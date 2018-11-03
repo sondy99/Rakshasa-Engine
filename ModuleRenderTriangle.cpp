@@ -20,19 +20,40 @@ bool ModuleRenderTriangle::Init()
 {
 	App->shader->LoadShaders("../default.vs", "../default.fs");
 	
-	float vertex_buffer_data[] =
+	float positionsBuffer[] =
 	{
-        // positions
 		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		-1.0f, 1.0f, 0.0f,
+		 1.0f, -1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f
+	};
 
+	unsigned int indices[] =
+	{
+		0,1,2,
+		1,3,2
 	};
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_data), vertex_buffer_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positionsBuffer), positionsBuffer, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(
+		0,                  // attribute 0
+		3,                  // number of componentes (3 floats)
+		GL_FLOAT,           // data type
+		GL_FALSE,           // should be normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     return vbo;
 }
@@ -40,17 +61,9 @@ bool ModuleRenderTriangle::Init()
 update_status ModuleRenderTriangle::Update()
 {
 
-    glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glVertexAttribPointer(
-            0,                  // attribute 0
-            3,                  // number of componentes (3 floats)
-            GL_FLOAT,           // data type
-            GL_FALSE,           // should be normalized?
-            0,                  // stride
-            (void*)0            // array buffer offset
-            );
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 	math::float4x4 projection = App->camera->GetProjectionMatrix();
 	math::float4x4 view = App->camera->LookAt(App->camera->position, App->camera->front, App->camera->up);
@@ -66,10 +79,9 @@ update_status ModuleRenderTriangle::Update()
 	
 	glUniform4f(location, 1.0f, 0.5f, 0.2f, 0.8f);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glUseProgram(0);
 

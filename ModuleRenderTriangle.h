@@ -9,13 +9,14 @@ public:
 	ModuleRenderTriangle();
     ~ModuleRenderTriangle();
 
-	bool            Init    ();
-	update_status   Update  ();
-	bool            CleanUp ();
+	bool Init();
+	update_status Update();
+	bool CleanUp();
 
 private:
-    unsigned vbo        = 0;
-	unsigned texture0   = 0;
+    unsigned vbo = 0;
+	unsigned ibo = 0;
+	unsigned texture0 = 0;
 };
 
 #endif /* __ModuleRenderExercise_h__ */
