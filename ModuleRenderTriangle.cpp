@@ -5,6 +5,7 @@
 #include "ModuleShader.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
+#include "ModuleEnvironment.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
@@ -86,6 +87,9 @@ update_status ModuleRenderTriangle::Update()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture0);
 	glUniform1i(glGetUniformLocation(App->shader->program, "texture0"), 0);
+
+	App->environment->DrawReferenceGround();
+	App->environment->DrawReferenceAxis();
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 

@@ -10,6 +10,7 @@ class ModuleInput;
 class ModuleCamera;
 class ModuleShader;
 class ModuleTextures;
+class ModuleEnvironment;
 
 class ModuleRenderTriangle;
 
@@ -31,6 +32,7 @@ public:
 	ModuleCamera* camera = nullptr;
 	ModuleShader* shader = nullptr;
 	ModuleTextures* textures = nullptr;
+	ModuleEnvironment* environment = nullptr;
 
 	ModuleRenderTriangle* renderTrieangle = nullptr;
 private:

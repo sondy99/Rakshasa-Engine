@@ -107,6 +107,7 @@
       <Filter>MathGeoLib\Time</Filter>
     </ClCompile>
     <ClCompile Include="ModuleTextures.cpp" />
+    <ClCompile Include="ModuleEnvironment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -291,6 +292,7 @@
     </ClInclude>
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="ModuleEnvironment.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

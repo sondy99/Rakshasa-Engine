@@ -6,6 +6,7 @@
 #include "ModuleCamera.h"
 #include "Moduleshader.h"
 #include "ModuleTextures.h"
+#include "ModuleEnvironment.h"
 
 #include "ModuleRenderTriangle.h"
 
@@ -19,6 +20,8 @@ Application::Application()
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(shader = new ModuleShader());
 	modules.push_back(textures = new ModuleTextures());
+	modules.push_back(environment = new ModuleEnvironment());
+	
 	modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }
 

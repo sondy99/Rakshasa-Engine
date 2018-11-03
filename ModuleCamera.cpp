@@ -4,9 +4,11 @@
 #include "ModuleInput.h"
 
 ModuleCamera::ModuleCamera() :
-	position(math::float3(0.0f, 0.0f, 5.0f)),
-	front(math::float3(0.0f, 0.0f, -1.0f)),
-	up(math::float3(0.0f, 1.0f, 0.0f))
+	position(math::float3(0.0f, 3.0f, 10.0f)),
+	front(math::float3(0.0f, 0.0f, 0.0f)),
+	up(math::float3(0.0f, 1.0f, 0.0f)),
+	pitch(0.0f),
+	yaw(0.0f)
 {
 }
 
@@ -29,35 +31,47 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) 
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
 	{
 		MoveCamera(Upwards);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) 
+	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
 	{
 		MoveCamera(Downwards);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
+	else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
 		MoveCamera(Left);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
+	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
 		MoveCamera(Right);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) 
+	else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 	{
 		MoveCamera(Forward);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) 
+	else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 	{
 		MoveCamera(Backwards);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
+		RotateCamera(NegativePitch);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+		RotateCamera(PositivePitch);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
+		RotateCamera(PositiveYaw);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
+		RotateCamera(NegativeYaw);
 	}
 
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleCamera::CleanUp() 
+bool ModuleCamera::CleanUp()
 {
 	return true;
 }
@@ -79,33 +93,80 @@ math::float4x4 ModuleCamera::LookAt(math::float3& position, math::float3& front,
 	return matrix;
 }
 
-void ModuleCamera::MoveCamera(CameraMovement cameraSide) 
+void ModuleCamera::MoveCamera(CameraMovement cameraMovement)
 {
-	switch (cameraSide) 
+	switch (cameraMovement)
 	{
-		case Upwards:
-			position += math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
-			front += math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
-			break;
-		case Downwards:
-			position -= math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
-			front -= math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
-			break;
-		case Left:
-			position -= sidew * cameraSpeed;
-			front -= sidew * cameraSpeed;
-			break;
-		case Right:
-			position += sidew * cameraSpeed;
-			front += sidew * cameraSpeed;
-			break;
-		case Forward:
-			position += forw * cameraSpeed;
-			front += forw * cameraSpeed;
-			break;
-		case Backwards:
-			position -= forw * cameraSpeed;
-			front -= forw * cameraSpeed;
-			break;
+	case Upwards:
+		position += math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
+		front += math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
+		break;
+	case Downwards:
+		position -= math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
+		front -= math::float3(0.0f, 1.0f, 0.0f) * cameraSpeed;
+		break;
+	case Left:
+		position -= sidew * cameraSpeed;
+		front -= sidew * cameraSpeed;
+		break;
+	case Right:
+		position += sidew * cameraSpeed;
+		front += sidew * cameraSpeed;
+		break;
+	case Forward:
+		position += forw * cameraSpeed;
+		front += forw * cameraSpeed;
+		break;
+	case Backwards:
+		position -= forw * cameraSpeed;
+		front -= forw * cameraSpeed;
+		break;
+	}
+}
+
+void ModuleCamera::RotateCamera(CameraRotation cameraRotation) {
+	math::float3 direction;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	switch (cameraRotation) {
+	case PositivePitch:
+		pitch += cameraSpeed;
+		forw.y = SDL_sin(degreesToRadians(pitch));
+		forw.x = SDL_cos(degreesToRadians(pitch));
+		forw.z = SDL_cos(degreesToRadians(pitch));
+		forw.Normalize();
+		front += forw * cameraSpeed;
+		break;
+	case NegativePitch:
+		pitch -= cameraSpeed * 2;
+		forw.y = SDL_sin(degreesToRadians(pitch));
+		forw.x = SDL_cos(degreesToRadians(pitch));
+		forw.z = SDL_cos(degreesToRadians(pitch));
+		forw.Normalize();
+		front -= forw * cameraSpeed;
+		break;
+	case PositiveYaw:
+		yaw += cameraSpeed;
+		forw.y = SDL_cos(degreesToRadians(pitch)) * SDL_cos(degreesToRadians(yaw));
+		forw.x = SDL_sin(degreesToRadians(pitch));
+		forw.z = SDL_cos(degreesToRadians(pitch)) * SDL_sin(degreesToRadians(yaw));
+		forw.Normalize();
+		front += forw * cameraSpeed;
+		position += forw * cameraSpeed;
+		break;
+	case NegativeYaw:
+		LOG("%f", yaw);
+		yaw -= cameraSpeed;
+		forw.y = SDL_cos(degreesToRadians(pitch)) * SDL_cos(degreesToRadians(yaw));
+		forw.x = SDL_sin(degreesToRadians(pitch));
+		forw.z = SDL_cos(degreesToRadians(pitch)) * SDL_sin(degreesToRadians(yaw));
+		forw.Normalize();
+		front -= forw * cameraSpeed;
+		position -= forw * cameraSpeed;
+		break;
 	}
 }
