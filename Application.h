@@ -7,6 +7,10 @@
 class ModuleRender;
 class ModuleWindow;
 class ModuleInput;
+class ModuleCamera;
+class ModuleShader;
+
+class ModuleRenderTriangle;
 
 class Application
 {
@@ -23,7 +27,10 @@ public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
+	ModuleCamera* camera = nullptr;
+	ModuleShader* shader = nullptr;
 
+	ModuleRenderTriangle* renderTrieangle = nullptr;
 private:
 
 	std::list<Module*> modules;

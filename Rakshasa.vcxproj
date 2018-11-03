@@ -75,17 +75,17 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;DevIL/lib/x86/Release;assimp/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;DevIL.lib;ILU.lib;ILut.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;glew32.lib;opengl32.lib;DevIL.lib;ILU.lib;ILUT.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,23 +109,28 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SupportJustMyCode>true</SupportJustMyCode>
     </ClCompile>
     <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <OptimizeReferences>
+      </OptimizeReferences>
       <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;DevIL/lib/x86/Release;assimp/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;DevIL.lib;ILU.lib;ILut.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;glew32.lib;opengl32.lib;DevIL.lib;ILU.lib;ILUT.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <LinkTimeCodeGeneration />
     </Link>
     <ProjectReference>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -177,9 +182,6 @@
     <ClInclude Include="MathGeoLib\include\Geometry\Sphere.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\Triangle.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\TriangleMesh.h" />
-    <ClInclude Include="MathGeoLib\include\MathBuildConfig.h" />
-    <ClInclude Include="MathGeoLib\include\MathGeoLib.h" />
-    <ClInclude Include="MathGeoLib\include\MathGeoLibFwd.h" />
     <ClInclude Include="MathGeoLib\include\Math\assume.h" />
     <ClInclude Include="MathGeoLib\include\Math\BitOps.h" />
     <ClInclude Include="MathGeoLib\include\Math\Complex.h" />
@@ -214,8 +216,11 @@
     <ClInclude Include="MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib\include\Time\Clock.h" />
     <ClInclude Include="Module.h" />
+    <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleRender.h" />
+    <ClInclude Include="ModuleRenderTriangle.h" />
+    <ClInclude Include="ModuleShader.h" />
     <ClInclude Include="ModuleWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -254,17 +259,16 @@
     <ClCompile Include="MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
+    <ClCompile Include="ModuleRenderTriangle.cpp" />
+    <ClCompile Include="ModuleShader.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MathGeoLib\include\Geometry\KDTree.inl" />
-    <None Include="MathGeoLib\include\Geometry\QuadTree.inl" />
-    <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
-    <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_CPP.inl" />
-    <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
-    <None Include="MathGeoLib\include\Math\Matrix.inl" />
+    <None Include="default.fs" />
+    <None Include="default.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,9 @@
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
+    <ClCompile Include="ModuleShader.cpp" />
+    <ClCompile Include="ModuleRenderTriangle.cpp" />
+    <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="MathGeoLib\include\Geometry\AABB.cpp">
       <Filter>MathGeoLib\Geometry</Filter>
     </ClCompile>
@@ -111,6 +114,9 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="ModuleShader.h" />
+    <ClInclude Include="ModuleRenderTriangle.h" />
+    <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\AABB.h">
       <Filter>MathGeoLib\Geometry</Filter>
     </ClInclude>
@@ -310,23 +316,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="MathGeoLib\include\Geometry\KDTree.inl">
-      <Filter>MathGeoLib</Filter>
-    </None>
-    <None Include="MathGeoLib\include\Math\Matrix.inl">
-      <Filter>MathGeoLib</Filter>
-    </None>
-    <None Include="MathGeoLib\include\Geometry\QuadTree.inl">
-      <Filter>MathGeoLib</Filter>
-    </None>
-    <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl">
-      <Filter>MathGeoLib</Filter>
-    </None>
-    <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_CPP.inl">
-      <Filter>MathGeoLib</Filter>
-    </None>
-    <None Include="MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl">
-      <Filter>MathGeoLib</Filter>
-    </None>
+    <None Include="default.fs" />
+    <None Include="default.vs" />
   </ItemGroup>
 </Project>

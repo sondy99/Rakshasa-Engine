@@ -3,6 +3,10 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleInput.h"
+#include "ModuleCamera.h"
+#include "Moduleshader.h"
+
+#include "ModuleRenderTriangle.h"
 
 using namespace std;
 
@@ -11,6 +15,9 @@ Application::Application()
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(input = new ModuleInput());
+	modules.push_back(camera = new ModuleCamera());
+	modules.push_back(shader = new ModuleShader());
+	modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }
 
 Application::~Application()
