@@ -290,6 +290,7 @@
       <Filter>MathGeoLib\Time</Filter>
     </ClInclude>
     <ClInclude Include="ModuleTextures.h" />
+    <ClInclude Include="Point.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

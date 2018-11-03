@@ -10,24 +10,41 @@
 class ModuleCamera : public Module
 {
 
+	enum CameraMovement {
+		Upwards,
+		Downwards,
+		Left,
+		Right,
+		Forward,
+		Backwards
+	};
+
 public:
 	ModuleCamera();
 	~ModuleCamera();
 
 	bool Init();
-	update_status	PreUpdate();
-	bool			CleanUp();
+	update_status PreUpdate();
+	bool CleanUp();
 
 	math::float4x4 LookAt(math::float3& position, math::float3& front, math::float3& up);
 
 	inline math::float4x4 GetProjectionMatrix() { return frustum.ProjectionMatrix(); }
 	
-public:
 	math::float3 position;
 	math::float3 front;
 	math::float3 up;
 	Frustum frustum;
 	float aspectRatio = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+private:
+	void MoveCamera(CameraMovement cameraSide);
+
+	float cameraSpeed = 0.01f;
+
+	math::float3 forw;
+	math::float3 sidew;
+	math::float3 upw;
 };
 
 #endif
