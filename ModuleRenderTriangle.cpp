@@ -3,6 +3,7 @@
 #include "ModuleRenderTriangle.h"
 #include "ModuleWindow.h"
 #include "ModuleShader.h"
+#include "ModuleTextures.h"
 #include "ModuleCamera.h"
 
 #include "GL/glew.h"
@@ -19,13 +20,20 @@ ModuleRenderTriangle::~ModuleRenderTriangle()
 bool ModuleRenderTriangle::Init()
 {
 	App->shader->LoadShaders("../default.vs", "../default.fs");
-	
+
+	texture0 = App->textures->Load("Lenna.png");
+
 	float positionsBuffer[] =
 	{
 		-1.0f, -1.0f, 0.0f,
 		 1.0f, -1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f,
-		 1.0f,  1.0f, 0.0f
+		 1.0f,  1.0f, 0.0f,
+
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f
 	};
 
 	unsigned int indices[] =
@@ -38,18 +46,14 @@ bool ModuleRenderTriangle::Init()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(positionsBuffer), positionsBuffer, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(
-		0,                  // attribute 0
-		3,                  // number of componentes (3 floats)
-		GL_FLOAT,           // data type
-		GL_FALSE,           // should be normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
-
+	//Vertex
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	
+	//UV position
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 4));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
+	
+	//index buffer
 	glGenBuffers(1, &ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -62,6 +66,7 @@ update_status ModuleRenderTriangle::Update()
 {
 
 	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
@@ -75,9 +80,12 @@ update_status ModuleRenderTriangle::Update()
 	glUniformMatrix4fv(glGetUniformLocation(App->shader->program, "view"), 1, GL_TRUE, &view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(App->shader->program, "proj"), 1, GL_TRUE, &projection[0][0]);
 
-	int location = glGetUniformLocation(App->shader->program, "uColor");
-	
-	glUniform4f(location, 1.0f, 0.5f, 0.2f, 0.8f);
+	//int location = glGetUniformLocation(App->shader->program, "uColor");
+	//glUniform4f(location, 1.0f, 0.5f, 0.2f, 0.8f);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture0);
+	glUniform1i(glGetUniformLocation(App->shader->program, "texture0"), 0);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 

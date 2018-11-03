@@ -1,10 +1,13 @@
 #version 330 core
 
-layout(location = 0) out vec4 color;
+out vec4 color;
+
+in vec2 uv0;
 
 uniform vec4 uColor;
+uniform sampler2D texture0;
 
 void main()
 {
-    color = uColor;
-};
+    color = texture2D(texture0, uv0);
+}
