@@ -5,6 +5,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleShader.h"
+#include "ModuleEnvironment.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
@@ -49,6 +50,8 @@ bool ModuleRender::Init()
     SDL_GetWindowSize(App->window->window, &width, &height);
     glViewport(0, 0, width, height);
 
+	App->shader->LoadShaders(App->shader->program, "../default.vs", "../default.fs");
+
 	return true;
 }
 
@@ -62,10 +65,20 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-
 	math::float4x4 projection = App->camera->ProjectionMatrix();
 	math::float4x4 view = App->camera->LookAt(App->camera->cameraPos, App->camera->cameraFront, App->camera->cameraUp);
 	math::float4x4 model = math::float4x4::identity;
+
+	glUseProgram(App->shader->colorProgram);
+
+	glUniformMatrix4fv(glGetUniformLocation(App->shader->colorProgram, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->shader->colorProgram, "view"), 1, GL_TRUE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(App->shader->colorProgram, "proj"), 1, GL_TRUE, &projection[0][0]);
+
+	App->environment->DrawReferenceGround();
+	App->environment->DrawReferenceAxis();
+
+	glUseProgram(0);
 
 	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
 	{
@@ -74,7 +87,7 @@ update_status ModuleRender::Update()
 		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
 			App->modelLoader->transform, view, projection);
 	}
-
+	
 	return UPDATE_CONTINUE;
 }
 

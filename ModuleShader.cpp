@@ -8,7 +8,7 @@ ModuleShader::~ModuleShader()
 {
 }
 
-GLuint ModuleShader::LoadShaders(const char* vertexShaderPath, const char* fragmentShaderPath) 
+GLuint ModuleShader::LoadShaders(GLuint& program, const char* vertexShaderPath, const char* fragmentShaderPath)
 {
 	GLint compileStatus = GL_FALSE;
 	int logLength = 0;

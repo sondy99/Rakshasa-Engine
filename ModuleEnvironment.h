@@ -9,6 +9,8 @@ public:
 	ModuleEnvironment();
 	~ModuleEnvironment();
 
+	bool Init() override;
+
 	void DrawReferenceGround();
 	void DrawReferenceAxis();
 };

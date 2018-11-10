@@ -316,5 +316,7 @@
   <ItemGroup>
     <None Include="default.fs" />
     <None Include="default.vs" />
+    <None Include="colorProgram.fs" />
+    <None Include="colorProgram.vs" />
   </ItemGroup>
 </Project>

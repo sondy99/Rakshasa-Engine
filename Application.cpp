@@ -1,4 +1,3 @@
-#pragma once
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
@@ -9,7 +8,7 @@
 #include "ModuleEnvironment.h"
 #include "ModuleModelLoader.h"
 
-#include "ModuleRenderTriangle.h"
+//#include "ModuleRenderTriangle.h"
 
 using namespace std;
 
@@ -24,7 +23,7 @@ Application::Application()
 	modules.push_back(environment = new ModuleEnvironment());
 	modules.push_back(modelLoader = new ModuleModelLoader());
 	
-	modules.push_back(renderTrieangle = new ModuleRenderTriangle());
+	//modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }
 
 Application::~Application()

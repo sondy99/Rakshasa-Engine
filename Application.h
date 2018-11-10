@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __APLICATION_H_
+#define __APLICATION_H_
 
 #include<list>
 #include "Globals.h"
@@ -13,12 +14,11 @@ class ModuleTextures;
 class ModuleEnvironment;
 class ModuleModelLoader;
 
-class ModuleRenderTriangle;
+//class ModuleRenderTriangle;
 
 class Application
 {
 public:
-
 	Application();
 	~Application();
 
@@ -26,7 +26,6 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void Tick();
-
 public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
@@ -37,7 +36,7 @@ public:
 	ModuleEnvironment* environment = nullptr;
 	ModuleModelLoader* modelLoader = nullptr;
 
-	ModuleRenderTriangle* renderTrieangle = nullptr;
+	//ModuleRenderTriangle* renderTrieangle = nullptr;
 
 	float lastTickTime = 0.0f;
 	float deltaTime = 0.0f;
@@ -45,9 +44,9 @@ public:
 	int frameCounter = 0;
 	int FPS = 0;
 private:
-
 	std::list<Module*> modules;
-
 };
 
 extern Application* App;
+
+#endif __APLICATION_H_

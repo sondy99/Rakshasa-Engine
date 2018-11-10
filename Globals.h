@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __GLOBAL_H_
+#define __GLOBAL_H_
+
 #include <windows.h>
 #include <stdio.h>
 
@@ -21,3 +23,5 @@ enum update_status
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Rakshasa Engine"
+
+#endif __GLOBAL_H_
