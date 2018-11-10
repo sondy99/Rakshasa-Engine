@@ -3,9 +3,9 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "Point.h"
 #include "MathGeoLib.h"
-#include "GL/glew.h"
-#include "SDL.h"
+
 
 class ModuleCamera : public Module
 {
@@ -20,41 +20,69 @@ class ModuleCamera : public Module
 	};
 
 	enum CameraRotation {
-		PositivePitch,
-		NegativePitch,
-		PositiveYaw,
-		NegativeYaw
+		Pitch,
+		Yaw
 	};
 
 public:
+
 	ModuleCamera();
 	~ModuleCamera();
 
 	bool Init();
-	update_status PreUpdate();
-	bool CleanUp();
+	update_status	PreUpdate();
+	bool			CleanUp();
 
-	math::float4x4 LookAt(math::float3& position, math::float3& front, math::float3& up);
+	// Render
+	math::float4x4	ProjectionMatrix();
+	;	math::float4x4	LookAt(math::float3& cameraPos, math::float3& cameraFront, math::float3& cameraUp);
+	void			InitFrustum();
 
-	inline math::float4x4 GetProjectionMatrix() { return frustum.ProjectionMatrix(); }
+	// Movement
+	void			CameraMovementKeyboard();
+	void			CameraMovementMouse();
+	void			MouseUpdate(const iPoint& mousePosition);
 
-	math::float3 position = math::float3(0.0f, 0.0f, 0.0f);
-	math::float3 front = math::float3(0.0f, 0.0f, 0.0f);
-	math::float3 up = math::float3(0.0f, 0.0f, 0.0f);
+	//Helper
+	void			SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
+	void			MoveCamera(CameraMovement cameraSide);
+	void			RotateCamera(CameraMovement cameraSide);
+	void			SetHorizontalFOV(float& fovXDegrees);
+	void			SetVerticalFOV(float& fovYDegrees);
+	void			Zooming(bool positive);
+	void			FocusObject(math::float3& objectCenterPos);
+
+public:
 	Frustum frustum;
-	float aspectRatio = SCREEN_WIDTH / SCREEN_HEIGHT;
+	float cameraSpeed;
+	float rotationSpeed;
+	float mouseSensitivity;
+	float fov;
 
-private:
-	void MoveCamera(CameraMovement cameraMovement);
-	void RotateCamera(CameraRotation cameraRotation);
+	unsigned screenWidth = SCREEN_WIDTH;
+	unsigned screenHeight = SCREEN_HEIGHT;
+	float screenRatio = screenWidth / screenHeight;
 
-	float cameraSpeed = 0.01f;
+	float fovY = 45.0f;
+	float fovX = 45.0f;
+	float zoomValue = 0.0f;
+
+	// Camera rotations
 	float pitch;
 	float yaw;
 
-	math::float3 forw;
-	math::float3 sidew;
-	math::float3 upw;
+	// Camera states
+	math::float3 cameraPos;
+	math::float3 cameraFront;
+	math::float3 cameraUp;
+
+	// Mouse 
+	bool firstMouse = true;
+	int lastX = 0;
+	int lastY = 0;
+
+	// Center
+	math::float3 sceneCenter = math::float3(0.0f, 0.0f, 0.0f);
 
 };
 

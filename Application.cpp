@@ -7,6 +7,7 @@
 #include "Moduleshader.h"
 #include "ModuleTextures.h"
 #include "ModuleEnvironment.h"
+#include "ModuleModelLoader.h"
 
 #include "ModuleRenderTriangle.h"
 
@@ -21,6 +22,7 @@ Application::Application()
 	modules.push_back(shader = new ModuleShader());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(environment = new ModuleEnvironment());
+	modules.push_back(modelLoader = new ModuleModelLoader());
 	
 	modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }
@@ -47,6 +49,8 @@ update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 
+	Tick();
+
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
 
@@ -67,4 +71,18 @@ bool Application::CleanUp()
 		ret = (*it)->CleanUp();
 
 	return ret;
+}
+
+void Application::Tick()
+{
+	++frameCounter;
+	unsigned ticksNow = SDL_GetTicks();
+	deltaTime = (float)(ticksNow - lastTickTime) * 0.001;
+	lastTickTime = ticksNow;
+	auxTimer += deltaTime;
+	if (auxTimer >= 1.0f) {
+		FPS = frameCounter;
+		auxTimer = 0;
+		frameCounter = 0;
+	}
 }

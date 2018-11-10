@@ -219,6 +219,7 @@
     <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="ModuleEnvironment.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleModelLoader.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleRenderTriangle.h" />
     <ClInclude Include="ModuleShader.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="ModuleEnvironment.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleModelLoader.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleRenderTriangle.cpp" />
     <ClCompile Include="ModuleShader.cpp" />

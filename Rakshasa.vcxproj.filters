@@ -108,6 +108,7 @@
     </ClCompile>
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleEnvironment.cpp" />
+    <ClCompile Include="ModuleModelLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="ModuleEnvironment.h" />
+    <ClInclude Include="ModuleModelLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
