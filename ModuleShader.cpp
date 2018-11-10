@@ -4,26 +4,12 @@ ModuleShader::ModuleShader()
 {
 }
 
-
 ModuleShader::~ModuleShader()
 {
 }
 
-
-bool ModuleShader::Init()
-{
-	return true;
-}
-
-
-bool ModuleShader::CleanUp()
-{
-	return true;
-}
-
 GLuint ModuleShader::LoadShaders(const char* vertexShaderPath, const char* fragmentShaderPath) 
 {
-
 	GLint compileStatus = GL_FALSE;
 	int logLength = 0;
 

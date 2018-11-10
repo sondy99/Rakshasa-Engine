@@ -39,11 +39,6 @@ bool ModuleModelLoader::Init()
 	return false;
 }
 
-update_status ModuleModelLoader::Update()
-{
-	return UPDATE_CONTINUE;
-}
-
 bool ModuleModelLoader::CleanUp()
 {
 	for (unsigned i = 0; i < meshes.size(); ++i)
@@ -114,8 +109,8 @@ void ModuleModelLoader::GenerateMeshes(const aiScene* scene)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		dst_mesh.material = src_mesh->mMaterialIndex;
-		dst_mesh.num_vertices = src_mesh->mNumVertices;
-		dst_mesh.num_indices = src_mesh->mNumFaces * 3;
+		dst_mesh.verticesNumber = src_mesh->mNumVertices;
+		dst_mesh.indicesNumber = src_mesh->mNumFaces * 3;
 
 		meshes.push_back(dst_mesh);
 	}

@@ -9,9 +9,9 @@ public:
 	ModuleRenderTriangle();
     ~ModuleRenderTriangle();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
 private:
     unsigned vbo = 0;

@@ -3,18 +3,12 @@
 
 #include "Module.h"
 
-
 class ModuleEnvironment : public Module
 {
 public:
 	ModuleEnvironment();
 	~ModuleEnvironment();
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	bool CleanUp();
 	void DrawReferenceGround();
 	void DrawReferenceAxis();
 };

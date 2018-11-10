@@ -10,12 +10,9 @@ class ModuleShader : public Module
 public:
 	ModuleShader();
 	~ModuleShader();
-
-	bool Init();
-	bool CleanUp();
-
+	
 	GLuint LoadShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
-
+public:
 	GLuint program = 0;
 private:
 	GLuint CreateShader(const char * shaderStr, const GLenum type);

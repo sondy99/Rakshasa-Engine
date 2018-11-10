@@ -9,37 +9,9 @@ ModuleEnvironment::ModuleEnvironment()
 {
 }
 
-
 ModuleEnvironment::~ModuleEnvironment()
 {
 }
-
-
-bool ModuleEnvironment::Init()
-{
-	return true;
-}
-
-update_status ModuleEnvironment::PreUpdate()
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleEnvironment::Update()
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleEnvironment::PostUpdate()
-{
-	return UPDATE_CONTINUE;
-}
-
-bool ModuleEnvironment::CleanUp()
-{
-	return true;
-}
-
 
 void ModuleEnvironment::DrawReferenceGround() {
 	glLineWidth(1.0f);

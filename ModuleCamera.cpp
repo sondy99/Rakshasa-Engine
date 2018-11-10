@@ -4,22 +4,14 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
 
-ModuleCamera::ModuleCamera() {
-	cameraPos = math::float3(0.0f, 3.0f, 10.0f);
-	cameraFront = math::float3(0.0f, 0.0f, -1.0f);
-	cameraUp = math::float3(0.0f, 1.0f, 0.0f);
-
-	cameraSpeed = 17.0f;
-	rotationSpeed = 65.0f;
-	mouseSensitivity = 0.5f;
-
-	yaw = -90.0f;
-	pitch = 0.0f;
-	fov = 45.0f;
+ModuleCamera::ModuleCamera() 
+{
 }
 
 // Destructor
-ModuleCamera::~ModuleCamera() {}
+ModuleCamera::~ModuleCamera() 
+{
+}
 
 // Called before render is available
 bool ModuleCamera::Init()
@@ -31,11 +23,8 @@ bool ModuleCamera::Init()
 // Called every draw update
 update_status ModuleCamera::PreUpdate()
 {
-
 	CameraMovementKeyboard();
-
 	CameraMovementMouse();
-
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		FocusObject(sceneCenter);
@@ -64,22 +53,22 @@ void ModuleCamera::MoveCamera(CameraMovement cameraSide) {
 	float normCameraSpeed = cameraSpeed * App->deltaTime;
 
 	switch (cameraSide) {
-	case Upwards:
+	case UP:
 		cameraPos += cameraUp.Normalized() * normCameraSpeed;
 		break;
-	case Downwards:
+	case DOWN:
 		cameraPos -= cameraUp.Normalized() * normCameraSpeed;
 		break;
-	case Left:
+	case LEFT:
 		cameraPos += cameraUp.Cross(cameraFront).Normalized() * normCameraSpeed;
 		break;
-	case Right:
+	case RIGHT:
 		cameraPos -= cameraUp.Cross(cameraFront).Normalized() * normCameraSpeed;
 		break;
-	case Forward:
+	case FORWARD:
 		cameraPos += cameraFront.Normalized() * normCameraSpeed;
 		break;
-	case Backwards:
+	case BACKWARDS:
 		cameraPos -= cameraFront.Normalized() * normCameraSpeed;
 		break;
 	}
@@ -88,16 +77,16 @@ void ModuleCamera::MoveCamera(CameraMovement cameraSide) {
 void ModuleCamera::RotateCamera(CameraMovement cameraSide) {
 
 	switch (cameraSide) {
-	case Upwards:
+	case UP:
 		pitch += rotationSpeed * App->deltaTime;
 		break;
-	case Downwards:
+	case DOWN:
 		pitch -= rotationSpeed * App->deltaTime;
 		break;
-	case Left:
+	case LEFT:
 		yaw -= rotationSpeed * App->deltaTime;
 		break;
-	case Right:
+	case RIGHT:
 		yaw += rotationSpeed * App->deltaTime;
 		break;
 	}
@@ -190,7 +179,6 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 }
 
 void ModuleCamera::Zooming(bool positive) {
-	// TODO: this is not allowed in Chymera, please fix this so we avoid future float problems
 	if (positive)
 		fovX += 10.0;
 	else
@@ -206,8 +194,6 @@ void ModuleCamera::Zooming(bool positive) {
 
 void ModuleCamera::FocusObject(math::float3& objectCenterPos) {
 	cameraFront = objectCenterPos - cameraPos;
-	// TODO: fix this values
-	// Trigonometry: TanOposAdja rule to get the current angles from new position
 	pitch = math::RadToDeg(SDL_tanf(cameraFront.y / cameraFront.x));
 	yaw = math::RadToDeg(SDL_tanf(cameraFront.z / cameraFront.x)) - 90;
 }
@@ -230,33 +216,33 @@ void ModuleCamera::CameraMovementMouse() {
 
 void ModuleCamera::CameraMovementKeyboard() {
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) {
-		MoveCamera(Upwards);
+		MoveCamera(UP);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) {
-		MoveCamera(Downwards);
+		MoveCamera(DOWN);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		MoveCamera(Left);
+		MoveCamera(LEFT);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		MoveCamera(Right);
+		MoveCamera(RIGHT);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		MoveCamera(Forward);
+		MoveCamera(FORWARD);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		MoveCamera(Backwards);
+		MoveCamera(BACKWARDS);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
-		RotateCamera(Upwards);
+		RotateCamera(UP);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-		RotateCamera(Downwards);
+		RotateCamera(DOWN);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-		RotateCamera(Left);
+		RotateCamera(LEFT);
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-		RotateCamera(Right);
+		RotateCamera(RIGHT);
 	}
 }

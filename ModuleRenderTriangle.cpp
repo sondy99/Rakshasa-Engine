@@ -65,7 +65,6 @@ bool ModuleRenderTriangle::Init()
 
 update_status ModuleRenderTriangle::Update()
 {
-
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);

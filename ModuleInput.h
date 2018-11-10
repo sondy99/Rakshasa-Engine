@@ -25,28 +25,24 @@ enum KeyState
 
 class ModuleInput : public Module
 {
-
 public:
-
 	ModuleInput();
 	~ModuleInput();
 
-	update_status PreUpdate();
-
-	bool CleanUp();
+	update_status PreUpdate() override;
+	bool CleanUp() override;
 
 	inline KeyState GetKey(int id) const { return keyboard[id]; }
 	inline KeyState GetMouseButtonDown(int id) const { return mouse_buttons[id - 1]; };
 	inline bool GetWindowEvent(EventWindow code) const { return windowEvents[code]; };
 	inline const iPoint& GetMouseMotion() const { return mouse_motion; };
 	inline const iPoint& GetMousePosition() const { return mouse; };
-	   
 private:
-	bool		windowEvents[WE_COUNT];
-	KeyState*	keyboard;
-	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
-	iPoint		mouse_motion;
-	iPoint		mouse;
+	bool windowEvents[WE_COUNT];
+	KeyState* keyboard = nullptr;
+	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
+	iPoint mouse_motion = { 0, 0 };
+	iPoint mouse = { 0, 0 };
 };
 
 #endif // __MODULEINPUT_H__

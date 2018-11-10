@@ -9,24 +9,14 @@ class Application;
 class ModuleWindow : public Module
 {
 public:
-
 	ModuleWindow();
+	~ModuleWindow();
 
-	// Destructor
-	virtual ~ModuleWindow();
-
-	// Called before quitting
-	bool Init();
-
-	// Called before quitting
-	bool CleanUp();
-
+	bool Init() override;
+	bool CleanUp() override;
 public:
-	//The window we'll be rendering to
-	SDL_Window* window = NULL;
-
-	//The surface contained by the window
-	SDL_Surface* screen_surface = NULL;
+	SDL_Window* window = nullptr;
+	SDL_Surface* screen_surface = nullptr;
 };
 
-#endif // __ModuleWindow_H__
+#endif __ModuleWindow_H__

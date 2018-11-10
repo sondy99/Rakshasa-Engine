@@ -14,13 +14,11 @@ public:
 	ModuleTextures();
 	~ModuleTextures();
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
 
 	GLuint const Load(const char* path);
 	void Unload(unsigned id);
 
-private:
 };
 
-#endif // __ModuleTextures_H__
+#endif __ModuleTextures_H__

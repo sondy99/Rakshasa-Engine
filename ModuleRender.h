@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULERENDER_H__
+#define __MODULERENDER_H__
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -14,18 +16,19 @@ public:
 	ModuleRender();
 	~ModuleRender();
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	update_status PreUpdate() override;
+	update_status Update() override;
+	update_status PostUpdate() override;
+	bool CleanUp() override;
+
 	void WindowResized(unsigned width, unsigned height);
-
-	void RenderMesh(const ModuleModelLoader::Mesh & mesh, const ModuleModelLoader::Material & material, unsigned program, const math::float4x4 & model, const math::float4x4 & view, const math::float4x4 & proj);
-
+	void RenderMesh(const ModuleModelLoader::Mesh& mesh, 
+		const ModuleModelLoader::Material& material, 
+		unsigned program, const math::float4x4& model,
+		const math::float4x4& view, const math::float4x4& proj);
 private:
-
-
-private:
-	void* context;
+	void* context = nullptr;
 };
+
+#endif __MODULERENDER_H__

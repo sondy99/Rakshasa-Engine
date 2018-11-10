@@ -14,22 +14,19 @@ public:
 	ModuleModelLoader();
 	~ModuleModelLoader();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
-
+	bool Init() override;
+	bool CleanUp() override;
 private:
 	void GenerateMeshes(const aiScene* scene);
 	void GenerateMaterials(const aiScene* scene);
-
 public:
 	struct Mesh
 	{
 		unsigned vbo = 0;
 		unsigned ibo = 0;
 		unsigned material = 0;
-		unsigned num_vertices = 0;
-		unsigned num_indices = 0;
+		unsigned verticesNumber = 0;
+		unsigned indicesNumber = 0;
 	};
 
 	struct Material
