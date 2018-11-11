@@ -25,8 +25,8 @@ public:
 	bool CleanUp() override;
 	
 	void WindowResized(unsigned width, unsigned height);
-	void RenderMesh(const ModuleModelLoader::Mesh& mesh, 
-		const ModuleModelLoader::Material& material, 
+	void RenderMesh(const Mesh& mesh, 
+		const Material& material, 
 		unsigned program, const math::float4x4& model,
 		const math::float4x4& view, const math::float4x4& proj);
 	void DrawProperties();

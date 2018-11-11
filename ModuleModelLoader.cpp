@@ -125,19 +125,33 @@ void ModuleModelLoader::GenerateMaterials(const aiScene* scene)
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
 		const aiMaterial* src_material = scene->mMaterials[i];
-
-		Material dst_material;
-
+		
 		aiString file;
 		aiTextureMapping mapping;
 		unsigned uvindex = 0;
 
 		if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 		{
-			dst_material.texture0 = App->textures->Load(file.data);
-		}
+			Material dst_material = App->textures->Load(file.data);
 
-		materials.push_back(dst_material);
+			materials.push_back(dst_material);
+		}
 	}
 }
 
+
+void ModuleModelLoader::DrawProperties()
+{
+	ImGui::Begin("Model");
+	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+	if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
+		for (auto &texture : materials)
+		{
+			ImGui::Text("Size:  Width: %d | Height: %d", texture.width, texture.height);
+			float size = ImGui::GetWindowWidth();
+			ImGui::Image((ImTextureID)texture.texture0, { size, size });
+		}
+	}
+	ImGui::End();
+}

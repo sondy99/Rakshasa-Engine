@@ -23,11 +23,13 @@ bool ModuleTextures::Init()
 	return true;
 }
 
-GLuint const ModuleTextures::Load(const char* path)
+Material const ModuleTextures::Load(const char* path)
 {
 	unsigned imageID;
 
-	GLuint textureID;
+	GLuint textureID = 0;
+	int width = 0;
+	int height = 0;
 
 	ilGenImages(1, &imageID); 		
 
@@ -56,8 +58,11 @@ GLuint const ModuleTextures::Load(const char* path)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+		width = ilGetInteger(IL_IMAGE_WIDTH);
+		height = ilGetInteger(IL_IMAGE_HEIGHT);
+
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT),
-			ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+			width, height,
 			0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
 			ilGetData());
 	}
@@ -70,7 +75,8 @@ GLuint const ModuleTextures::Load(const char* path)
 
 	ilDeleteImages(1, &imageID); 
 	LOG("Texture creation successful.");
-	return textureID;
+
+	return Material(textureID, width, height);
 }
 
 

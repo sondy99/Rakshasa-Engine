@@ -90,6 +90,10 @@ void ModuleEditor::WindowManager()
 	{
 		App->camera->DrawProperties();
 	}
+	if (toggleModelProperties)
+	{
+		App->modelLoader->DrawProperties();
+	}
 }
 
 void ModuleEditor::ShowAboutMenu() 

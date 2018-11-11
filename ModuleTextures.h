@@ -3,6 +3,7 @@
 
 #include<list>
 #include "Module.h"
+#include "ModuleModelLoader.h"
 #include "Globals.h"
 #include "GL/glew.h"
 
@@ -16,7 +17,7 @@ public:
 
 	bool Init() override;
 
-	GLuint const Load(const char* path);
+	Material const Load(const char* path);
 	void Unload(unsigned id);
 
 };

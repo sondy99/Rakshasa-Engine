@@ -22,7 +22,7 @@ bool ModuleRenderTriangle::Init()
 {
 	App->shader->LoadShaders(App->shader->program, "../default.vs", "../default.fs");
 
-	texture0 = App->textures->Load("Lenna.png");
+	//texture0 = App->textures->Load("Lenna.png");
 
 	float positionsBuffer[] =
 	{

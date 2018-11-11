@@ -90,7 +90,7 @@ update_status ModuleRender::Update()
 
 	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
 	{
-		const ModuleModelLoader::Mesh& mesh = App->modelLoader->meshes[i];
+		const Mesh& mesh = App->modelLoader->meshes[i];
 
 		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
 			App->modelLoader->transform, view, projection);
@@ -124,7 +124,7 @@ void ModuleRender::WindowResized(unsigned width, unsigned height)
     glViewport(0, 0, width, height); 
 }
 
-void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh, const ModuleModelLoader::Material& material,
+void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
 	unsigned program, const math::float4x4& model,
 	const math::float4x4& view, const math::float4x4& proj)
 {

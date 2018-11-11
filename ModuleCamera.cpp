@@ -258,7 +258,8 @@ void ModuleCamera::DrawProperties()
 {
 	ImGui::Begin("Camera");
 	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-	if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen)) {
+	if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
 		float camPos[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
 		ImGui::InputFloat3("Camera position", camPos, "%.3f");
 		ImGui::Separator();
@@ -272,7 +273,8 @@ void ModuleCamera::DrawProperties()
 		ImGui::InputFloat("Pitch", &pitch, 0, 0, 0);
 		ImGui::InputFloat("Yaw", &yaw, 0, 0, 0);
 	}
-	if (ImGui::CollapsingHeader("Camera configurations", ImGuiTreeNodeFlags_DefaultOpen)) {
+	if (ImGui::CollapsingHeader("Camera configurations", ImGuiTreeNodeFlags_DefaultOpen)) 
+	{
 		ImGui::SliderFloat("Mov Speed", &cameraSpeed, 0.0f, 100.0f);
 		ImGui::SliderFloat("Rot Speed", &rotationSpeed, 0.0f, 100.0f);
 		ImGui::SliderFloat("Mouse Sens", &mouseSensitivity, 0.0f, 1.0f);
