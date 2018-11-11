@@ -132,7 +132,7 @@ void ModuleCamera::InitFrustum() {
 	frustum.front = -float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 100.0f;
+	frustum.farPlaneDistance = 350.0f;
 	SetVerticalFOV(fovY);
 }
 

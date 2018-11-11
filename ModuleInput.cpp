@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
+#include "ModuleModelLoader.h"
 #include "SDL.h"
 
 #define MAX_KEYS 300
@@ -91,6 +92,16 @@ update_status ModuleInput::PreUpdate()
 					break;
 			}
 			break;
+
+		case SDL_DROPFILE:
+		{
+			// TODO: check extension of file and reupload a texture or a model
+			char* fileDroppedPath = event.drop.file;
+			App->modelLoader->CleanUp();
+			App->modelLoader->Load(fileDroppedPath);
+			SDL_free(fileDroppedPath);
+			break;
+		}
 
 		case SDL_MOUSEBUTTONDOWN:
 			mouse_buttons[event.button.button - 1] = KEY_DOWN;

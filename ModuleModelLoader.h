@@ -16,6 +16,8 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
+
+	void Load(const char * filePath);
 private:
 	void GenerateMeshes(const aiScene* scene);
 	void GenerateMaterials(const aiScene* scene);

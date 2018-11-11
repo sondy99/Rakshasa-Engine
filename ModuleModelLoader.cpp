@@ -20,7 +20,14 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	const aiScene* scene = aiImportFile("BakerHouse.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
+	Load("BakerHouse.FBX");
+
+	return true;
+}
+
+void ModuleModelLoader::Load(const char* filePath)
+{
+	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene)
 	{
@@ -28,15 +35,12 @@ bool ModuleModelLoader::Init()
 		GenerateMaterials(scene);
 
 		aiReleaseImport(scene);
-
-		return true;
 	}
-	else 
+	else
 	{
 		LOG(aiGetErrorString());
 	}
 
-	return false;
 }
 
 bool ModuleModelLoader::CleanUp()
