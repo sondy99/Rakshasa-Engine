@@ -49,9 +49,7 @@ bool Application::Init()
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
-
-	Tick();
-
+	
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
 
@@ -72,18 +70,4 @@ bool Application::CleanUp()
 		ret = (*it)->CleanUp();
 
 	return ret;
-}
-
-void Application::Tick()
-{
-	++frameCounter;
-	unsigned ticksNow = SDL_GetTicks();
-	deltaTime = (float)(ticksNow - lastTickTime) * 0.001;
-	lastTickTime = ticksNow;
-	auxTimer += deltaTime;
-	if (auxTimer >= 1.0f) {
-		FPS = frameCounter;
-		auxTimer = 0;
-		frameCounter = 0;
-	}
 }

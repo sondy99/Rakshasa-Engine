@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
+#include "ModuleRender.h"
 
 ModuleCamera::ModuleCamera() 
 {
@@ -55,7 +56,7 @@ bool ModuleCamera::CleanUp() {
 
 void ModuleCamera::MoveCamera(CameraMovement cameraSide) {
 
-	float normCameraSpeed = cameraSpeed * App->deltaTime;
+	float normCameraSpeed = cameraSpeed * App->renderer->deltaTime;
 
 	switch (cameraSide) {
 	case UP:
@@ -83,16 +84,16 @@ void ModuleCamera::RotateCamera(CameraMovement cameraSide) {
 
 	switch (cameraSide) {
 	case UP:
-		pitch += rotationSpeed * App->deltaTime;
+		pitch += rotationSpeed * App->renderer->deltaTime;
 		break;
 	case DOWN:
-		pitch -= rotationSpeed * App->deltaTime;
+		pitch -= rotationSpeed * App->renderer->deltaTime;
 		break;
 	case LEFT:
-		yaw -= rotationSpeed * App->deltaTime;
+		yaw -= rotationSpeed * App->renderer->deltaTime;
 		break;
 	case RIGHT:
-		yaw += rotationSpeed * App->deltaTime;
+		yaw += rotationSpeed * App->renderer->deltaTime;
 		break;
 	}
 

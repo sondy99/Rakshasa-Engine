@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+#include <vector>
+
 #include "ModuleModelLoader.h"
 
 struct SDL_Texture;
@@ -27,8 +29,26 @@ public:
 		const ModuleModelLoader::Material& material, 
 		unsigned program, const math::float4x4& model,
 		const math::float4x4& view, const math::float4x4& proj);
+	void DrawProperties();
 public:
 	void* context = nullptr;
+
+	float deltaTime = 0.0f;
+private:
+	void FpsCount();
+	void manageFpsAndMsList();
+private:
+	float lastTickTime = 0.0f;
+	float auxTimer = 0.0f;
+	int frameCounter = 0;
+	float fps = 0;
+	unsigned ticksNow = 0;
+	
+	float minFps = 100.0f;
+	float maxMs = 0.0f;
+
+	std::vector<float> fpsList;
+	std::vector<float> msList;
 };
 
 #endif __MODULERENDER_H__

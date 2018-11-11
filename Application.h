@@ -1,7 +1,7 @@
 #ifndef __APLICATION_H_
 #define __APLICATION_H_
 
-#include<list>
+#include <list>
 #include "Globals.h"
 #include "Module.h"
 
@@ -26,7 +26,6 @@ public:
 	bool Init();
 	update_status Update();
 	bool CleanUp();
-	void Tick();
 public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
@@ -38,13 +37,7 @@ public:
 	ModuleModelLoader* modelLoader = nullptr;
 	ModuleEditor* editor = nullptr;
 
-	//ModuleRenderTriangle* renderTrieangle = nullptr;
-
-	float lastTickTime = 0.0f;
-	float deltaTime = 0.0f;
-	float auxTimer = 0.0f;
-	int frameCounter = 0;
-	int FPS = 0;
+	//ModuleRenderTriangle* renderTrieangle = nullptr; 
 private:
 	std::list<Module*> modules;
 };

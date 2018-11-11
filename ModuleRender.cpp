@@ -13,6 +13,8 @@
 
 ModuleRender::ModuleRender()
 {
+	fpsList.resize(100, 0.0f); 
+	msList.resize(100, 0.0f);
 }
 
 // Destructor
@@ -58,6 +60,8 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
+	manageFpsAndMsList();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ImGui_ImplOpenGL3_NewFrame();
@@ -102,6 +106,8 @@ update_status ModuleRender::PostUpdate()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	SDL_GL_SwapWindow(App->window->window);
+
+	FpsCount();
 
 	return UPDATE_CONTINUE;
 }
@@ -148,4 +154,58 @@ void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh, const ModuleM
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
+}
+
+void ModuleRender::DrawProperties()
+{
+	ImGui::Begin("Render properties");
+	char minFpsMessage[35];
+	sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
+	ImGui::Text(minFpsMessage);
+
+	char message[20];
+	sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
+	ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
+	
+	ImGui::Separator();
+
+	char minMsMessage[40];
+	sprintf_s(minMsMessage, 40, "Slowest millisecod per second %0.1f", maxMs);
+	ImGui::Text(minMsMessage);
+
+	sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
+	ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+
+	ImGui::End();
+}
+
+void ModuleRender::FpsCount()
+{
+	++frameCounter;
+	ticksNow = SDL_GetTicks();
+	deltaTime = (float)(ticksNow - lastTickTime) * 0.001;
+	lastTickTime = ticksNow;
+	auxTimer += deltaTime;
+	if (auxTimer >= 1.0f) {
+		fps = frameCounter;
+		auxTimer = 0;
+		frameCounter = 0;
+	}
+}
+
+void ModuleRender::manageFpsAndMsList()
+{
+	fpsList.erase(fpsList.begin());
+	fpsList.push_back(fps);
+
+	float ms = deltaTime * 1000;
+	msList.erase(msList.begin());
+	msList.push_back(ms);
+	
+	if (ticksNow > 5000)
+	{
+		minFps = (minFps > fps) ? fps : minFps;
+		maxMs = (maxMs < ms) ? ms : maxMs;
+	}
+
 }
