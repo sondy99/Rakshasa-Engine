@@ -60,22 +60,22 @@ void ModuleCamera::MoveCamera(CameraMovement cameraSide) {
 
 	switch (cameraSide) {
 	case UP:
-		cameraPos += cameraUp.Normalized() * normCameraSpeed;
+		cameraPosition += cameraUp.Normalized() * normCameraSpeed;
 		break;
 	case DOWN:
-		cameraPos -= cameraUp.Normalized() * normCameraSpeed;
+		cameraPosition -= cameraUp.Normalized() * normCameraSpeed;
 		break;
 	case LEFT:
-		cameraPos += cameraUp.Cross(cameraFront).Normalized() * normCameraSpeed;
+		cameraPosition += cameraUp.Cross(cameraFront).Normalized() * normCameraSpeed;
 		break;
 	case RIGHT:
-		cameraPos -= cameraUp.Cross(cameraFront).Normalized() * normCameraSpeed;
+		cameraPosition -= cameraUp.Cross(cameraFront).Normalized() * normCameraSpeed;
 		break;
 	case FORWARD:
-		cameraPos += cameraFront.Normalized() * normCameraSpeed;
+		cameraPosition += cameraFront.Normalized() * normCameraSpeed;
 		break;
 	case BACKWARDS:
-		cameraPos -= cameraFront.Normalized() * normCameraSpeed;
+		cameraPosition -= cameraFront.Normalized() * normCameraSpeed;
 		break;
 	}
 }
@@ -106,16 +106,17 @@ void ModuleCamera::RotateCamera(CameraMovement cameraSide) {
 	cameraFront = rotation.Normalized();
 }
 
-math::float4x4 ModuleCamera::LookAt(math::float3& cameraPos, math::float3& cameraFront, math::float3& cameraUp) {
+math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp) {
 	cameraFront.Normalize();
-	math::float3 s(cameraFront.Cross(cameraUp)); s.Normalize();
-	math::float3 u(s.Cross(cameraFront));
+	cameraSide = cameraFront.Cross(cameraUp); 
+	cameraSide.Normalize();
+	math::float3 auxCameraUp = cameraSide.Cross(cameraFront);
 
 	math::float4x4 matrix;
-	matrix[0][0] = s.x; matrix[0][1] = s.y; matrix[0][2] = s.z;
-	matrix[1][0] = u.x; matrix[1][1] = u.y; matrix[1][2] = u.z;
+	matrix[0][0] = cameraSide.x; matrix[0][1] = cameraSide.y; matrix[0][2] = cameraSide.z;
+	matrix[1][0] = auxCameraUp.x; matrix[1][1] = auxCameraUp.y; matrix[1][2] = auxCameraUp.z;
 	matrix[2][0] = -cameraFront.x; matrix[2][1] = -cameraFront.y; matrix[2][2] = -cameraFront.z;
-	matrix[0][3] = -s.Dot(cameraPos); matrix[1][3] = -u.Dot(cameraPos); matrix[2][3] = cameraFront.Dot(cameraPos);
+	matrix[0][3] = -cameraSide.Dot(cameraPosition); matrix[1][3] = -auxCameraUp.Dot(cameraPosition); matrix[2][3] = cameraFront.Dot(cameraPosition);
 	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
 
 	return matrix;
@@ -199,7 +200,7 @@ void ModuleCamera::Zooming(bool positive) {
 }
 
 void ModuleCamera::FocusObject(math::float3& objectCenterPos) {
-	cameraFront = objectCenterPos - cameraPos;
+	cameraFront = objectCenterPos - cameraPosition;
 	pitch = math::RadToDeg(SDL_tanf(cameraFront.y / cameraFront.x));
 	yaw = math::RadToDeg(SDL_tanf(cameraFront.z / cameraFront.x)) - 90;
 }
@@ -251,4 +252,33 @@ void ModuleCamera::CameraMovementKeyboard() {
 	else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
 		RotateCamera(RIGHT);
 	}
+}
+
+void ModuleCamera::DrawProperties()
+{
+	ImGui::Begin("Camera");
+	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+	if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen)) {
+		float camPos[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
+		ImGui::InputFloat3("Camera position", camPos, "%.3f");
+		ImGui::Separator();
+		float vectorFront[3] = { cameraFront.x, cameraFront.y, cameraFront.z };
+		ImGui::InputFloat3("Vector front", vectorFront, "%.3f");
+		float vectorSide[3] = { cameraSide.x, cameraSide.y, cameraSide.z };
+		ImGui::InputFloat3("Vector side", vectorSide, "%.3f");
+		float vectorUp[3] = { cameraUp.x, cameraUp.y, cameraUp.z };
+		ImGui::InputFloat3("Vector up", vectorUp, "%.3f");
+		ImGui::Separator();
+		ImGui::InputFloat("Pitch", &pitch, 0, 0, 0);
+		ImGui::InputFloat("Yaw", &yaw, 0, 0, 0);
+	}
+	if (ImGui::CollapsingHeader("Camera configurations", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::SliderFloat("Mov Speed", &cameraSpeed, 0.0f, 100.0f);
+		ImGui::SliderFloat("Rot Speed", &rotationSpeed, 0.0f, 100.0f);
+		ImGui::SliderFloat("Mouse Sens", &mouseSensitivity, 0.0f, 1.0f);
+		ImGui::Separator();
+		ImGui::SliderFloat("Near Plane", &frustum.nearPlaneDistance, 0.1f, frustum.farPlaneDistance);
+		ImGui::SliderFloat("Far Plane", &frustum.farPlaneDistance, 0.1f, 500.0f);
+	}
+	ImGui::End();
 }

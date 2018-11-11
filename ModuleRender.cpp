@@ -6,7 +6,6 @@
 #include "ModuleCamera.h"
 #include "ModuleShader.h"
 #include "ModuleEnvironment.h"
-#include "ModuleEditor.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
@@ -75,7 +74,7 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 	math::float4x4 projection = App->camera->ProjectionMatrix();
-	math::float4x4 view = App->camera->LookAt(App->camera->cameraPos, App->camera->cameraFront, App->camera->cameraUp);
+	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
 	math::float4x4 model = math::float4x4::identity;
 
 	glUseProgram(App->shader->colorProgram);

@@ -71,7 +71,7 @@ update_status ModuleRenderTriangle::Update()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 	math::float4x4 projection = App->camera->ProjectionMatrix();
-	math::float4x4 view = App->camera->LookAt(App->camera->cameraPos, App->camera->cameraFront, App->camera->cameraUp);
+	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
 	math::float4x4 model = math::float4x4::identity;
 
 	glUseProgram(App->shader->program);

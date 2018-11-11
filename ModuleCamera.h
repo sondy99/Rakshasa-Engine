@@ -30,8 +30,15 @@ public:
 	bool CleanUp() override;
 
 	math::float4x4 ProjectionMatrix();
-	math::float4x4 LookAt(math::float3& cameraPos, math::float3& cameraFront, math::float3& cameraUp);
+	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void InitFrustum();
+
+	void DrawProperties();
+public:
+	math::float3 cameraPosition = math::float3(0.0f, 3.0f, 10.0f);
+	math::float3 cameraFront = math::float3(0.0f, 0.0f, -1.0f);
+	math::float3 cameraSide = math::float3(1.0f, 1.0f, 1.0f);
+	math::float3 cameraUp = math::float3(0.0f, 1.0f, 0.0f);
 private:
 	void CameraMovementKeyboard();
 	void CameraMovementMouse();
@@ -44,10 +51,6 @@ private:
 	void SetVerticalFOV(float& fovYDegrees);
 	void Zooming(bool positive);
 	void FocusObject(math::float3& objectCenterPos);
-public:
-	math::float3 cameraPos = math::float3(0.0f, 3.0f, 10.0f);
-	math::float3 cameraFront = math::float3(0.0f, 0.0f, -1.0f);
-	math::float3 cameraUp = math::float3(0.0f, 1.0f, 0.0f);
 private:
 	Frustum frustum;
 	float cameraSpeed = 15.0f;
@@ -71,6 +74,7 @@ private:
 	int lastY = 0;
 
 	math::float3 sceneCenter = math::float3(0.0f, 0.0f, 0.0f);
+
 };
 
 #endif __MODULECAMERA_H_
