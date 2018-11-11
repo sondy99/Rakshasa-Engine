@@ -7,6 +7,7 @@
 #include "ModuleTextures.h"
 #include "ModuleEnvironment.h"
 #include "ModuleModelLoader.h"
+#include "ModuleEditor.h"
 
 //#include "ModuleRenderTriangle.h"
 
@@ -22,6 +23,7 @@ Application::Application()
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(environment = new ModuleEnvironment());
 	modules.push_back(modelLoader = new ModuleModelLoader());
+	modules.push_back(editor = new ModuleEditor());
 	
 	//modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }

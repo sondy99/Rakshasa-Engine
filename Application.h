@@ -13,6 +13,7 @@ class ModuleShader;
 class ModuleTextures;
 class ModuleEnvironment;
 class ModuleModelLoader;
+class ModuleEditor;
 
 //class ModuleRenderTriangle;
 
@@ -35,6 +36,7 @@ public:
 	ModuleTextures* textures = nullptr;
 	ModuleEnvironment* environment = nullptr;
 	ModuleModelLoader* modelLoader = nullptr;
+	ModuleEditor* editor = nullptr;
 
 	//ModuleRenderTriangle* renderTrieangle = nullptr;
 

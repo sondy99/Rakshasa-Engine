@@ -6,6 +6,7 @@
 #include "ModuleCamera.h"
 #include "ModuleShader.h"
 #include "ModuleEnvironment.h"
+#include "ModuleEditor.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
@@ -59,6 +60,10 @@ update_status ModuleRender::PreUpdate()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -93,6 +98,9 @@ update_status ModuleRender::Update()
 
 update_status ModuleRender::PostUpdate()
 {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
@@ -102,9 +110,7 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
-
-	//Destroy window
-
+	
 	return true;
 }
 
@@ -133,6 +139,7 @@ void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh, const ModuleM
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.verticesNumber));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	
 	glDrawElements(GL_TRIANGLES, mesh.indicesNumber, GL_UNSIGNED_INT, nullptr);
 
 	glDisableVertexAttribArray(0);
@@ -141,5 +148,4 @@ void ModuleRender::RenderMesh(const ModuleModelLoader::Mesh& mesh, const ModuleM
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
-
 }

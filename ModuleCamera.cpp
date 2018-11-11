@@ -132,13 +132,13 @@ void ModuleCamera::InitFrustum() {
 void ModuleCamera::SetHorizontalFOV(float& fovXDegrees) {
 	fovX = fovXDegrees;
 	frustum.horizontalFov = math::DegToRad(fovX);
-	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5) * ((float)screenHeight / (float)screenWidth));
+	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5) * ((float)App->window->height/(float)App->window->width));
 }
 
 void ModuleCamera::SetVerticalFOV(float& fovYDegrees) {
 	fovY = fovYDegrees;
 	frustum.verticalFov = math::DegToRad(fovY);
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
+	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)App->window->width / (float)App->window->height));
 }
 
 void ModuleCamera::SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight) {
