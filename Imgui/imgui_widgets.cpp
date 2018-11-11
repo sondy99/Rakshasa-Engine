@@ -3014,8 +3014,8 @@ ImGuiInputTextCallbackData::ImGuiInputTextCallbackData()
 void ImGuiInputTextCallbackData::DeleteChars(int pos, int bytes_count)
 {
     IM_ASSERT(pos + bytes_count <= BufTextLen);
-    char* dst = Buf + pos;
-    const char* src = Buf + pos + bytes_count;
+    char* dst = textBuffer + pos;
+    const char* src = textBuffer + pos + bytes_count;
     while (char c = *src++)
         *dst++ = c;
     *dst = '\0';
@@ -3042,17 +3042,17 @@ void ImGuiInputTextCallbackData::InsertChars(int pos, const char* new_text, cons
         ImGuiContext& g = *GImGui;
         ImGuiInputTextState* edit_state = &g.InputTextState;
         IM_ASSERT(edit_state->ID != 0 && g.ActiveId == edit_state->ID);
-        IM_ASSERT(Buf == edit_state->TempBuffer.Data);
+        IM_ASSERT(textBuffer == edit_state->TempBuffer.Data);
         int new_buf_size = BufTextLen + ImClamp(new_text_len * 4, 32, ImMax(256, new_text_len)) + 1;
         edit_state->TempBuffer.reserve(new_buf_size + 1);
-        Buf = edit_state->TempBuffer.Data;
+        textBuffer = edit_state->TempBuffer.Data;
         BufSize = edit_state->BufCapacityA = new_buf_size;
     }
 
     if (BufTextLen != pos)
-        memmove(Buf + pos + new_text_len, Buf + pos, (size_t)(BufTextLen - pos));
-    memcpy(Buf + pos, new_text, (size_t)new_text_len * sizeof(char));
-    Buf[BufTextLen + new_text_len] = '\0';
+        memmove(textBuffer + pos + new_text_len, textBuffer + pos, (size_t)(BufTextLen - pos));
+    memcpy(textBuffer + pos, new_text, (size_t)new_text_len * sizeof(char));
+    textBuffer[BufTextLen + new_text_len] = '\0';
 
     if (CursorPos >= pos)
         CursorPos += new_text_len;
@@ -3521,7 +3521,7 @@ bool ImGui::InputTextEx(const char* label, char* buf, int buf_size, const ImVec2
                     callback_data.UserData = callback_user_data;
 
                     callback_data.EventKey = event_key;
-                    callback_data.Buf = edit_state.TempBuffer.Data;
+                    callback_data.textBuffer = edit_state.TempBuffer.Data;
                     callback_data.BufTextLen = edit_state.CurLenA;
                     callback_data.BufSize = edit_state.BufCapacityA;
                     callback_data.BufDirty = false;
@@ -3536,18 +3536,18 @@ bool ImGui::InputTextEx(const char* label, char* buf, int buf_size, const ImVec2
                     callback(&callback_data);
 
                     // Read back what user may have modified
-                    IM_ASSERT(callback_data.Buf == edit_state.TempBuffer.Data);  // Invalid to modify those fields
+                    IM_ASSERT(callback_data.textBuffer == edit_state.TempBuffer.Data);  // Invalid to modify those fields
                     IM_ASSERT(callback_data.BufSize == edit_state.BufCapacityA);
                     IM_ASSERT(callback_data.Flags == flags);
-                    if (callback_data.CursorPos != utf8_cursor_pos)            { edit_state.StbState.cursor = ImTextCountCharsFromUtf8(callback_data.Buf, callback_data.Buf + callback_data.CursorPos); edit_state.CursorFollow = true; }
-                    if (callback_data.SelectionStart != utf8_selection_start)  { edit_state.StbState.select_start = ImTextCountCharsFromUtf8(callback_data.Buf, callback_data.Buf + callback_data.SelectionStart); }
-                    if (callback_data.SelectionEnd != utf8_selection_end)      { edit_state.StbState.select_end = ImTextCountCharsFromUtf8(callback_data.Buf, callback_data.Buf + callback_data.SelectionEnd); }
+                    if (callback_data.CursorPos != utf8_cursor_pos)            { edit_state.StbState.cursor = ImTextCountCharsFromUtf8(callback_data.textBuffer, callback_data.textBuffer + callback_data.CursorPos); edit_state.CursorFollow = true; }
+                    if (callback_data.SelectionStart != utf8_selection_start)  { edit_state.StbState.select_start = ImTextCountCharsFromUtf8(callback_data.textBuffer, callback_data.textBuffer + callback_data.SelectionStart); }
+                    if (callback_data.SelectionEnd != utf8_selection_end)      { edit_state.StbState.select_end = ImTextCountCharsFromUtf8(callback_data.textBuffer, callback_data.textBuffer + callback_data.SelectionEnd); }
                     if (callback_data.BufDirty)
                     {
-                        IM_ASSERT(callback_data.BufTextLen == (int)strlen(callback_data.Buf)); // You need to maintain BufTextLen if you change the text!
+                        IM_ASSERT(callback_data.BufTextLen == (int)strlen(callback_data.textBuffer)); // You need to maintain BufTextLen if you change the text!
                         if (callback_data.BufTextLen > backup_current_text_length && is_resizable)
                             edit_state.TextW.resize(edit_state.TextW.Size + (callback_data.BufTextLen - backup_current_text_length));
-                        edit_state.CurLenW = ImTextStrFromUtf8(edit_state.TextW.Data, edit_state.TextW.Size, callback_data.Buf, NULL);
+                        edit_state.CurLenW = ImTextStrFromUtf8(edit_state.TextW.Data, edit_state.TextW.Size, callback_data.textBuffer, NULL);
                         edit_state.CurLenA = callback_data.BufTextLen;  // Assume correct length and valid UTF-8 from user, saves us an extra strlen()
                         edit_state.CursorAnimReset();
                     }
@@ -3571,12 +3571,12 @@ bool ImGui::InputTextEx(const char* label, char* buf, int buf_size, const ImVec2
                 ImGuiInputTextCallbackData callback_data;
                 callback_data.EventFlag = ImGuiInputTextFlags_CallbackResize;
                 callback_data.Flags = flags;
-                callback_data.Buf = buf;
+                callback_data.textBuffer = buf;
                 callback_data.BufTextLen = apply_new_text_length;
                 callback_data.BufSize = ImMax(buf_size, apply_new_text_length + 1);
                 callback_data.UserData = callback_user_data;
                 callback(&callback_data);
-                buf = callback_data.Buf;
+                buf = callback_data.textBuffer;
                 buf_size = callback_data.BufSize;
                 apply_new_text_length = ImMin(callback_data.BufTextLen, buf_size - 1);
                 IM_ASSERT(apply_new_text_length <= buf_size);

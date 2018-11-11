@@ -20,6 +20,8 @@ bool ModuleEditor::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
+	LogIntoConsole(TITLE);
+
 	return true;
 }
 bool showAboutMenu;
@@ -39,7 +41,7 @@ update_status ModuleEditor::PreUpdate()
 			ImGui::Checkbox("Camera properties", &toggleCameraProperties);
 			ImGui::Checkbox("Model properties", &toggleModelProperties);
 			ImGui::Checkbox("Console", &toggleConsole);
-			ImGui::Checkbox("Window", &toggleWindow);
+			//ImGui::Checkbox("Window", &toggleWindow);
 			ImGui::EndMenu();
 		}
 
@@ -69,6 +71,8 @@ update_status ModuleEditor::PostUpdate()
 
 bool ModuleEditor::CleanUp()
 {
+	exit = true;
+
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -80,7 +84,7 @@ void ModuleEditor::WindowManager()
 {
 	if (toggleAboutMenu)
 	{
-		ShowAboutMenu();
+		DrawAboutMenu();
 	}
 	if(toggleRenderProperties)
 	{
@@ -94,9 +98,13 @@ void ModuleEditor::WindowManager()
 	{
 		App->modelLoader->DrawProperties();
 	}
+	if (toggleConsole)
+	{
+		DrawConsole();
+	}
 }
 
-void ModuleEditor::ShowAboutMenu() 
+void ModuleEditor::DrawAboutMenu() 
 {
 	ImGui::Begin("About");
 
@@ -128,5 +136,29 @@ void ModuleEditor::ShowAboutMenu()
 		ShellExecute(0, 0, "http://openil.sourceforge.net/", 0, 0, SW_SHOW); 
 	}
 
+	ImGui::End();
+}
+
+void ModuleEditor::LogIntoConsole(const char* message)
+{
+	if (!exit)
+	{
+		textBuffer.appendf(message);
+		scrollDown = true;
+	}
+}
+
+void ModuleEditor::DrawConsole()
+{
+	ImGui::Begin("Console");
+	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+	ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+	ImGui::TextUnformatted(textBuffer.begin());
+
+	if (scrollDown)
+		ImGui::SetScrollHereY(1.0f);
+
+	scrollDown = false;
+	ImGui::EndChild();
 	ImGui::End();
 }

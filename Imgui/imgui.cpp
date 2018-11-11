@@ -2027,16 +2027,16 @@ void ImGuiTextBuffer::appendfv(const char* fmt, va_list args)
     }
 
     // Add zero-terminator the first time
-    const int write_off = (Buf.Size != 0) ? Buf.Size : 1;
+    const int write_off = (textBuffer.Size != 0) ? textBuffer.Size : 1;
     const int needed_sz = write_off + len;
-    if (write_off + len >= Buf.Capacity)
+    if (write_off + len >= textBuffer.Capacity)
     {
-        int double_capacity = Buf.Capacity * 2;
-        Buf.reserve(needed_sz > double_capacity ? needed_sz : double_capacity);
+        int double_capacity = textBuffer.Capacity * 2;
+        textBuffer.reserve(needed_sz > double_capacity ? needed_sz : double_capacity);
     }
 
-    Buf.resize(needed_sz);
-    ImFormatStringV(&Buf[write_off - 1], (size_t)len + 1, fmt, args_copy);
+    textBuffer.resize(needed_sz);
+    ImFormatStringV(&textBuffer[write_off - 1], (size_t)len + 1, fmt, args_copy);
     va_end(args_copy);
 }
 
@@ -12785,8 +12785,8 @@ const char* ImGui::SaveIniSettingsToMemory(size_t* out_size)
 {
     ImGuiContext& g = *GImGui;
     g.SettingsDirtyTimer = 0.0f;
-    g.SettingsIniData.Buf.resize(0);
-    g.SettingsIniData.Buf.push_back(0);
+    g.SettingsIniData.textBuffer.resize(0);
+    g.SettingsIniData.textBuffer.push_back(0);
     for (int handler_n = 0; handler_n < g.SettingsHandlers.Size; handler_n++)
     {
         ImGuiSettingsHandler* handler = &g.SettingsHandlers[handler_n];

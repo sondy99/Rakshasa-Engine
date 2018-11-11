@@ -14,16 +14,22 @@ public:
 	update_status Update() override;
 	update_status PostUpdate() override;
 	bool CleanUp() override;
+
+	void LogIntoConsole(const char* message);
 private:
 	void WindowManager();
-	void ShowAboutMenu();
+	void DrawAboutMenu();
+	void DrawConsole();
 private:
 	bool toggleAboutMenu = false;
 	bool toggleModelProperties = false;
 	bool toggleRenderProperties = false;
 	bool toggleConsole = false;
 	bool toggleWindow = false;
-	bool toggleCameraProperties = false;
+	bool toggleCameraProperties = false;	
+	ImGuiTextBuffer textBuffer;     
+	bool scrollDown;
+	bool exit = false;
 };
 
 #endif __ModuleEditor_h__

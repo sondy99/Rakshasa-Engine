@@ -2,9 +2,17 @@
 #define __LOG_H_
 
 #include "Globals.h"
+#include "Application.h"
+#include "ModuleEditor.h"
 
 void log(const char file[], int line, const char* format, ...)
 {
+	if (App != nullptr && App->editor != nullptr)
+	{
+		App->editor->LogIntoConsole(format);
+		App->editor->LogIntoConsole("\n");
+	}
+
 	static char tmp_string[4096];
 	static char tmp_string2[4096];
 	static va_list  ap;

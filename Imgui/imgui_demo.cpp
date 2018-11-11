@@ -2941,7 +2941,7 @@ struct ExampleAppConsole
 {
     char                  InputBuf[256];
     ImVector<char*>       Items;
-    bool                  ScrollToBottom;
+    bool                  scrollDown;
     ImVector<char*>       History;
     int                   HistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
     ImVector<const char*> Commands;
@@ -2975,7 +2975,7 @@ struct ExampleAppConsole
         for (int i = 0; i < Items.Size; i++)
             free(Items[i]);
         Items.clear();
-        ScrollToBottom = true;
+        scrollDown = true;
     }
 
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
@@ -2988,7 +2988,7 @@ struct ExampleAppConsole
         buf[IM_ARRAYSIZE(buf)-1] = 0;
         va_end(args);
         Items.push_back(Strdup(buf));
-        ScrollToBottom = true;
+        scrollDown = true;
     }
 
     void    Draw(const char* title, bool* p_open)
@@ -3018,7 +3018,7 @@ struct ExampleAppConsole
         if (ImGui::SmallButton("Add Dummy Error")) { AddLog("[error] something went wrong"); } ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) { ClearLog(); } ImGui::SameLine();
         bool copy_to_clipboard = ImGui::SmallButton("Copy"); ImGui::SameLine();
-        if (ImGui::SmallButton("Scroll to bottom")) ScrollToBottom = true;
+        if (ImGui::SmallButton("Scroll to bottom")) scrollDown = true;
         //static float t = 0.0f; if (ImGui::GetTime() - t > 0.02f) { t = ImGui::GetTime(); AddLog("Spam %f", t); }
 
         ImGui::Separator();
@@ -3066,9 +3066,9 @@ struct ExampleAppConsole
         }
         if (copy_to_clipboard)
             ImGui::LogFinish();
-        if (ScrollToBottom)
+        if (scrollDown)
             ImGui::SetScrollHereY(1.0f);
-        ScrollToBottom = false;
+        scrollDown = false;
         ImGui::PopStyleVar();
         ImGui::EndChild();
         ImGui::Separator();
@@ -3147,9 +3147,9 @@ struct ExampleAppConsole
                 // Example of TEXT COMPLETION
 
                 // Locate beginning of current word
-                const char* word_end = data->Buf + data->CursorPos;
+                const char* word_end = data->textBuffer + data->CursorPos;
                 const char* word_start = word_end;
-                while (word_start > data->Buf)
+                while (word_start > data->textBuffer)
                 {
                     const char c = word_start[-1];
                     if (c == ' ' || c == '\t' || c == ',' || c == ';')
@@ -3171,7 +3171,7 @@ struct ExampleAppConsole
                 else if (candidates.Size == 1)
                 {
                     // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing
-                    data->DeleteChars((int)(word_start-data->Buf), (int)(word_end-word_start));
+                    data->DeleteChars((int)(word_start-data->textBuffer), (int)(word_end-word_start));
                     data->InsertChars(data->CursorPos, candidates[0]);
                     data->InsertChars(data->CursorPos, " ");
                 }
@@ -3195,7 +3195,7 @@ struct ExampleAppConsole
 
                     if (match_len > 0)
                     {
-                        data->DeleteChars((int)(word_start - data->Buf), (int)(word_end-word_start));
+                        data->DeleteChars((int)(word_start - data->textBuffer), (int)(word_end-word_start));
                         data->InsertChars(data->CursorPos, candidates[0], candidates[0] + match_len);
                     }
 
@@ -3254,24 +3254,24 @@ static void ShowExampleAppConsole(bool* p_open)
 //  my_log.Draw("title");
 struct ExampleAppLog
 {
-    ImGuiTextBuffer     Buf;
+    ImGuiTextBuffer     textBuffer;
     ImGuiTextFilter     Filter;
     ImVector<int>       LineOffsets;        // Index to lines offset
-    bool                ScrollToBottom;
+    bool                scrollDown;
 
-    void    Clear()     { Buf.clear(); LineOffsets.clear(); }
+    void    Clear()     { textBuffer.clear(); LineOffsets.clear(); }
 
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
-        int old_size = Buf.size();
+        int old_size = textBuffer.size();
         va_list args;
         va_start(args, fmt);
-        Buf.appendfv(fmt, args);
+        textBuffer.appendfv(fmt, args);
         va_end(args);
-        for (int new_size = Buf.size(); old_size < new_size; old_size++)
-            if (Buf[old_size] == '\n')
+        for (int new_size = textBuffer.size(); old_size < new_size; old_size++)
+            if (textBuffer[old_size] == '\n')
                 LineOffsets.push_back(old_size);
-        ScrollToBottom = true;
+        scrollDown = true;
     }
 
     void    Draw(const char* title, bool* p_open = NULL)
@@ -3293,7 +3293,7 @@ struct ExampleAppLog
 
         if (Filter.IsActive())
         {
-            const char* buf_begin = Buf.begin();
+            const char* buf_begin = textBuffer.begin();
             const char* line = buf_begin;
             for (int line_no = 0; line != NULL; line_no++)
             {
@@ -3305,12 +3305,12 @@ struct ExampleAppLog
         }
         else
         {
-            ImGui::TextUnformatted(Buf.begin());
+            ImGui::TextUnformatted(textBuffer.begin());
         }
 
-        if (ScrollToBottom)
+        if (scrollDown)
             ImGui::SetScrollHereY(1.0f);
-        ScrollToBottom = false;
+        scrollDown = false;
         ImGui::EndChild();
         ImGui::End();
     }
