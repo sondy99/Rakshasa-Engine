@@ -114,7 +114,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Master\Rakshasa Engine\Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <SupportJustMyCode>true</SupportJustMyCode>
     </ClCompile>

@@ -16,7 +16,7 @@ ModuleEnvironment::~ModuleEnvironment()
 
 bool ModuleEnvironment::Init()
 {
-	App->shader->LoadShaders(App->shader->colorProgram, "../colorProgram.vs", "../colorProgram.fs");
+	App->shader->LoadShaders(App->shader->colorProgram, "colorProgram.vs", "colorProgram.fs");
 
 	return true;
 }

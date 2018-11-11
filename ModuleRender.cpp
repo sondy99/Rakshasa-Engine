@@ -52,7 +52,7 @@ bool ModuleRender::Init()
     SDL_GetWindowSize(App->window->window, &width, &height);
     glViewport(0, 0, width, height);
 
-	App->shader->LoadShaders(App->shader->program, "../default.vs", "../default.fs");
+	App->shader->LoadShaders(App->shader->program, "default.vs", "default.fs");
 
 	return true;
 }
