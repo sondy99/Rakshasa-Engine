@@ -20,11 +20,16 @@ bool ModuleCamera::Init()
 	return true;
 }
 
-// Called every draw update
 update_status ModuleCamera::PreUpdate()
 {
-	CameraMovementKeyboard();
-	CameraMovementMouse();
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT) {
+		SDL_ShowCursor(SDL_DISABLE);
+		CameraMovementKeyboard();
+		CameraMovementMouse();
+	}
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP) {
+		SDL_ShowCursor(SDL_ENABLE);
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
 		FocusObject(sceneCenter);
