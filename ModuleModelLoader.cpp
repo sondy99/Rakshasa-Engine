@@ -58,6 +58,8 @@ bool ModuleModelLoader::CleanUp()
 		}
 	}
 
+	meshes.clear();
+
 	for (unsigned i = 0; i < materials.size(); ++i)
 	{
 		if (materials[i].texture0 != 0)
@@ -65,6 +67,9 @@ bool ModuleModelLoader::CleanUp()
 			App->textures->Unload(materials[i].texture0);
 		}
 	}
+
+	materials.clear();
+
 	return true;
 }
 
@@ -138,7 +143,6 @@ void ModuleModelLoader::GenerateMaterials(const aiScene* scene)
 		}
 	}
 }
-
 
 void ModuleModelLoader::DrawProperties()
 {

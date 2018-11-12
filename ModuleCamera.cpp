@@ -148,9 +148,9 @@ void ModuleCamera::SetVerticalFOV(float& fovYDegrees) {
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)App->window->width / (float)App->window->height));
 }
 
-void ModuleCamera::SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight) {
-	screenWidth = newWidth;
-	screenHeight = newHeight;
+void ModuleCamera::SetScreenNewScreenSize(unsigned width, unsigned height) {
+	screenWidth = width;
+	screenHeight = height;
 	screenRatio = (float)screenWidth / (float)screenHeight;
 
 	SetHorizontalFOV(fovX);

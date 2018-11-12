@@ -32,6 +32,7 @@ public:
 	math::float4x4 ProjectionMatrix();
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	void InitFrustum();
+	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 
 	void DrawProperties();
 public:
@@ -44,7 +45,6 @@ private:
 	void CameraMovementMouse();
 	void MouseUpdate(const iPoint& mousePosition);
 
-	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 	void MoveCamera(CameraMovement cameraSide);
 	void RotateCamera(CameraMovement cameraSide);
 	void SetHorizontalFOV(float& fovXDegrees);

@@ -24,12 +24,14 @@ bool ModuleWindow::Init()
 	{
 		width = SCREEN_WIDTH;
 		height = SCREEN_HEIGHT;
-		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
+		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL 
+			| SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED;
 		
 		if(FULLSCREEN == true)
 		{
-			flags |= SDL_WINDOW_FULLSCREEN;
+			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
+		
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 
 		if(window == NULL)
@@ -38,7 +40,8 @@ bool ModuleWindow::Init()
 			ret = false;
 		}
 		else
-		{			
+		{
+			SDL_GetWindowSize(window, &width, &height);
 			screen_surface = SDL_GetWindowSurface(window);
 		}
 	}

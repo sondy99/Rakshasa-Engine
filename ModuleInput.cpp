@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleModelLoader.h"
+#include "ModuleCamera.h"
 #include "SDL.h"
 
 #define MAX_KEYS 300
@@ -89,6 +90,7 @@ update_status ModuleInput::PreUpdate()
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
 					App->window->WindowResized(event.window.data1, event.window.data2);
 					App->renderer->WindowResized(event.window.data1, event.window.data2);
+					App->camera->SetScreenNewScreenSize(event.window.data1, event.window.data2);
 					break;
 			}
 			break;
