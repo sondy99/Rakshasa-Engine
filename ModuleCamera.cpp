@@ -49,13 +49,13 @@ update_status ModuleCamera::PreUpdate()
 }
 
 // Called before quitting
-bool ModuleCamera::CleanUp() {
-
+bool ModuleCamera::CleanUp() 
+{
 	return true;
 }
 
-void ModuleCamera::MoveCamera(CameraMovement cameraSide) {
-
+void ModuleCamera::MoveCamera(CameraMovement cameraSide) 
+{
 	float normCameraSpeed = cameraSpeed * App->renderer->deltaTime;
 
 	switch (cameraSide) {
@@ -80,8 +80,8 @@ void ModuleCamera::MoveCamera(CameraMovement cameraSide) {
 	}
 }
 
-void ModuleCamera::RotateCamera(CameraMovement cameraSide) {
-
+void ModuleCamera::RotateCamera(CameraMovement cameraSide) 
+{
 	switch (cameraSide) {
 	case UP:
 		pitch += rotationSpeed * App->renderer->deltaTime;
@@ -106,7 +106,8 @@ void ModuleCamera::RotateCamera(CameraMovement cameraSide) {
 	cameraFront = rotation.Normalized();
 }
 
-math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp) {
+math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
+{
 	cameraFront.Normalize();
 	cameraSide = cameraFront.Cross(cameraUp); 
 	cameraSide.Normalize();
@@ -122,11 +123,13 @@ math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& 
 	return matrix;
 }
 
-math::float4x4 ModuleCamera::ProjectionMatrix() {
+math::float4x4 ModuleCamera::ProjectionMatrix() 
+{
 	return frustum.ProjectionMatrix();
 }
 
-void ModuleCamera::InitFrustum() {
+void ModuleCamera::InitFrustum() 
+{
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.pos = float3::zero;
 	frustum.front = -float3::unitZ;
@@ -136,19 +139,22 @@ void ModuleCamera::InitFrustum() {
 	SetVerticalFOV(fovY);
 }
 
-void ModuleCamera::SetHorizontalFOV(float& fovXDegrees) {
+void ModuleCamera::SetHorizontalFOV(float& fovXDegrees) 
+{
 	fovX = fovXDegrees;
 	frustum.horizontalFov = math::DegToRad(fovX);
 	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5) * ((float)App->window->height/(float)App->window->width));
 }
 
-void ModuleCamera::SetVerticalFOV(float& fovYDegrees) {
+void ModuleCamera::SetVerticalFOV(float& fovYDegrees) 
+{
 	fovY = fovYDegrees;
 	frustum.verticalFov = math::DegToRad(fovY);
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)App->window->width / (float)App->window->height));
 }
 
-void ModuleCamera::SetScreenNewScreenSize(unsigned width, unsigned height) {
+void ModuleCamera::SetScreenNewScreenSize(unsigned width, unsigned height) 
+{
 	screenWidth = width;
 	screenHeight = height;
 	screenRatio = (float)screenWidth / (float)screenHeight;
@@ -185,7 +191,8 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 	cameraFront = rotation.Normalized();
 }
 
-void ModuleCamera::Zooming(bool positive) {
+void ModuleCamera::Zooming(bool positive) 
+{
 	if (positive)
 		fovX += 10.0;
 	else
@@ -196,16 +203,17 @@ void ModuleCamera::Zooming(bool positive) {
 	zoomValue = 45.0f / fovX;
 
 	SetHorizontalFOV(fovX);
-	
 }
 
-void ModuleCamera::FocusObject(math::float3& objectCenterPos) {
+void ModuleCamera::FocusObject(math::float3& objectCenterPos) 
+{
 	cameraFront = objectCenterPos - cameraPosition;
 	pitch = math::RadToDeg(SDL_tanf(cameraFront.y / cameraFront.x));
 	yaw = math::RadToDeg(SDL_tanf(cameraFront.z / cameraFront.x)) - 90;
 }
 
-void ModuleCamera::CameraMovementMouse() {
+void ModuleCamera::CameraMovementMouse() 
+{
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 		SDL_ShowCursor(SDL_DISABLE);
 		MouseUpdate(App->input->GetMousePosition());
@@ -221,7 +229,8 @@ void ModuleCamera::CameraMovementMouse() {
 	}
 }
 
-void ModuleCamera::CameraMovementKeyboard() {
+void ModuleCamera::CameraMovementKeyboard() 
+{
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) {
 		MoveCamera(UP);
 	}
