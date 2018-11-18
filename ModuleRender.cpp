@@ -55,7 +55,7 @@ bool ModuleRender::Init()
 
 	App->shader->LoadShaders(App->shader->program, "default.vs", "default.fs");
 
-	InitFrameBuffer();
+	InitFrameBuffer(App->window->width, App->window->height);
 
 	return true;
 }
@@ -183,16 +183,16 @@ void ModuleRender::DrawProperties()
 	ImGui::End();
 }
 
-void ModuleRender::DrawCameraWindow()
+void ModuleRender::DrawSceneWindow()
 {
-	ImGui::SetNextWindowPos(ImVec2(30, 155));
-	ImGui::SetNextWindowSize(ImVec2(700, 500));
 	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
+	
 	ImVec2 size = ImGui::GetWindowSize();
-	ImGui::SetCursorPos({ -(700 - size.x) / 2,-(500 - size.y) / 2 });
-	ImGui::Image((ImTextureID)renderTexture,
-		{ (float)700, 500 }, { 0,1 }, { 1,0 });
+
+	App->camera->SetScreenNewScreenSize(size.x, size.y);
+
+	ImGui::Image((ImTextureID)App->renderer->renderTexture,
+		{ size.x, size.y }, { 0,1 }, { 1,0 });
 
 	ImGui::End();
 }
@@ -228,8 +228,11 @@ void ModuleRender::manageFpsAndMsList()
 
 }
 
-void ModuleRender::InitFrameBuffer()
+void ModuleRender::InitFrameBuffer(int width, int height)
 {
+	glDeleteFramebuffers(1, &frameBufferObject);
+	glDeleteRenderbuffers(1, &renderBufferObject);
+
 	glGenFramebuffers(1, &frameBufferObject);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
@@ -237,7 +240,7 @@ void ModuleRender::InitFrameBuffer()
 	glBindTexture(GL_TEXTURE_2D, renderTexture);
 
 	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_RGB, App->window->width, App->window->height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
+		GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
 	);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -251,7 +254,7 @@ void ModuleRender::InitFrameBuffer()
 
 	glGenRenderbuffers(1, &renderBufferObject);
 	glBindRenderbuffer(GL_RENDERBUFFER, renderBufferObject);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->width, App->window->height);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBufferObject);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);

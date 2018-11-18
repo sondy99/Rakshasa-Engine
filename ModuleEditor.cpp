@@ -107,7 +107,7 @@ void ModuleEditor::WindowManager()
 		DrawConsole();
 	}
 
-	App->renderer->DrawCameraWindow();
+	App->renderer->DrawSceneWindow();
 }
 
 void ModuleEditor::DrawAboutMenu() 

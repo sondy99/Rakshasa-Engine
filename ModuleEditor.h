@@ -25,11 +25,11 @@ private:
 	void CreateDockSpace() const;
 private:
 	bool toggleAboutMenu = false;
-	bool toggleModelProperties = false;
+	bool toggleModelProperties = true;
 	bool toggleRenderProperties = false;
-	bool toggleConsole = false;
+	bool toggleConsole = true;
 	bool toggleWindow = false;
-	bool toggleCameraProperties = false;	
+	bool toggleCameraProperties = true;	
 	ImGuiTextBuffer textBuffer;     
 	bool scrollDown;
 	bool exit = false;

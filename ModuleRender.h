@@ -30,14 +30,14 @@ public:
 		unsigned program, const math::float4x4& model,
 		const math::float4x4& view, const math::float4x4& proj);
 	void DrawProperties();
-	void DrawCameraWindow();
+	void DrawSceneWindow();
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;
 private:
 	void FpsCount();
 	void manageFpsAndMsList();
-	void InitFrameBuffer();
+	void InitFrameBuffer(int width, int height);
 private:
 	unsigned frameBufferObject = 0u;
 	unsigned renderBufferObject = 0u;
