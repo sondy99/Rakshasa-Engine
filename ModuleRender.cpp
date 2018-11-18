@@ -54,6 +54,41 @@ bool ModuleRender::Init()
 
 	App->shader->LoadShaders(App->shader->program, "default.vs", "default.fs");
 
+
+
+	
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	glGenTextures(1, &renderTexture);
+	glBindTexture(GL_TEXTURE_2D, renderTexture);
+
+	glTexImage2D(
+		GL_TEXTURE_2D, 0, GL_RGB, App->window->width, App->window->height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
+	);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glFramebufferTexture2D(
+		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0
+	);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->width, App->window->height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		LOG("Framebuffer ERROR");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 	return true;
 }
 
@@ -73,6 +108,9 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	math::float4x4 projection = App->camera->ProjectionMatrix();
 	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
 	math::float4x4 model = math::float4x4::identity;
@@ -95,7 +133,9 @@ update_status ModuleRender::Update()
 		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
 			App->modelLoader->transform, view, projection);
 	}
-	
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -103,7 +143,7 @@ update_status ModuleRender::PostUpdate()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+	
 	SDL_GL_SwapWindow(App->window->window);
 
 	FpsCount();
@@ -114,7 +154,8 @@ update_status ModuleRender::PostUpdate()
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
-	LOG("Destroying renderer");
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
 	
 	return true;
 }
@@ -174,6 +215,18 @@ void ModuleRender::DrawProperties()
 
 	sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
 	ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+
+	ImGui::End();
+}
+
+void ModuleRender::DrawCameraWindow()
+{
+	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+	ImVec2 size = ImGui::GetWindowSize();
+	ImGui::SetCursorPos({ -(App->window->width - size.x) / 2,-(App->window->height - size.y) / 2 });
+	ImGui::Image((ImTextureID)renderTexture,
+		{ (float)App->window->width, (float)App->window->height }, { 0,1 }, { 1,0 });
 
 	ImGui::End();
 }

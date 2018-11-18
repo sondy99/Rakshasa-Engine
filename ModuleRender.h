@@ -30,19 +30,24 @@ public:
 		unsigned program, const math::float4x4& model,
 		const math::float4x4& view, const math::float4x4& proj);
 	void DrawProperties();
+	void DrawCameraWindow();
 public:
 	void* context = nullptr;
-
 	float deltaTime = 0.0f;
 private:
 	void FpsCount();
 	void manageFpsAndMsList();
 private:
+	unsigned fbo = 0u;
+	unsigned rbo = 0u;
+	unsigned renderTexture = 0u;
+	bool sceneEnabled = true;
+
 	float lastTickTime = 0.0f;
 	float auxTimer = 0.0f;
 	int frameCounter = 0;
 	float fps = 0;
-	unsigned ticksNow = 0;
+	unsigned ticksNow = 0u;
 	
 	float minFps = 100.0f;
 	float maxMs = 0.0f;
