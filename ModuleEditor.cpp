@@ -17,14 +17,19 @@ ModuleEditor::~ModuleEditor()
 bool ModuleEditor::Init()
 {
 	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->context);
 	ImGui_ImplOpenGL3_Init("#version 130");
+
+	ImGui::StyleColorsDark();
 
 	LogIntoConsole(TITLE);
 
 	return true;
 }
-bool showAboutMenu;
+
 update_status ModuleEditor::PreUpdate()
 {
 	if (ImGui::BeginMainMenuBar()) {
@@ -65,7 +70,6 @@ update_status ModuleEditor::Update()
 
 update_status ModuleEditor::PostUpdate()
 {
-	
 	return update_status();
 }
 
@@ -148,6 +152,42 @@ void ModuleEditor::LogIntoConsole(const char* message)
 		textBuffer.appendf(message);
 		scrollDown = true;
 	}
+}
+
+void ModuleEditor::InitImGuiFrame()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+
+	CreateDockSpace();
+}
+
+void ModuleEditor::EndImGuiFrame()
+{
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleEditor::CreateDockSpace() const
+{
+	ImGui::SetNextWindowPos({ 0, 0 });
+	ImGui::SetNextWindowSize({ (float)App->window->width, (float)App->window->height });
+	ImGui::SetNextWindowBgAlpha(0.0f);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpace", NULL, window_flags);
+	ImGui::PopStyleVar(3);
+
+	ImGui::DockSpace(ImGui::GetID("MyDockSpace"), ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 }
 
 void ModuleEditor::DrawConsole()

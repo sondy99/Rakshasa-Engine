@@ -16,10 +16,13 @@ public:
 	bool CleanUp() override;
 
 	void LogIntoConsole(const char* message);
+	void InitImGuiFrame();
+	void EndImGuiFrame();
 private:
 	void WindowManager();
 	void DrawAboutMenu();
 	void DrawConsole();
+	void CreateDockSpace() const;
 private:
 	bool toggleAboutMenu = false;
 	bool toggleModelProperties = false;

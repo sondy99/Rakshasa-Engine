@@ -17740,8 +17740,8 @@ typedef GLboolean (GLAPIENTRY * PFNGLEXTISPROGRAMBINARYQCOMPROC) (GLuint program
 #define GL_FOVEATION_ENABLE_BIT_QCOM 0x1
 #define GL_FOVEATION_SCALED_BIN_METHOD_BIT_QCOM 0x2
 
-typedef void (GLAPIENTRY * PFNGLFRAMEBUFFERFOVEATIONCONFIGQCOMPROC) (GLuint fbo, GLuint numLayers, GLuint focalPointsPerLayer, GLuint requestedFeatures, GLuint* providedFeatures);
-typedef void (GLAPIENTRY * PFNGLFRAMEBUFFERFOVEATIONPARAMETERSQCOMPROC) (GLuint fbo, GLuint layer, GLuint focalPoint, GLfloat focalX, GLfloat focalY, GLfloat gainX, GLfloat gainY, GLfloat foveaArea);
+typedef void (GLAPIENTRY * PFNGLFRAMEBUFFERFOVEATIONCONFIGQCOMPROC) (GLuint frameBufferObject, GLuint numLayers, GLuint focalPointsPerLayer, GLuint requestedFeatures, GLuint* providedFeatures);
+typedef void (GLAPIENTRY * PFNGLFRAMEBUFFERFOVEATIONPARAMETERSQCOMPROC) (GLuint frameBufferObject, GLuint layer, GLuint focalPoint, GLfloat focalX, GLfloat focalY, GLfloat gainX, GLfloat gainY, GLfloat foveaArea);
 
 #define glFramebufferFoveationConfigQCOM GLEW_GET_FUN(__glewFramebufferFoveationConfigQCOM)
 #define glFramebufferFoveationParametersQCOM GLEW_GET_FUN(__glewFramebufferFoveationParametersQCOM)

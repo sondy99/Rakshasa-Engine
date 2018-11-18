@@ -37,9 +37,10 @@ public:
 private:
 	void FpsCount();
 	void manageFpsAndMsList();
+	void InitFrameBuffer();
 private:
-	unsigned fbo = 0u;
-	unsigned rbo = 0u;
+	unsigned frameBufferObject = 0u;
+	unsigned renderBufferObject = 0u;
 	unsigned renderTexture = 0u;
 	bool sceneEnabled = true;
 
