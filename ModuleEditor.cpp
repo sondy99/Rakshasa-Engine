@@ -34,7 +34,7 @@ update_status ModuleEditor::PreUpdate()
 {
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("Exit")) 
+			if (ImGui::MenuItem("Exit"))
 			{
 				return UPDATE_STOP;
 			}
@@ -42,28 +42,28 @@ update_status ModuleEditor::PreUpdate()
 		}
 
 		if (ImGui::BeginMenu("Windows")) {
-			ImGui::Checkbox("Render properties", &toggleRenderProperties);
-			ImGui::Checkbox("Camera properties", &toggleCameraProperties);
-			ImGui::Checkbox("Model properties", &toggleModelProperties);
+			ImGui::Checkbox("Render properties", &App->renderer->toggleRenderProperties);
+			ImGui::Checkbox("Camera properties", &App->camera->toggleCameraProperties);
+			ImGui::Checkbox("Model properties", &App->modelLoader->toggleModelProperties);
 			ImGui::Checkbox("Console", &toggleConsole);
 			//ImGui::Checkbox("Window", &toggleWindow);
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Help")) 
+		if (ImGui::BeginMenu("Help"))
 		{
 			ImGui::Checkbox("About", &toggleAboutMenu);
 			ImGui::EndMenu();
 		}
 	}
 	ImGui::EndMainMenuBar();
-		
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::Update()
 {
-	WindowManager();	
+	WindowManager();
 
 	return UPDATE_CONTINUE;
 }
@@ -84,74 +84,15 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-void ModuleEditor::WindowManager() 
+void ModuleEditor::WindowManager()
 {
-	if (toggleAboutMenu)
-	{
-		DrawAboutMenu();
-	}
-	if(toggleRenderProperties)
-	{
-		App->renderer->DrawProperties();
-	}
-	if (toggleCameraProperties)
-	{
-		App->camera->DrawProperties();
-	}
-	if (toggleModelProperties)
-	{
-		App->modelLoader->DrawProperties();
-	}
-	if (toggleConsole)
-	{
-		DrawConsole();
-	}
+	DrawAboutMenu();
+	App->renderer->DrawProperties();
+	App->camera->DrawProperties();
+	App->modelLoader->DrawProperties();
+	DrawConsole();
 
 	App->renderer->DrawSceneWindow();
-}
-
-void ModuleEditor::DrawAboutMenu() 
-{
-	ImGui::Begin("About");
-
-	if (ImGui::MenuItem(TITLE))
-	{
-		ShellExecute(0, 0, "https://github.com/sondy99/sondy99/Rakshasa-Engine", 0, 0, SW_SHOW);
-	}
-
-	ImGui::Text("Authors:");
-	ImGui::Text("Daniel Cardoza");
-	
-	ImGui::Separator();
-	
-	ImGui::Text("Libraries:");
-	if (ImGui::MenuItem("SDL v2.0.8")) 
-	{
-		ShellExecute(0, 0, "https://www.libsdl.org/index.php", 0, 0, SW_SHOW); 
-	}
-	if (ImGui::MenuItem("Glew v2.1.0")) 
-	{ 
-		ShellExecute(0, 0, "http://glew.sourceforge.net/", 0, 0, SW_SHOW); 
-	}
-	if (ImGui::MenuItem("ImGui v1.66")) 
-	{ 
-		ShellExecute(0, 0, "https://github.com/ocornut/imgui/tree/docking", 0, 0, SW_SHOW); 
-	}
-	if (ImGui::MenuItem("Devil v1.8.0")) 
-	{ 
-		ShellExecute(0, 0, "http://openil.sourceforge.net/", 0, 0, SW_SHOW); 
-	}
-
-	ImGui::End();
-}
-
-void ModuleEditor::LogIntoConsole(const char* message)
-{
-	if (!exit)
-	{
-		textBuffer.appendf(message);
-		scrollDown = true;
-	}
 }
 
 void ModuleEditor::InitImGuiFrame()
@@ -192,15 +133,65 @@ void ModuleEditor::CreateDockSpace() const
 
 void ModuleEditor::DrawConsole()
 {
-	ImGui::Begin("Console");
-	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-	ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
-	ImGui::TextUnformatted(textBuffer.begin());
+	if (toggleConsole)
+	{
+		ImGui::Begin("Console", &toggleConsole);
+		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+		ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+		ImGui::TextUnformatted(textBuffer.begin());
 
-	if (scrollDown)
-		ImGui::SetScrollHereY(1.0f);
+		if (scrollDown)
+			ImGui::SetScrollHereY(1.0f);
 
-	scrollDown = false;
-	ImGui::EndChild();
-	ImGui::End();
+		scrollDown = false;
+		ImGui::EndChild();
+		ImGui::End();
+	}
+}
+
+void ModuleEditor::DrawAboutMenu()
+{
+	if (toggleAboutMenu)
+	{
+		ImGui::Begin("About", &toggleAboutMenu);
+
+		if (ImGui::MenuItem(TITLE))
+		{
+			ShellExecute(0, 0, "https://github.com/sondy99/sondy99/Rakshasa-Engine", 0, 0, SW_SHOW);
+		}
+
+		ImGui::Text("Authors:");
+		ImGui::Text("Daniel Cardoza");
+
+		ImGui::Separator();
+
+		ImGui::Text("Libraries:");
+		if (ImGui::MenuItem("SDL v2.0.8"))
+		{
+			ShellExecute(0, 0, "https://www.libsdl.org/index.php", 0, 0, SW_SHOW);
+		}
+		if (ImGui::MenuItem("Glew v2.1.0"))
+		{
+			ShellExecute(0, 0, "http://glew.sourceforge.net/", 0, 0, SW_SHOW);
+		}
+		if (ImGui::MenuItem("ImGui v1.66"))
+		{
+			ShellExecute(0, 0, "https://github.com/ocornut/imgui/tree/docking", 0, 0, SW_SHOW);
+		}
+		if (ImGui::MenuItem("Devil v1.8.0"))
+		{
+			ShellExecute(0, 0, "http://openil.sourceforge.net/", 0, 0, SW_SHOW);
+		}
+
+		ImGui::End();
+	}
+}
+
+void ModuleEditor::LogIntoConsole(const char* message)
+{
+	if (!exit)
+	{
+		textBuffer.appendf(message);
+		scrollDown = true;
+	}
 }

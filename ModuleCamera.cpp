@@ -265,31 +265,34 @@ void ModuleCamera::CameraMovementKeyboard()
 
 void ModuleCamera::DrawProperties()
 {
-	ImGui::Begin("Camera");
-	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-	if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen)) 
+	if(toggleCameraProperties)
 	{
-		float camPos[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
-		ImGui::InputFloat3("Camera position", camPos, "%.3f");
-		ImGui::Separator();
-		float vectorFront[3] = { cameraFront.x, cameraFront.y, cameraFront.z };
-		ImGui::InputFloat3("Vector front", vectorFront, "%.3f");
-		float vectorSide[3] = { cameraSide.x, cameraSide.y, cameraSide.z };
-		ImGui::InputFloat3("Vector side", vectorSide, "%.3f");
-		float vectorUp[3] = { cameraUp.x, cameraUp.y, cameraUp.z };
-		ImGui::InputFloat3("Vector up", vectorUp, "%.3f");
-		ImGui::Separator();
-		ImGui::InputFloat("Pitch", &pitch, 0, 0, 0);
-		ImGui::InputFloat("Yaw", &yaw, 0, 0, 0);
+		ImGui::Begin("Camera", &toggleCameraProperties);
+		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+		if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			float camPos[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
+			ImGui::InputFloat3("Camera position", camPos, "%.3f");
+			ImGui::Separator();
+			float vectorFront[3] = { cameraFront.x, cameraFront.y, cameraFront.z };
+			ImGui::InputFloat3("Vector front", vectorFront, "%.3f");
+			float vectorSide[3] = { cameraSide.x, cameraSide.y, cameraSide.z };
+			ImGui::InputFloat3("Vector side", vectorSide, "%.3f");
+			float vectorUp[3] = { cameraUp.x, cameraUp.y, cameraUp.z };
+			ImGui::InputFloat3("Vector up", vectorUp, "%.3f");
+			ImGui::Separator();
+			ImGui::InputFloat("Pitch", &pitch, 0, 0, 0);
+			ImGui::InputFloat("Yaw", &yaw, 0, 0, 0);
+		}
+		if (ImGui::CollapsingHeader("Camera configurations", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::SliderFloat("Mov Speed", &cameraSpeed, 0.0f, 100.0f);
+			ImGui::SliderFloat("Rot Speed", &rotationSpeed, 0.0f, 100.0f);
+			ImGui::SliderFloat("Mouse Sens", &mouseSensitivity, 0.0f, 1.0f);
+			ImGui::Separator();
+			ImGui::SliderFloat("Near Plane", &frustum.nearPlaneDistance, 0.1f, frustum.farPlaneDistance);
+			ImGui::SliderFloat("Far Plane", &frustum.farPlaneDistance, 0.1f, 500.0f);
+		}
+		ImGui::End();
 	}
-	if (ImGui::CollapsingHeader("Camera configurations", ImGuiTreeNodeFlags_DefaultOpen)) 
-	{
-		ImGui::SliderFloat("Mov Speed", &cameraSpeed, 0.0f, 100.0f);
-		ImGui::SliderFloat("Rot Speed", &rotationSpeed, 0.0f, 100.0f);
-		ImGui::SliderFloat("Mouse Sens", &mouseSensitivity, 0.0f, 1.0f);
-		ImGui::Separator();
-		ImGui::SliderFloat("Near Plane", &frustum.nearPlaneDistance, 0.1f, frustum.farPlaneDistance);
-		ImGui::SliderFloat("Far Plane", &frustum.farPlaneDistance, 0.1f, 500.0f);
-	}
-	ImGui::End();
 }

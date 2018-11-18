@@ -146,16 +146,19 @@ void ModuleModelLoader::GenerateMaterials(const aiScene* scene)
 
 void ModuleModelLoader::DrawProperties()
 {
-	ImGui::Begin("Model");
-	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-	if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen)) 
+	if (toggleModelProperties)
 	{
-		for (auto &texture : materials)
+		ImGui::Begin("Model", &toggleModelProperties);
+		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+		if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::Text("Size:  Width: %d | Height: %d", texture.width, texture.height);
-			float size = ImGui::GetWindowWidth();
-			ImGui::Image((ImTextureID)texture.texture0, { size, size });
+			for (auto &texture : materials)
+			{
+				ImGui::Text("Size:  Width: %d | Height: %d", texture.width, texture.height);
+				float size = ImGui::GetWindowWidth();
+				ImGui::Image((ImTextureID)texture.texture0, { size, size });
+			}
 		}
+		ImGui::End();
 	}
-	ImGui::End();
 }

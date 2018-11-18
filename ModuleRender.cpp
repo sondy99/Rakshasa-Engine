@@ -162,25 +162,28 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
 
 void ModuleRender::DrawProperties()
 {
-	ImGui::Begin("Render properties");
-	char minFpsMessage[35];
-	sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
-	ImGui::Text(minFpsMessage);
+	if (toggleRenderProperties && minFps != 100.0f)
+	{
+		ImGui::Begin("Render properties", &toggleRenderProperties);
+		char minFpsMessage[35];
+		sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
+		ImGui::Text(minFpsMessage);
 
-	char message[20];
-	sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
-	ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
-	
-	ImGui::Separator();
+		char message[20];
+		sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
+		ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
 
-	char minMsMessage[40];
-	sprintf_s(minMsMessage, 40, "Slowest millisecod per second %0.1f", maxMs);
-	ImGui::Text(minMsMessage);
+		ImGui::Separator();
 
-	sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
-	ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+		char minMsMessage[40];
+		sprintf_s(minMsMessage, 40, "Slowest millisecod per second %0.1f", maxMs);
+		ImGui::Text(minMsMessage);
 
-	ImGui::End();
+		sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
+		ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+
+		ImGui::End();
+	}
 }
 
 void ModuleRender::DrawSceneWindow()

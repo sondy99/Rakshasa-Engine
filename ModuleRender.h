@@ -34,6 +34,8 @@ public:
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;
+
+	bool toggleRenderProperties = true;
 private:
 	void FpsCount();
 	void manageFpsAndMsList();

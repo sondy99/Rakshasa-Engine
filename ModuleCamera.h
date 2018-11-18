@@ -40,6 +40,8 @@ public:
 	math::float3 cameraFront = math::float3(0.0f, 0.0f, -1.0f);
 	math::float3 cameraSide = math::float3(1.0f, 1.0f, 1.0f);
 	math::float3 cameraUp = math::float3(0.0f, 1.0f, 0.0f);
+
+	bool toggleCameraProperties = true;
 private:
 	void CameraMovementKeyboard();
 	void CameraMovementMouse();
