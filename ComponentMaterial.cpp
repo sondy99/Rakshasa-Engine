@@ -1,9 +1,9 @@
-//#include "ComponentMaterial.h"
-//
-//ComponentMaterial::ComponentMaterial(GameObject* gameObject, componentType componentType) : Component(gameObject, componentType)
-//{
-//}
-//
-//ComponentMaterial::~ComponentMaterial()
-//{
-//}
+#include "ComponentMaterial.h"
+
+ComponentMaterial::ComponentMaterial(GameObject* gameObject, ComponentType componentType) : Component(gameObject, componentType)
+{
+}
+
+ComponentMaterial::~ComponentMaterial()
+{
+}

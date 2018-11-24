@@ -1,13 +1,13 @@
-//#include "GameObject.h"
-//
-//GameObject::GameObject()
-//{
-//}
-//
-//GameObject::~GameObject()
-//{
-//}
-//
-//void GameObject::update()
-//{
-//}
+#include "GameObject.h"
+
+GameObject::GameObject()
+{
+}
+
+GameObject::~GameObject()
+{
+}
+
+void GameObject::update()
+{
+}

@@ -90,13 +90,13 @@ update_status ModuleRender::Update()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
-	//for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
-	//{
-	//	const Mesh& mesh = App->modelLoader->meshes[i];
+	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+	{
+		const Mesh& mesh = App->modelLoader->meshes[i];
 
-	//	RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
-	//		App->modelLoader->transform, view, projection);
-	//}
+		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
+			App->modelLoader->transform, view, projection);
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
