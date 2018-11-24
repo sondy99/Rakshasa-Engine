@@ -2,14 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ModuleInput.cpp" />
-    <ClCompile Include="ModuleRender.cpp" />
-    <ClCompile Include="ModuleWindow.cpp" />
-    <ClCompile Include="ModuleShader.cpp" />
-    <ClCompile Include="ModuleRenderTriangle.cpp" />
-    <ClCompile Include="ModuleCamera.cpp" />
     <ClCompile Include="MathGeoLib\include\Geometry\AABB.cpp">
       <Filter>MathGeoLib\Geometry</Filter>
     </ClCompile>
@@ -106,10 +99,6 @@
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp">
       <Filter>MathGeoLib\Time</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleTextures.cpp" />
-    <ClCompile Include="ModuleEnvironment.cpp" />
-    <ClCompile Include="ModuleModelLoader.cpp" />
-    <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -128,17 +117,61 @@
     <ClCompile Include="Imgui\imgui.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleShader.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRenderTriangle.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRender.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleModelLoader.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleInput.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEnvironment.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEditor.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCamera.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTransformation.cpp">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleDebugDraw.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="Module.h" />
-    <ClInclude Include="ModuleInput.h" />
-    <ClInclude Include="ModuleRender.h" />
-    <ClInclude Include="ModuleWindow.h" />
-    <ClInclude Include="ModuleShader.h" />
-    <ClInclude Include="ModuleRenderTriangle.h" />
-    <ClInclude Include="ModuleCamera.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\AABB.h">
       <Filter>MathGeoLib\Geometry</Filter>
     </ClInclude>
@@ -310,11 +343,6 @@
     <ClInclude Include="MathGeoLib\include\Time\Clock.h">
       <Filter>MathGeoLib\Time</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleTextures.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="ModuleEnvironment.h" />
-    <ClInclude Include="ModuleModelLoader.h" />
-    <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -339,7 +367,72 @@
     <ClInclude Include="Imgui\imconfig.h">
       <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTextures.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleShader.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRenderTriangle.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRender.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleModelLoader.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleInput.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEnvironment.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEditor.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCamera.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransformation.h">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleDebugDraw.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="debugdraw.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="par_shapes.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_draw.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -360,11 +453,31 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{03eb3046-8835-4f6e-8dc7-dbc9d46ffee4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{208e2f52-8d51-4730-b722-0579af6cac2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{f6bc9d24-a3a5-44fc-9481-e0979977b308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{5079db37-720c-4cf4-bcaa-57c5e4dc681d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjectsAndComponents">
+      <UniqueIdentifier>{f150bff2-8485-47c9-b9c5-e8dd72383e2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.fs" />
-    <None Include="default.vs" />
-    <None Include="colorProgram.fs" />
-    <None Include="colorProgram.vs" />
+    <None Include="default.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="default.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="colorProgram.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="colorProgram.fs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

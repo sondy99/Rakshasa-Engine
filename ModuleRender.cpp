@@ -7,6 +7,7 @@
 #include "ModuleShader.h"
 #include "ModuleEnvironment.h"
 #include "ModuleEditor.h"
+#include "ModuleDebugDraw.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
@@ -74,30 +75,28 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+
+	App->environment->DrawReferenceGround();
+	App->environment->DrawReferenceAxis();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	math::float4x4 projection = App->camera->ProjectionMatrix();
 	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
 	math::float4x4 model = math::float4x4::identity;
 
-	glUseProgram(App->shader->colorProgram);
+	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
 
-	glUniformMatrix4fv(glGetUniformLocation(App->shader->colorProgram, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->shader->colorProgram, "view"), 1, GL_TRUE, &view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(App->shader->colorProgram, "proj"), 1, GL_TRUE, &projection[0][0]);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
-	App->environment->DrawReferenceGround();
-	App->environment->DrawReferenceAxis();
+	//for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+	//{
+	//	const Mesh& mesh = App->modelLoader->meshes[i];
 
-	glUseProgram(0);
-
-	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
-	{
-		const Mesh& mesh = App->modelLoader->meshes[i];
-
-		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
-			App->modelLoader->transform, view, projection);
-	}
+	//	RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
+	//		App->modelLoader->transform, view, projection);
+	//}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -162,7 +161,7 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
 
 void ModuleRender::DrawProperties()
 {
-	if (toggleRenderProperties && minFps != 100.0f)
+	if (toggleRenderProperties && minFps != 0.0f && minFps != 100.0f)
 	{
 		ImGui::Begin("Render properties", &toggleRenderProperties);
 		char minFpsMessage[35];
@@ -176,7 +175,7 @@ void ModuleRender::DrawProperties()
 		ImGui::Separator();
 
 		char minMsMessage[40];
-		sprintf_s(minMsMessage, 40, "Slowest millisecod per second %0.1f", maxMs);
+		sprintf_s(minMsMessage, 40, "Max millisecod per second %0.1f", maxMs);
 		ImGui::Text(minMsMessage);
 
 		sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);

@@ -42,6 +42,8 @@ public:
 	math::float3 cameraUp = math::float3(0.0f, 1.0f, 0.0f);
 
 	bool toggleCameraProperties = true;
+	unsigned screenWidth = SCREEN_WIDTH;
+	unsigned screenHeight = SCREEN_HEIGHT;
 private:
 	void CameraMovementKeyboard();
 	void CameraMovementMouse();
@@ -60,8 +62,8 @@ private:
 	float mouseSensitivity = 0.2f;
 	float fov = 0.0f;
 
-	unsigned screenWidth = SCREEN_WIDTH;
-	unsigned screenHeight = SCREEN_HEIGHT;
+	//unsigned screenWidth = SCREEN_WIDTH;
+	//unsigned screenHeight = SCREEN_HEIGHT;
 	float screenRatio = screenWidth / screenHeight;
 
 	float fovY = 45.0f;

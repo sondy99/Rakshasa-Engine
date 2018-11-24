@@ -77,6 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>D:\Master\Rakshasa Engine\Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>./glew-2.1.0/lib/Release/Win32;DevIL/lib/x86/Release;assimp/lib/x86</AdditionalLibraryDirectories>
@@ -117,6 +118,7 @@
       <AdditionalIncludeDirectories>./Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <SupportJustMyCode>true</SupportJustMyCode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>
@@ -157,6 +159,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentMaterial.h" />
+    <ClInclude Include="ComponentMesh.h" />
+    <ClInclude Include="ComponentTransformation.h" />
+    <ClInclude Include="debugdraw.h" />
+    <ClInclude Include="debug_draw.hpp" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
@@ -225,6 +234,7 @@
     <ClInclude Include="MathGeoLib\include\Time\Clock.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleCamera.h" />
+    <ClInclude Include="ModuleDebugDraw.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="ModuleEnvironment.h" />
     <ClInclude Include="ModuleInput.h" />
@@ -234,11 +244,17 @@
     <ClInclude Include="ModuleShader.h" />
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
+    <ClInclude Include="par_shapes.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentMaterial.cpp" />
+    <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="ComponentTransformation.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
     <ClCompile Include="Imgui\imgui_draw.cpp" />
@@ -280,6 +296,7 @@
     <ClCompile Include="MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp" />
     <ClCompile Include="ModuleCamera.cpp" />
+    <ClCompile Include="ModuleDebugDraw.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="ModuleEnvironment.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
