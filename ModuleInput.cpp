@@ -89,7 +89,6 @@ update_status ModuleInput::PreUpdate()
 				case SDL_WINDOWEVENT_RESIZED:
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
 					App->window->WindowResized(event.window.data1, event.window.data2);
-					App->renderer->WindowResized(event.window.data1, event.window.data2);
 					App->camera->SetScreenNewScreenSize(event.window.data1, event.window.data2);
 					break;
 			}
@@ -100,7 +99,7 @@ update_status ModuleInput::PreUpdate()
 			// TODO: check extension of file and reupload a texture or a model
 			char* fileDroppedPath = event.drop.file;
 			App->modelLoader->CleanUp();
-			App->modelLoader->Load(fileDroppedPath);
+			//App->modelLoader->Load(fileDroppedPath);
 			SDL_free(fileDroppedPath);
 			break;
 		}

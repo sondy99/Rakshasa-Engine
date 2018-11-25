@@ -4,6 +4,11 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
 
+#include "GameObject.h"
+#include "Component.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+
 #include "GL/glew.h"
 
 #include <assimp/scene.h>
@@ -20,19 +25,17 @@ ModuleModelLoader::~ModuleModelLoader()
 
 bool ModuleModelLoader::Init()
 {
-	Load("BakerHouse.FBX");
-
 	return true;
 }
 
-void ModuleModelLoader::Load(const char* filePath)
+void ModuleModelLoader::Load(const char* filePath, GameObject* gameObject)
 {
 	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene)
 	{
-		GenerateMeshes(scene);
-		GenerateMaterials(scene);
+		GenerateMeshes(scene, gameObject);
+		GenerateMaterials(scene, gameObject);
 
 		aiReleaseImport(scene);
 	}
@@ -73,7 +76,7 @@ bool ModuleModelLoader::CleanUp()
 	return true;
 }
 
-void ModuleModelLoader::GenerateMeshes(const aiScene* scene)
+void ModuleModelLoader::GenerateMeshes(const aiScene* scene, GameObject* gameObject)
 {
 	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
 	{
@@ -122,10 +125,12 @@ void ModuleModelLoader::GenerateMeshes(const aiScene* scene)
 		dst_mesh.indicesNumber = src_mesh->mNumFaces * 3;
 
 		meshes.push_back(dst_mesh);
+		gameObject->components.push_back(new ComponentMesh(new GameObject("das", nullptr), ComponentType::MESH, dst_mesh));
 	}
+
 }
 
-void ModuleModelLoader::GenerateMaterials(const aiScene* scene)
+void ModuleModelLoader::GenerateMaterials(const aiScene* scene, GameObject* gameObject)
 {
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
@@ -140,6 +145,7 @@ void ModuleModelLoader::GenerateMaterials(const aiScene* scene)
 			Material dst_material = App->textures->Load(file.data);
 
 			materials.push_back(dst_material);
+			gameObject->components.push_back(new ComponentMaterial(gameObject, ComponentType::MATERIAL, dst_material));
 		}
 	}
 }

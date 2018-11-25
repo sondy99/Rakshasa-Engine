@@ -9,6 +9,22 @@
 
 struct SDL_Texture;
 
+struct Mesh
+{
+	unsigned vbo = 0;
+	unsigned ibo = 0;
+	unsigned material = 0;
+	unsigned verticesNumber = 0;
+	unsigned indicesNumber = 0;
+};
+
+struct Material
+{
+	int width = 0;
+	int height = 0;
+	unsigned texture0 = 0;
+};
+
 class ModuleTextures : public Module
 {
 public:
@@ -17,7 +33,7 @@ public:
 
 	bool Init() override;
 
-	Material const Load(const char* path);
+	Material Load(const char* path);
 	void Unload(unsigned id);
 
 };

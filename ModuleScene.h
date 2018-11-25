@@ -11,6 +11,8 @@ public:
 	ModuleScene();
 	~ModuleScene();
 
+	bool Init() override;
+
 	GameObject* CreateGameObject(const char* name, GameObject* parent);
 	void DrawProperties();
 public:

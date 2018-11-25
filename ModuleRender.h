@@ -11,6 +11,8 @@
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
+struct Mesh;
+struct Material;
 
 class ModuleRender : public Module
 {
@@ -24,7 +26,6 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 	
-	void WindowResized(unsigned width, unsigned height);
 	void RenderMesh(const Mesh& mesh, 
 		const Material& material, 
 		unsigned program, const math::float4x4& model,

@@ -2,8 +2,21 @@
 #include "GameObject.h"
 #include "Application.h"
 
+#include "ModuleModelLoader.h"
+
 ModuleScene::ModuleScene()
 {
+}
+
+ModuleScene::~ModuleScene()
+{
+	delete root;
+	root = nullptr;
+}
+
+bool ModuleScene::Init()
+{
+
 	root = new GameObject("root", nullptr);
 
 	GameObject* nivelUno = new GameObject("primer nivel uno", root);
@@ -24,19 +37,22 @@ ModuleScene::ModuleScene()
 
 	GameObject* nivelTres = new GameObject("primer nivel tres", root);
 	root->childrens.push_back(nivelTres);
-}
 
-ModuleScene::~ModuleScene()
-{
-	delete root;
-	root = nullptr;
+	GameObject* house = CreateGameObject("house", nullptr);
+	
+	App->modelLoader->Load("BakerHouse.FBX", house);
+
+	return true;
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {
 	GameObject* gameObject = new GameObject(name, parent);
 
-	root->childrens.push_back(gameObject);
+	if(parent == nullptr)
+	{
+		root->childrens.push_back(gameObject);
+	}
 
 	return gameObject;
 }
@@ -71,7 +87,6 @@ void ModuleScene::DrawProperties()
 
 void ModuleScene::DrawTreeNode(GameObject * gameObject)
 {
-
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (root->childrens.empty()) {

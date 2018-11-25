@@ -23,7 +23,7 @@ bool ModuleTextures::Init()
 	return true;
 }
 
-Material const ModuleTextures::Load(const char* path)
+Material ModuleTextures::Load(const char* path)
 {
 	unsigned imageID;
 
@@ -76,9 +76,13 @@ Material const ModuleTextures::Load(const char* path)
 	ilDeleteImages(1, &imageID); 
 	LOG("Texture creation successful.");
 
-	return Material(textureID, width, height);
-}
+	Material mate;
+	mate.texture0 = textureID;
+	mate.width = width;
+	mate.height = height;
 
+	return mate;
+}
 
 void ModuleTextures::Unload(unsigned id)
 {

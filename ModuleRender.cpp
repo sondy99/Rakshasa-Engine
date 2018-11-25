@@ -2,19 +2,24 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
-#include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleShader.h"
 #include "ModuleEnvironment.h"
 #include "ModuleEditor.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleScene.h"
+#include "ModuleTextures.h"
+
+#include "GameObject.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
 
 ModuleRender::ModuleRender()
 {
-	fpsList.resize(100, 0.0f); 
+	fpsList.resize(100, 0.0f);
 	msList.resize(100, 0.0f);
 }
 
@@ -33,7 +38,7 @@ bool ModuleRender::Init()
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);	
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	context = SDL_GL_CreateContext(App->window->window);
@@ -50,9 +55,9 @@ bool ModuleRender::Init()
 	glClearDepth(1.0f);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 
-    int width, height;
-    SDL_GetWindowSize(App->window->window, &width, &height);
-    glViewport(0, 0, width, height);
+	int width, height;
+	SDL_GetWindowSize(App->window->window, &width, &height);
+	glViewport(0, 0, width, height);
 
 	App->shader->LoadShaders(App->shader->program, "default.vs", "default.fs");
 
@@ -89,13 +94,44 @@ update_status ModuleRender::Update()
 	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+	
+		/*for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+		{
+			const Mesh& mesh = App->modelLoader->meshes[i];
 
-	for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
+			RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
+				App->modelLoader->transform, view, projection);
+		}*/
+
+	for (unsigned i = 0; i < App->scene->root->childrens.size(); ++i)
 	{
-		const Mesh& mesh = App->modelLoader->meshes[i];
+		for (auto &gameObjectChild : App->scene->root->childrens)
+		{
+			if (gameObjectChild->components.size() > 0)
+			{
+				Material* material = nullptr;
 
-		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
-			App->modelLoader->transform, view, projection);
+				for (auto &component : gameObjectChild->components)
+				{
+					if (component->componentType == ComponentType::MATERIAL)
+					{
+						material = &(dynamic_cast<ComponentMaterial*>(component))->material;
+					}
+				}
+
+				for (auto &component : gameObjectChild->components)
+				{
+					if (component->componentType == ComponentType::MESH)
+					{
+						Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
+
+						RenderMesh(mesh, *material, App->shader->program,
+							App->modelLoader->transform, view, projection);
+
+					}
+				}
+			}
+		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -119,13 +155,8 @@ bool ModuleRender::CleanUp()
 {
 	glDeleteFramebuffers(1, &frameBufferObject);
 	glDeleteRenderbuffers(1, &renderBufferObject);
-	
-	return true;
-}
 
-void ModuleRender::WindowResized(unsigned width, unsigned height)
-{
-    glViewport(0, 0, width, height); 
+	return true;
 }
 
 void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
@@ -148,7 +179,7 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.verticesNumber));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	
+
 	glDrawElements(GL_TRIANGLES, mesh.indicesNumber, GL_UNSIGNED_INT, nullptr);
 
 	glDisableVertexAttribArray(0);
@@ -188,7 +219,7 @@ void ModuleRender::DrawProperties()
 void ModuleRender::DrawSceneWindow()
 {
 	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-	
+
 	ImVec2 size = ImGui::GetWindowSize();
 
 	App->camera->SetScreenNewScreenSize(size.x, size.y);
@@ -221,7 +252,7 @@ void ModuleRender::manageFpsAndMsList()
 	float ms = deltaTime * 1000;
 	msList.erase(msList.begin());
 	msList.push_back(ms);
-	
+
 	if (ticksNow > 5000)
 	{
 		minFps = (minFps > fps) ? fps : minFps;
