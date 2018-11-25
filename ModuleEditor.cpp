@@ -5,6 +5,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
+#include "ModuleScene.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -32,6 +33,11 @@ bool ModuleEditor::Init()
 
 update_status ModuleEditor::PreUpdate()
 {
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleEditor::Update()
+{
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Exit"))
@@ -42,6 +48,7 @@ update_status ModuleEditor::PreUpdate()
 		}
 
 		if (ImGui::BeginMenu("Windows")) {
+			ImGui::Checkbox("Game objects hierarchy", &App->scene->toggleSceneProperties);
 			ImGui::Checkbox("Render properties", &App->renderer->toggleRenderProperties);
 			ImGui::Checkbox("Camera properties", &App->camera->toggleCameraProperties);
 			ImGui::Checkbox("Model properties", &App->modelLoader->toggleModelProperties);
@@ -58,11 +65,6 @@ update_status ModuleEditor::PreUpdate()
 	}
 	ImGui::EndMainMenuBar();
 
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleEditor::Update()
-{
 	WindowManager();
 
 	return UPDATE_CONTINUE;
@@ -90,6 +92,7 @@ void ModuleEditor::WindowManager()
 	App->renderer->DrawProperties();
 	App->camera->DrawProperties();
 	App->modelLoader->DrawProperties();
+	App->scene->DrawProperties();
 	DrawConsole();
 
 	App->renderer->DrawSceneWindow();
@@ -123,7 +126,7 @@ void ModuleEditor::CreateDockSpace() const
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
+	
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("DockSpace", NULL, window_flags);
 	ImGui::PopStyleVar(3);

@@ -168,6 +168,10 @@
     <ClCompile Include="ModuleDebugDraw.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleScene.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="crossguid\Guid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -433,6 +437,10 @@
     <ClInclude Include="debug_draw.hpp">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleScene.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="crossguid\Guid.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

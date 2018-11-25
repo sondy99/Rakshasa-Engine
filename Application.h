@@ -15,6 +15,7 @@ class ModuleEnvironment;
 class ModuleModelLoader;
 class ModuleEditor;
 class ModuleDebugDraw;
+class ModuleScene;
 
 //class ModuleRenderTriangle;
 
@@ -38,6 +39,7 @@ public:
 	ModuleModelLoader* modelLoader = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleDebugDraw* debugDraw = nullptr;
+	ModuleScene* scene = nullptr;
 
 	//ModuleRenderTriangle* renderTrieangle = nullptr; 
 private:

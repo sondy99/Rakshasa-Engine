@@ -4,17 +4,19 @@
 #include "Globals.h"
 
 #include <vector>
+#include <string>
 
 class Component;
 
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(const char* name, GameObject* parent);
 	~GameObject();
 
 	void update();
 public:
+	std::string uuid = "";
 	const char* name = nullptr;
 	GameObject* parent = nullptr;
 

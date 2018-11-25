@@ -6,7 +6,7 @@
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial(GameObject* gameObject, ComponentType componentType);;
+	ComponentMaterial(GameObject* gameObject, ComponentType componentType);
 	~ComponentMaterial();
 };
 

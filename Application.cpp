@@ -9,6 +9,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleEditor.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleScene.h"
 
 //#include "ModuleRenderTriangle.h"
 
@@ -26,6 +27,7 @@ Application::Application()
 	modules.push_back(environment = new ModuleEnvironment());
 	modules.push_back(modelLoader = new ModuleModelLoader());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
+	modules.push_back(scene = new ModuleScene);
 
 	//modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }
