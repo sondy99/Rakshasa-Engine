@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Module.h"
 
+#include "Brofiler.h"
+
 class ModuleRender;
 class ModuleWindow;
 class ModuleInput;

@@ -52,6 +52,8 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	BROFILER_FRAME("MainLoop");
+
 	update_status ret = UPDATE_CONTINUE;
 	
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)

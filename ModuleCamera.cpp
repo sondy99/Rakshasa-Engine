@@ -23,24 +23,21 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT) {
-		SDL_ShowCursor(SDL_DISABLE);
-		CameraMovementKeyboard();
-		CameraMovementMouse();
-	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP) {
-		SDL_ShowCursor(SDL_ENABLE);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) {
+	CameraMovementKeyboard();
+	CameraMovementMouse();
+	
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) 
+	{
 		FocusObject(sceneCenter);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) 
+	{
 		cameraSpeed = cameraSpeed * 3;
 		rotationSpeed = rotationSpeed * 3;
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP) {
+	else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP) 
+	{
 		cameraSpeed = cameraSpeed / 3;
 		rotationSpeed = rotationSpeed / 3;
 	}
@@ -207,6 +204,7 @@ void ModuleCamera::Zooming(bool positive)
 
 void ModuleCamera::FocusObject(math::float3& objectCenterPos) 
 {
+	firstMouse = true;
 	cameraFront = objectCenterPos - cameraPosition;
 	pitch = math::RadToDeg(SDL_tanf(cameraFront.y / cameraFront.x));
 	yaw = math::RadToDeg(SDL_tanf(cameraFront.z / cameraFront.x)) - 90;
@@ -214,51 +212,65 @@ void ModuleCamera::FocusObject(math::float3& objectCenterPos)
 
 void ModuleCamera::CameraMovementMouse() 
 {
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT) 
+	{
 		SDL_ShowCursor(SDL_DISABLE);
 		MouseUpdate(App->input->GetMousePosition());
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP) 
+	{
 		SDL_ShowCursor(SDL_ENABLE);
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) {
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) 
+	{
 		Zooming(true);
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) {
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) 
+	{
 		Zooming(false);
 	}
 }
 
 void ModuleCamera::CameraMovementKeyboard() 
 {
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) 
+	{
 		MoveCamera(UP);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) 
+	{
 		MoveCamera(DOWN);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
+	{
 		MoveCamera(LEFT);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
+	{
 		MoveCamera(RIGHT);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) 
+	{
 		MoveCamera(FORWARD);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) 
+	{
 		MoveCamera(BACKWARDS);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) 
+	{
 		RotateCamera(UP);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) 
+	{
 		RotateCamera(DOWN);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) 
+	{
 		RotateCamera(LEFT);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
+	else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) 
+	{
 		RotateCamera(RIGHT);
 	}
 }

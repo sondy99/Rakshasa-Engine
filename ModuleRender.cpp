@@ -67,7 +67,8 @@ bool ModuleRender::Init()
 }
 
 update_status ModuleRender::PreUpdate()
-{
+{ BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue)
+
 	manageFpsAndMsList();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,7 +79,7 @@ update_status ModuleRender::PreUpdate()
 }
 
 update_status ModuleRender::Update()
-{
+{ BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
 	App->environment->DrawReferenceGround();
@@ -140,7 +141,8 @@ update_status ModuleRender::Update()
 }
 
 update_status ModuleRender::PostUpdate()
-{
+{ BROFILER_CATEGORY("RenderPostUpdate()", Profiler::Color::Orchid)
+
 	App->editor->EndImGuiFrame();
 
 	SDL_GL_SwapWindow(App->window->window);
