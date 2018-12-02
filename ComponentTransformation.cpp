@@ -29,9 +29,17 @@ void ComponentTransformation::DrawProperties()
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
-
-		ImGui::Checkbox("Model identity", &identity);
+		ImGui::Checkbox("Watch as model identity", &identity);
 		
+		if (ImGui::Button("Transform to model identity"))
+		{
+			localModelMatrix = math::float4x4::identity;
+			position = { 0.0f,0.0f,0.0f };
+			scale = { 1.0f,1.0f,1.0f };
+			rotation = { 0.0f,0.0f,0.0f,1.0f };
+		}
+
+
 		UnpdateLocalModelMatrix();
 
 		ImGui::NewLine();
@@ -88,7 +96,7 @@ void ComponentTransformation::DrawProperties()
 			changed = true;
 		ImGui::PopID();
 		auxRotation *= 0.0174532925199432957f;
-		rotation = rotation.FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+		rotation = rotation.FromEulerXYZ(auxRotation.x, auxRotation.y, auxRotation.z);
 
 		ImGui::Text("Scale:");
 		ImGui::Text("X:");
