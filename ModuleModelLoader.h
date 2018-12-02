@@ -38,6 +38,10 @@ private:
 	void GenerateMesh(Mesh& meshStruct);
 	void GenerateMaterial(Material& materialStruct);
 	void CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node, GameObject* gameObjectParent);
+	void CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh);
+	void CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex);
+	void CreateTransformationComponent(const aiNode* node, GameObject* gameObjectMesh);
+
 };
 
 #endif __ModuleModelLoader_H__

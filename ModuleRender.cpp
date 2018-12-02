@@ -13,6 +13,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentTransformation.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
@@ -68,9 +69,9 @@ bool ModuleRender::Init()
 
 update_status ModuleRender::PreUpdate()
 {
-	BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue)
+	BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue);
 
-		manageFpsAndMsList();
+	manageFpsAndMsList();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -81,7 +82,7 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::Update()
 {
-	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
+	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
@@ -90,13 +91,12 @@ update_status ModuleRender::Update()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
 
 	math::float4x4 projection = App->camera->ProjectionMatrix();
 	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
-	math::float4x4 model = math::float4x4::identity;
-
-	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
-
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 	
 	RenderComponentFromGameObject(App->scene->root, view, projection);
@@ -164,22 +164,22 @@ void ModuleRender::DrawProperties()
 	if (toggleRenderProperties && minFps != 0.0f && minFps != 100.0f)
 	{
 		ImGui::Begin("Render properties", &toggleRenderProperties);
-		char minFpsMessage[35];
+		/*char minFpsMessage[35];
 		sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
 		ImGui::Text(minFpsMessage);
 
 		char message[20];
-		sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
-		ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
+		sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);*/
+		//ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
 
 		ImGui::Separator();
 
-		char minMsMessage[40];
-		sprintf_s(minMsMessage, 40, "Max millisecod per second %0.1f", maxMs);
-		ImGui::Text(minMsMessage);
+		//char minMsMessage[40];
+		//sprintf_s(minMsMessage, 40, "Max millisecod per second %0.1f", maxMs);
+		//ImGui::Text(minMsMessage);
 
-		sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
-		ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+		//sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
+		//ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
 
 		ImGui::End();
 	}
@@ -279,6 +279,16 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 
 		if (gameObjectChild->components.size() > 0)
 		{
+			math::float4x4 model = math::float4x4::identity;
+
+			for (auto &component : gameObjectChild->components)
+			{
+				if (component->componentType == ComponentType::TRANSFORM)
+				{
+					model = (dynamic_cast<ComponentTransformation*>(component))->localMatrix;
+				}
+			}
+
 			Material* material = nullptr;
 
 			for (auto &component : gameObjectChild->components)
@@ -296,7 +306,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 					Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
 
 					RenderMesh(mesh, *material, App->shader->program,
-						App->modelLoader->transform, view, projection);
+						model, view, projection);
 
 				}
 			}

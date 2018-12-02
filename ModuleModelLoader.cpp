@@ -9,12 +9,15 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentTransformation.h"
 
 #include "GL/glew.h"
 
 #include <assimp/scene.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
+
+#include "MathGeoLib.h"
 
 #include <string>
 
@@ -39,7 +42,7 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 	{
 		gameObjectParent->name = std::string(scene->mRootNode->mName.C_Str());
 
-		CreateGameObjectsFromNode(scene, scene->mRootNode,gameObjectParent);
+		CreateGameObjectsFromNode(scene, scene->mRootNode, gameObjectParent);
 
 		aiReleaseImport(scene);
 	}
@@ -51,7 +54,7 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 }
 
 bool ModuleModelLoader::CleanUp()
-{  	
+{
 	CleanUpMeshesAndTextures(App->scene->root);
 
 	return true;
@@ -99,7 +102,6 @@ void ModuleModelLoader::CleanUpMeshesAndTextures(const GameObject * gameObject)
 			}
 		}
 	}
-
 }
 
 void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
@@ -178,30 +180,56 @@ void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const ai
 
 			if (node->mChildren[i]->mMeshes != nullptr)
 			{
-				Mesh meshStruct;
-				meshStruct.mesh = scene->mMeshes[node->mChildren[i]->mMeshes[0]];
-				GenerateMesh(meshStruct);
-
-				gameObjectMesh->components.push_back(new ComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
-
-				if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
-				{
-					Material materialStruct;
-					materialStruct.material = scene->mMaterials[meshStruct.mesh->mMaterialIndex];
-					GenerateMaterial(materialStruct);
-
-					gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
-				}
+				CreateMeshComponent(scene, node->mChildren[i], gameObjectMesh);
 			}
-			else 
+			else
 			{
 				//TODO: change this to not use recursivity
 				CreateGameObjectsFromNode(scene, node->mChildren[i], gameObjectParent);
 			}
-
 			gameObjectParent->childrens.push_back(gameObjectMesh);
 		}
 	}
+}
+
+void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh)
+{
+	Mesh meshStruct;
+	meshStruct.mesh = scene->mMeshes[node->mMeshes[0]];
+	GenerateMesh(meshStruct);
+
+	gameObjectMesh->components.push_back(new ComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
+
+	if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
+	{
+		CreateMaterialComponent(scene, node, gameObjectMesh, meshStruct.mesh->mMaterialIndex);
+	}
+
+	CreateTransformationComponent(node, gameObjectMesh);
+}
+
+void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex)
+{
+	Material materialStruct;
+	materialStruct.material = scene->mMaterials[materialIndex];
+	GenerateMaterial(materialStruct);
+
+	gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+}
+
+void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameObject* gameObjectMesh)
+{
+	aiVector3D translation;
+	aiVector3D scaling;
+	aiQuaternion rotation;
+
+	node->mTransformation.Decompose(scaling, rotation, translation);
+
+	float3 position = { translation.x, translation.y, translation.z };
+	float3 scale = { scaling.x, scaling.y, scaling.z };
+	Quat quatRotation = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+	
+	gameObjectMesh->components.push_back(new ComponentTransformation(gameObjectMesh, ComponentType::TRANSFORM, position, scale, quatRotation));
 }
 
 void ModuleModelLoader::DrawProperties()
