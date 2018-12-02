@@ -17,7 +17,7 @@ public:
 	void update();
 public:
 	std::string uuid = "";
-	const char* name = nullptr;
+	std::string name = nullptr;
 	GameObject* parent = nullptr;
 
 	std::vector<Component*> components;

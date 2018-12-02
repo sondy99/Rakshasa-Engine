@@ -1,7 +1,7 @@
 #include "ComponentMesh.h"
 
-ComponentMesh::ComponentMesh(GameObject* gameObject, ComponentType componentType, Mesh mesh) 
-	: Component(gameObject, componentType), mesh(mesh)
+ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh) 
+	: Component(gameObjectParent, componentType), mesh(mesh)
 {
 }
 

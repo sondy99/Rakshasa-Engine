@@ -19,7 +19,7 @@ public:
 	GameObject* root = nullptr;
 	bool toggleSceneProperties = true;
 private:
-	void DrawTreeNode(GameObject * gameObject);
+	void DrawTreeNode(GameObject * gameObjectParent);
 };
 
 #endif __MODULESCENE_H_

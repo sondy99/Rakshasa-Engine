@@ -7,7 +7,7 @@
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(GameObject* gameObject, ComponentType componentType, Mesh mesh);
+	ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
 	~ComponentMesh();
 public:
 	Mesh mesh;

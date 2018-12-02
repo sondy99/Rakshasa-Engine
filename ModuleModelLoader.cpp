@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
+#include "ModuleScene.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -14,6 +15,8 @@
 #include <assimp/scene.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
+
+#include <string>
 
 ModuleModelLoader::ModuleModelLoader()
 {
@@ -28,14 +31,15 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-void ModuleModelLoader::Load(const char* filePath, GameObject* gameObject)
+void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 {
 	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	if (scene)
 	{
-		GenerateMeshes(scene, gameObject);
-		GenerateMaterials(scene, gameObject);
+		gameObjectParent->name = std::string(scene->mRootNode->mName.C_Str());
+
+		CreateGameObjectsFromNode(scene, gameObjectParent);
 
 		aiReleaseImport(scene);
 	}
@@ -76,76 +80,95 @@ bool ModuleModelLoader::CleanUp()
 	return true;
 }
 
-void ModuleModelLoader::GenerateMeshes(const aiScene* scene, GameObject* gameObject)
+void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 {
-	for (unsigned i = 0; i < scene->mNumMeshes; ++i)
+	const aiMesh* mesh = meshStruct.mesh;
+
+	glGenBuffers(1, &meshStruct.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
+
+	glBufferData(GL_ARRAY_BUFFER, (sizeof(float) * 3 + sizeof(float) * 2)*mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh->mNumVertices, mesh->mVertices);
+
+	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->mNumVertices,
+		sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
+	for (unsigned i = 0; i < mesh->mNumVertices; ++i)
 	{
-		const aiMesh* src_mesh = scene->mMeshes[i];
-
-		Mesh dst_mesh;
-
-		glGenBuffers(1, &dst_mesh.vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, dst_mesh.vbo);
-
-		glBufferData(GL_ARRAY_BUFFER, (sizeof(float) * 3 + sizeof(float) * 2)*src_mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * src_mesh->mNumVertices, src_mesh->mVertices);
-
-		math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * src_mesh->mNumVertices,
-			sizeof(float) * 2 * src_mesh->mNumVertices, GL_MAP_WRITE_BIT);
-		for (unsigned i = 0; i < src_mesh->mNumVertices; ++i)
-		{
-			texture_coords[i] = math::float2(src_mesh->mTextureCoords[0][i].x, src_mesh->mTextureCoords[0][i].y);
-		}
-
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glGenBuffers(1, &dst_mesh.ibo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dst_mesh.ibo);
-
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*src_mesh->mNumFaces * 3, nullptr, GL_STATIC_DRAW);
-
-		unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
-			sizeof(unsigned)*src_mesh->mNumFaces * 3, GL_MAP_WRITE_BIT);
-
-		for (unsigned i = 0; i < src_mesh->mNumFaces; ++i)
-		{
-			assert(src_mesh->mFaces[i].mNumIndices == 3);
-
-			*(indices++) = src_mesh->mFaces[i].mIndices[0];
-			*(indices++) = src_mesh->mFaces[i].mIndices[1];
-			*(indices++) = src_mesh->mFaces[i].mIndices[2];
-		}
-
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		dst_mesh.material = src_mesh->mMaterialIndex;
-		dst_mesh.verticesNumber = src_mesh->mNumVertices;
-		dst_mesh.indicesNumber = src_mesh->mNumFaces * 3;
-
-		meshes.push_back(dst_mesh);
-		gameObject->components.push_back(new ComponentMesh(new GameObject("das", nullptr), ComponentType::MESH, dst_mesh));
+		texture_coords[i] = math::float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 	}
 
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &meshStruct.ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshStruct.ibo);
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*mesh->mNumFaces * 3, nullptr, GL_STATIC_DRAW);
+
+	unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
+		sizeof(unsigned)*mesh->mNumFaces * 3, GL_MAP_WRITE_BIT);
+
+	for (unsigned i = 0; i < mesh->mNumFaces; ++i)
+	{
+		assert(mesh->mFaces[i].mNumIndices == 3);
+
+		*(indices++) = mesh->mFaces[i].mIndices[0];
+		*(indices++) = mesh->mFaces[i].mIndices[1];
+		*(indices++) = mesh->mFaces[i].mIndices[2];
+	}
+
+	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	meshStruct.material = mesh->mMaterialIndex;
+	meshStruct.verticesNumber = mesh->mNumVertices;
+	meshStruct.indicesNumber = mesh->mNumFaces * 3;
+
+	meshes.push_back(meshStruct);
 }
 
-void ModuleModelLoader::GenerateMaterials(const aiScene* scene, GameObject* gameObject)
+void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
 {
-	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
+	const aiMaterial* src_material = materialStruct.material;
+
+	aiString file;
+	aiTextureMapping mapping;
+	unsigned uvindex = 0;
+
+	if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 	{
-		const aiMaterial* src_material = scene->mMaterials[i];
-		
-		aiString file;
-		aiTextureMapping mapping;
-		unsigned uvindex = 0;
+		Material auxMaterialStruct = App->textures->Load(file.data);
+		materialStruct.texture0 = auxMaterialStruct.texture0;
+		materialStruct.width = auxMaterialStruct.width;
+		materialStruct.height = auxMaterialStruct.height;
 
-		if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
+		materials.push_back(materialStruct);
+	}
+}
+
+void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, GameObject* gameObjectParent)
+{
+	aiNode* node = scene->mRootNode;
+
+	if (node->mNumChildren > 0)
+	{
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			Material dst_material = App->textures->Load(file.data);
+			GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent);
 
-			materials.push_back(dst_material);
-			gameObject->components.push_back(new ComponentMaterial(gameObject, ComponentType::MATERIAL, dst_material));
+			Mesh meshStruct;
+			meshStruct.mesh = scene->mMeshes[node->mChildren[i]->mMeshes[0]];
+			GenerateMesh(meshStruct);
+
+			gameObjectMesh->components.push_back(new ComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
+			
+			Material materialStruct;
+			materialStruct.material = scene->mMaterials[meshStruct.mesh->mMaterialIndex];
+			GenerateMaterial(materialStruct);
+
+			gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+
+			gameObjectParent->childrens.push_back(gameObjectMesh);
 		}
 	}
 }

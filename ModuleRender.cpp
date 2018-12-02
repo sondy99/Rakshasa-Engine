@@ -67,9 +67,10 @@ bool ModuleRender::Init()
 }
 
 update_status ModuleRender::PreUpdate()
-{ BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue)
+{
+	BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue)
 
-	manageFpsAndMsList();
+		manageFpsAndMsList();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -79,8 +80,9 @@ update_status ModuleRender::PreUpdate()
 }
 
 update_status ModuleRender::Update()
-{ BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+{
+	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
 	App->environment->DrawReferenceGround();
 	App->environment->DrawReferenceAxis();
@@ -95,45 +97,16 @@ update_status ModuleRender::Update()
 	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
-	
-		/*for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
-		{
-			const Mesh& mesh = App->modelLoader->meshes[i];
 
-			RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
-				App->modelLoader->transform, view, projection);
-		}*/
-
-	for (unsigned i = 0; i < App->scene->root->childrens.size(); ++i)
+	/*for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
 	{
-		for (auto &gameObjectChild : App->scene->root->childrens)
-		{
-			if (gameObjectChild->components.size() > 0)
-			{
-				Material* material = nullptr;
+		const Mesh& mesh = App->modelLoader->meshes[i];
 
-				for (auto &component : gameObjectChild->components)
-				{
-					if (component->componentType == ComponentType::MATERIAL)
-					{
-						material = &(dynamic_cast<ComponentMaterial*>(component))->material;
-					}
-				}
+		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
+			App->modelLoader->transform, view, projection);
+	}*/
 
-				for (auto &component : gameObjectChild->components)
-				{
-					if (component->componentType == ComponentType::MESH)
-					{
-						Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
-
-						RenderMesh(mesh, *material, App->shader->program,
-							App->modelLoader->transform, view, projection);
-
-					}
-				}
-			}
-		}
-	}
+	RenderComponentFromGameObject(App->scene->root, view, projection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -141,9 +114,10 @@ update_status ModuleRender::Update()
 }
 
 update_status ModuleRender::PostUpdate()
-{ BROFILER_CATEGORY("RenderPostUpdate()", Profiler::Color::Orchid)
+{
+	BROFILER_CATEGORY("RenderPostUpdate()", Profiler::Color::Orchid)
 
-	App->editor->EndImGuiFrame();
+		App->editor->EndImGuiFrame();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -298,4 +272,41 @@ void ModuleRender::InitFrameBuffer(int width, int height)
 		LOG("Framebuffer ERROR");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::float4x4 view, math::float4x4 projection)
+{
+	for (auto &gameObjectChild : gameObject->childrens)
+	{
+		if (gameObjectChild->childrens.size() > 0)
+		{
+			//TODO: change this to not use recursivity
+			RenderComponentFromGameObject(gameObjectChild, view, projection);
+		}
+
+		if (gameObjectChild->components.size() > 0)
+		{
+			Material* material = nullptr;
+
+			for (auto &component : gameObjectChild->components)
+			{
+				if (component->componentType == ComponentType::MATERIAL)
+				{
+					material = &(dynamic_cast<ComponentMaterial*>(component))->material;
+				}
+			}
+
+			for (auto &component : gameObjectChild->components)
+			{
+				if (component->componentType == ComponentType::MESH)
+				{
+					Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
+
+					RenderMesh(mesh, *material, App->shader->program,
+						App->modelLoader->transform, view, projection);
+
+				}
+			}
+		}
+	}
 }

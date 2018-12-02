@@ -7,7 +7,7 @@
 class ComponentTransformation : public Component
 {
 public:
-	ComponentTransformation(GameObject* gameObject, ComponentType componentType);
+	ComponentTransformation(GameObject* gameObjectParent, ComponentType componentType);
 	~ComponentTransformation();
 public:
 	float3 position = { 0.0f, 0.0f, 0.0f };

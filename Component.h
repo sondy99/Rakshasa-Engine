@@ -16,7 +16,7 @@ enum class ComponentType
 class Component
 {
 public:
-	Component(const GameObject* gameObject, ComponentType componentType) : gameObject(gameObject), componentType(componentType) {};
+	Component(const GameObject* gameObjectParent, ComponentType componentType) : gameObjectParent(gameObjectParent), componentType(componentType) {};
 	virtual ~Component() {};
 
 	virtual void enable() {};
@@ -25,7 +25,7 @@ public:
 public:
 	ComponentType componentType;
 	bool active = false;
-	const GameObject* gameObject = nullptr;
+	const GameObject* gameObjectParent = nullptr;
 };
 
 #endif __COMPONENT_H__

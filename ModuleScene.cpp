@@ -47,14 +47,14 @@ bool ModuleScene::Init()
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {
-	GameObject* gameObject = new GameObject(name, parent);
+	GameObject* gameObjectParent = new GameObject(name, parent);
 
 	if(parent == nullptr)
 	{
-		root->childrens.push_back(gameObject);
+		root->childrens.push_back(gameObjectParent);
 	}
 
-	return gameObject;
+	return gameObjectParent;
 }
 
 void ModuleScene::DrawProperties() 
@@ -71,7 +71,7 @@ void ModuleScene::DrawProperties()
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	bool rootOpen = ImGui::TreeNodeEx(root->uuid.c_str(), node_flags, root->name);
+	bool rootOpen = ImGui::TreeNodeEx(root->uuid.c_str(), node_flags, root->name.c_str());
 
 	if (rootOpen)
 	{
@@ -85,7 +85,7 @@ void ModuleScene::DrawProperties()
 	ImGui::End();
 }
 
-void ModuleScene::DrawTreeNode(GameObject * gameObject)
+void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 {
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
@@ -93,11 +93,11 @@ void ModuleScene::DrawTreeNode(GameObject * gameObject)
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	bool gameObjectOpen = ImGui::TreeNodeEx(gameObject->uuid.c_str(), node_flags, gameObject->name);
+	bool gameObjectOpen = ImGui::TreeNodeEx(gameObjectParent->uuid.c_str(), node_flags, gameObjectParent->name.c_str());
 
 	if (gameObjectOpen)
 	{
-		for (auto &gameObjectChild : gameObject->childrens)
+		for (auto &gameObjectChild : gameObjectParent->childrens)
 		{
 			DrawTreeNode(gameObjectChild);
 		}

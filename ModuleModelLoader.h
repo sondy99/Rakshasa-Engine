@@ -8,6 +8,7 @@
 #include <vector>
 
 struct aiScene;
+struct aiMesh;
 
 class GameObject;
 class ComponentMesh;
@@ -25,7 +26,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void Load(const char * filePath, GameObject* gameObject);
+	void Load(const char * filePath, GameObject* gameObjectParent);
 	void DrawProperties();
 public:
 	std::vector<Mesh> meshes;
@@ -34,8 +35,9 @@ public:
 
 	bool toggleModelProperties = true;
 private:
-	void GenerateMeshes(const aiScene* scene, GameObject* gameObject);
-	void GenerateMaterials(const aiScene* scene, GameObject* gameObject);
+	void GenerateMesh(Mesh& meshStruct);
+	void GenerateMaterial(Material& materialStruct);
+	void CreateGameObjectsFromNode(const aiScene* scene, GameObject* gameObjectParent);
 };
 
 #endif __ModuleModelLoader_H__
