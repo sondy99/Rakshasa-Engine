@@ -5,11 +5,23 @@ ComponentTransformation::ComponentTransformation(GameObject* gameObjectParent,
 	Component(gameObjectParent, componentType),
 	position(position), scale(scale), rotation(rotation)
 {
-	localMatrix = float4x4::FromTRS(position, rotation, scale);
+	UnpdateLocalModelMatrix();
 }
 
 ComponentTransformation::~ComponentTransformation()
 {
+}
+
+void ComponentTransformation::UnpdateLocalModelMatrix()
+{
+	if (!identity)
+	{
+		localModelMatrix = float4x4::FromTRS(position, rotation, scale);
+	} 
+	else
+	{
+		localModelMatrix = float4x4::identity;
+	}
 }
 
 void ComponentTransformation::DrawProperties()
@@ -17,13 +29,11 @@ void ComponentTransformation::DrawProperties()
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
-		if (ImGui::Button("Model identity"))
-		{
-			localMatrix = math::float4x4::identity;
-			position = { 0.0f,0.0f,0.0f };
-			scale = { 1.0f,1.0f,1.0f };
-			rotation = { 0.0f,0.0f,0.0f,1.0f };
-		}
+
+		ImGui::Checkbox("Model identity", &identity);
+		
+		UnpdateLocalModelMatrix();
+
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
 		ImGui::Text("Position:");
@@ -108,7 +118,7 @@ void ComponentTransformation::DrawProperties()
 
 		if (changed)
 		{
-			localMatrix.Set(float4x4::FromTRS(position, rotation, scale));
+			localModelMatrix.Set(float4x4::FromTRS(position, rotation, scale));
 		}
 	}
 }

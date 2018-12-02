@@ -5,12 +5,12 @@
 #include "ModuleCamera.h"
 #include "ModuleRender.h"
 
-ModuleCamera::ModuleCamera() 
+ModuleCamera::ModuleCamera()
 {
 }
 
 // Destructor
-ModuleCamera::~ModuleCamera() 
+ModuleCamera::~ModuleCamera()
 {
 }
 
@@ -25,18 +25,18 @@ update_status ModuleCamera::PreUpdate()
 {
 	CameraMovementKeyboard();
 	CameraMovementMouse();
-	
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) 
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
 		FocusObject(sceneCenter);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN) 
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
 	{
 		cameraSpeed = cameraSpeed * 3;
 		rotationSpeed = rotationSpeed * 3;
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP) 
+	else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
 	{
 		cameraSpeed = cameraSpeed / 3;
 		rotationSpeed = rotationSpeed / 3;
@@ -46,12 +46,12 @@ update_status ModuleCamera::PreUpdate()
 }
 
 // Called before quitting
-bool ModuleCamera::CleanUp() 
+bool ModuleCamera::CleanUp()
 {
 	return true;
 }
 
-void ModuleCamera::MoveCamera(CameraMovement cameraSide) 
+void ModuleCamera::MoveCamera(CameraMovement cameraSide)
 {
 	float normCameraSpeed = cameraSpeed * App->renderer->deltaTime;
 
@@ -77,7 +77,7 @@ void ModuleCamera::MoveCamera(CameraMovement cameraSide)
 	}
 }
 
-void ModuleCamera::RotateCamera(CameraMovement cameraSide) 
+void ModuleCamera::RotateCamera(CameraMovement cameraSide)
 {
 	switch (cameraSide) {
 	case UP:
@@ -106,7 +106,7 @@ void ModuleCamera::RotateCamera(CameraMovement cameraSide)
 math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
 {
 	cameraFront.Normalize();
-	cameraSide = cameraFront.Cross(cameraUp); 
+	cameraSide = cameraFront.Cross(cameraUp);
 	cameraSide.Normalize();
 	math::float3 auxCameraUp = cameraSide.Cross(cameraFront);
 
@@ -120,12 +120,12 @@ math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& 
 	return matrix;
 }
 
-math::float4x4 ModuleCamera::ProjectionMatrix() 
+math::float4x4 ModuleCamera::ProjectionMatrix()
 {
 	return frustum.ProjectionMatrix();
 }
 
-void ModuleCamera::InitFrustum() 
+void ModuleCamera::InitFrustum()
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.pos = float3::zero;
@@ -136,21 +136,21 @@ void ModuleCamera::InitFrustum()
 	SetVerticalFOV(fovY);
 }
 
-void ModuleCamera::SetHorizontalFOV(float& fovXDegrees) 
+void ModuleCamera::SetHorizontalFOV(float& fovXDegrees)
 {
 	fovX = fovXDegrees;
 	frustum.horizontalFov = math::DegToRad(fovX);
-	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5) * ((float)screenHeight/(float)screenWidth));
+	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5) * ((float)screenHeight / (float)screenWidth));
 }
 
-void ModuleCamera::SetVerticalFOV(float& fovYDegrees) 
+void ModuleCamera::SetVerticalFOV(float& fovYDegrees)
 {
 	fovY = fovYDegrees;
 	frustum.verticalFov = math::DegToRad(fovY);
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 }
 
-void ModuleCamera::SetScreenNewScreenSize(unsigned width, unsigned height) 
+void ModuleCamera::SetScreenNewScreenSize(unsigned width, unsigned height)
 {
 	screenWidth = width;
 	screenHeight = height;
@@ -188,7 +188,7 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 	cameraFront = rotation.Normalized();
 }
 
-void ModuleCamera::Zooming(bool positive) 
+void ModuleCamera::Zooming(bool positive)
 {
 	if (positive)
 		fovX += 10.0;
@@ -202,7 +202,7 @@ void ModuleCamera::Zooming(bool positive)
 	SetHorizontalFOV(fovX);
 }
 
-void ModuleCamera::FocusObject(math::float3& objectCenterPos) 
+void ModuleCamera::FocusObject(math::float3& objectCenterPos)
 {
 	firstMouse = true;
 	cameraFront = objectCenterPos - cameraPosition;
@@ -210,74 +210,77 @@ void ModuleCamera::FocusObject(math::float3& objectCenterPos)
 	yaw = math::RadToDeg(SDL_tanf(cameraFront.z / cameraFront.x)) - 90;
 }
 
-void ModuleCamera::CameraMovementMouse() 
+void ModuleCamera::CameraMovementMouse()
 {
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT) 
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		SDL_ShowCursor(SDL_DISABLE);
 		MouseUpdate(App->input->GetMousePosition());
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP) 
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP)
 	{
 		SDL_ShowCursor(SDL_ENABLE);
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN) 
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
 	{
 		Zooming(true);
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN) 
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
 	{
 		Zooming(false);
 	}
 }
 
-void ModuleCamera::CameraMovementKeyboard() 
+void ModuleCamera::CameraMovementKeyboard()
 {
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) 
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		MoveCamera(UP);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) 
-	{
-		MoveCamera(DOWN);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
-	{
-		MoveCamera(LEFT);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
-	{
-		MoveCamera(RIGHT);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) 
-	{
-		MoveCamera(FORWARD);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) 
-	{
-		MoveCamera(BACKWARDS);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT) 
-	{
-		RotateCamera(UP);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) 
-	{
-		RotateCamera(DOWN);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) 
-	{
-		RotateCamera(LEFT);
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) 
-	{
-		RotateCamera(RIGHT);
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+		{
+			MoveCamera(UP);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+		{
+			MoveCamera(DOWN);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			MoveCamera(LEFT);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			MoveCamera(RIGHT);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		{
+			MoveCamera(FORWARD);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		{
+			MoveCamera(BACKWARDS);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			RotateCamera(UP);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			RotateCamera(DOWN);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			RotateCamera(LEFT);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			RotateCamera(RIGHT);
+		}
 	}
 }
 
 void ModuleCamera::DrawProperties()
 {
-	if(toggleCameraProperties)
+	if (toggleCameraProperties)
 	{
 		ImGui::Begin("Camera", &toggleCameraProperties);
 		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);

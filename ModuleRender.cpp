@@ -290,7 +290,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 				{
 					if (component->componentType == ComponentType::TRANSFORM)
 					{
-						model = (dynamic_cast<ComponentTransformation*>(component))->localMatrix;
+						model = (dynamic_cast<ComponentTransformation*>(component))->localModelMatrix;
 					}
 				}
 
