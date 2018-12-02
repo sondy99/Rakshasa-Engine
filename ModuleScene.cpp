@@ -19,30 +19,35 @@ bool ModuleScene::Init()
 
 	root = new GameObject("root", nullptr);
 
-	GameObject* nivelUno = new GameObject("primer nivel uno", root);
-	GameObject* subnivelTres = new GameObject("sub nivel tres", nivelUno);
-	nivelUno->childrens.push_back(subnivelTres);
+	//GameObject* nivelUno = new GameObject("primer nivel uno", root);
+	//GameObject* subnivelTres = new GameObject("sub nivel tres", nivelUno);
+	//nivelUno->childrens.push_back(subnivelTres);
 
-	root->childrens.push_back(nivelUno);
+	//root->childrens.push_back(nivelUno);
 
-	GameObject* nivelDos = new GameObject("primer nivel dos", root);
-	GameObject* subnivelUno = new GameObject("sub nivel uno", nivelDos);
-	nivelDos->childrens.push_back(subnivelUno);
-	GameObject* subnivelDos = new GameObject("sub nivel dos", nivelDos);
-	nivelDos->childrens.push_back(subnivelDos);
-	GameObject* subsubniveluno = new GameObject("subsub nivel uno", subnivelDos);
-	subnivelDos->childrens.push_back(subsubniveluno);
+	//GameObject* nivelDos = new GameObject("primer nivel dos", root);
+	//GameObject* subnivelUno = new GameObject("sub nivel uno", nivelDos);
+	//nivelDos->childrens.push_back(subnivelUno);
+	//GameObject* subnivelDos = new GameObject("sub nivel dos", nivelDos);
+	//nivelDos->childrens.push_back(subnivelDos);
+	//GameObject* subsubniveluno = new GameObject("subsub nivel uno", subnivelDos);
+	//subnivelDos->childrens.push_back(subsubniveluno);
 
-	root->childrens.push_back(nivelDos);
+	//root->childrens.push_back(nivelDos);
 
-	GameObject* nivelTres = new GameObject("primer nivel tres", root);
-	root->childrens.push_back(nivelTres);
-
-	GameObject* house = CreateGameObject("house", nullptr);
-	
-	App->modelLoader->Load("BakerHouse.FBX", house);
+	//GameObject* nivelTres = new GameObject("primer nivel tres", root);
+	//root->childrens.push_back(nivelTres);
+		
+	LoadModel("BakerHouse.FBX");
 
 	return true;
+}
+
+void ModuleScene::LoadModel(const char * modelPath)
+{
+	GameObject* gameObject = CreateGameObject("gameObject", nullptr);
+
+	App->modelLoader->Load(modelPath, gameObject);
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)

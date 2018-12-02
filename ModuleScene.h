@@ -13,6 +13,7 @@ public:
 
 	bool Init() override;
 
+	void LoadModel(const char* modelPath);
 	GameObject* CreateGameObject(const char* name, GameObject* parent);
 	void DrawProperties();
 public:

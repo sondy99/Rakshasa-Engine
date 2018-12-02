@@ -25,7 +25,7 @@ bool ModuleEnvironment::Init()
 
 void ModuleEnvironment::DrawReferenceGround() 
 {
-	dd::xzSquareGrid(-40.0f, 40.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+	dd::xzSquareGrid(-400.0f, 400.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
 }
 
 void ModuleEnvironment::DrawReferenceAxis() 

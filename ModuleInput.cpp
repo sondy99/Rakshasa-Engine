@@ -3,7 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
-#include "ModuleModelLoader.h"
+#include "ModuleScene.h"
 #include "ModuleCamera.h"
 #include "SDL.h"
 
@@ -99,7 +99,7 @@ update_status ModuleInput::PreUpdate()
 			// TODO: check extension of file and reupload a texture or a model
 			char* fileDroppedPath = event.drop.file;
 			App->modelLoader->CleanUp();
-			//App->modelLoader->Load(fileDroppedPath);
+			App->scene->LoadModel(fileDroppedPath);
 			SDL_free(fileDroppedPath);
 			break;
 		}

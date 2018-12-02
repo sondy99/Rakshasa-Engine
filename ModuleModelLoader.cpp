@@ -39,7 +39,7 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 	{
 		gameObjectParent->name = std::string(scene->mRootNode->mName.C_Str());
 
-		CreateGameObjectsFromNode(scene, gameObjectParent);
+		CreateGameObjectsFromNode(scene, scene->mRootNode,gameObjectParent);
 
 		aiReleaseImport(scene);
 	}
@@ -51,33 +51,55 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 }
 
 bool ModuleModelLoader::CleanUp()
-{
-	for (unsigned i = 0; i < meshes.size(); ++i)
-	{
-		if (meshes[i].vbo != 0)
-		{
-			glDeleteBuffers(1, &meshes[i].vbo);
-		}
-
-		if (meshes[i].ibo != 0)
-		{
-			glDeleteBuffers(1, &meshes[i].ibo);
-		}
-	}
-
-	meshes.clear();
-
-	for (unsigned i = 0; i < materials.size(); ++i)
-	{
-		if (materials[i].texture0 != 0)
-		{
-			App->textures->Unload(materials[i].texture0);
-		}
-	}
-
-	materials.clear();
+{  	
+	CleanUpMeshesAndTextures(App->scene->root);
 
 	return true;
+}
+
+void ModuleModelLoader::CleanUpMeshesAndTextures(const GameObject * gameObject)
+{
+	for (auto &gameObjectChild : gameObject->childrens)
+	{
+		if (gameObjectChild->childrens.size() > 0)
+		{
+			//TODO: change this to not use recursivity
+			CleanUpMeshesAndTextures(gameObjectChild);
+		}
+
+		if (gameObjectChild->components.size() > 0)
+		{
+			Material* material = nullptr;
+
+			for (auto &component : gameObjectChild->components)
+			{
+				if (component->componentType == ComponentType::MATERIAL)
+				{
+					material = &(dynamic_cast<ComponentMaterial*>(component))->material;
+					App->textures->Unload(material->texture0);
+				}
+			}
+
+			for (auto &component : gameObjectChild->components)
+			{
+				if (component->componentType == ComponentType::MESH)
+				{
+					Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
+
+					if (mesh.vbo != 0)
+					{
+						glDeleteBuffers(1, &mesh.vbo);
+					}
+
+					if (mesh.ibo != 0)
+					{
+						glDeleteBuffers(1, &mesh.ibo);
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
@@ -124,7 +146,7 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 	meshStruct.verticesNumber = mesh->mNumVertices;
 	meshStruct.indicesNumber = mesh->mNumFaces * 3;
 
-	meshes.push_back(meshStruct);
+	//meshes.push_back(meshStruct);
 }
 
 void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
@@ -142,31 +164,40 @@ void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
 		materialStruct.width = auxMaterialStruct.width;
 		materialStruct.height = auxMaterialStruct.height;
 
-		materials.push_back(materialStruct);
+		//materials.push_back(materialStruct);
 	}
 }
 
-void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, GameObject* gameObjectParent)
+void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node, GameObject* gameObjectParent)
 {
-	aiNode* node = scene->mRootNode;
-
 	if (node->mNumChildren > 0)
 	{
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
 			GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent);
 
-			Mesh meshStruct;
-			meshStruct.mesh = scene->mMeshes[node->mChildren[i]->mMeshes[0]];
-			GenerateMesh(meshStruct);
+			if (node->mChildren[i]->mMeshes != nullptr)
+			{
+				Mesh meshStruct;
+				meshStruct.mesh = scene->mMeshes[node->mChildren[i]->mMeshes[0]];
+				GenerateMesh(meshStruct);
 
-			gameObjectMesh->components.push_back(new ComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
-			
-			Material materialStruct;
-			materialStruct.material = scene->mMaterials[meshStruct.mesh->mMaterialIndex];
-			GenerateMaterial(materialStruct);
+				gameObjectMesh->components.push_back(new ComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
 
-			gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+				if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
+				{
+					Material materialStruct;
+					materialStruct.material = scene->mMaterials[meshStruct.mesh->mMaterialIndex];
+					GenerateMaterial(materialStruct);
+
+					gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+				}
+			}
+			else 
+			{
+				//TODO: change this to not use recursivity
+				CreateGameObjectsFromNode(scene, node->mChildren[i], gameObjectParent);
+			}
 
 			gameObjectParent->childrens.push_back(gameObjectMesh);
 		}
@@ -178,7 +209,7 @@ void ModuleModelLoader::DrawProperties()
 	if (toggleModelProperties)
 	{
 		ImGui::Begin("Model", &toggleModelProperties);
-		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+		/*ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			for (auto &texture : materials)
@@ -187,7 +218,8 @@ void ModuleModelLoader::DrawProperties()
 				float size = ImGui::GetWindowWidth();
 				ImGui::Image((ImTextureID)texture.texture0, { size, size });
 			}
-		}
+		}*/
 		ImGui::End();
 	}
 }
+

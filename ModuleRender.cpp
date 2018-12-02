@@ -81,8 +81,9 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::Update()
 {
-	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
 	App->environment->DrawReferenceGround();
 	App->environment->DrawReferenceAxis();
@@ -97,15 +98,7 @@ update_status ModuleRender::Update()
 	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
-
-	/*for (unsigned i = 0; i < App->modelLoader->meshes.size(); ++i)
-	{
-		const Mesh& mesh = App->modelLoader->meshes[i];
-
-		RenderMesh(mesh, App->modelLoader->materials[mesh.material], App->shader->program,
-			App->modelLoader->transform, view, projection);
-	}*/
-
+	
 	RenderComponentFromGameObject(App->scene->root, view, projection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
