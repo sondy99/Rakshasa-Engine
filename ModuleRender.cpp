@@ -77,6 +77,8 @@ update_status ModuleRender::PreUpdate()
 
 	App->editor->InitImGuiFrame();
 
+	CalculateGameObjectGlobalMatrix(App->scene->root);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -84,21 +86,21 @@ update_status ModuleRender::Update()
 {
 	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
 
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
 	App->environment->DrawReferenceGround();
 	App->environment->DrawReferenceAxis();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	
+
 	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
 
 	math::float4x4 projection = App->camera->ProjectionMatrix();
 	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
-	
+
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
-	
+
 	RenderComponentFromGameObject(App->scene->root, view, projection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -108,9 +110,9 @@ update_status ModuleRender::Update()
 
 update_status ModuleRender::PostUpdate()
 {
-	BROFILER_CATEGORY("RenderPostUpdate()", Profiler::Color::Orchid)
+	BROFILER_CATEGORY("RenderPostUpdate()", Profiler::Color::Orchid);
 
-		App->editor->EndImGuiFrame();
+	App->editor->EndImGuiFrame();
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -166,7 +168,7 @@ void ModuleRender::DrawProperties()
 		ImGui::Begin("Render properties", &toggleRenderProperties);
 		if (minFps != 0.0f && minFps != 100.0f)
 		{
-			char minFpsMessage[35];
+			/*char minFpsMessage[35];
 			sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
 			ImGui::Text(minFpsMessage);
 
@@ -181,7 +183,7 @@ void ModuleRender::DrawProperties()
 			ImGui::Text(minMsMessage);
 
 			sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
-			ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+			ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));*/
 		}
 
 		ImGui::End();
@@ -274,7 +276,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 {
 	for (auto &gameObjectChild : gameObject->childrens)
 	{
-		if (gameObjectChild->active) 
+		if (gameObjectChild->active)
 		{
 			if (gameObjectChild->childrens.size() > 0)
 			{
@@ -282,40 +284,39 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 				RenderComponentFromGameObject(gameObjectChild, view, projection);
 			}
 
-			if (gameObjectChild->components.size() > 0)
+			ComponentTransformation* transformation = (ComponentTransformation*)gameObjectChild->GetComponent(ComponentType::TRANSFORMATION);
+			ComponentMaterial* componentMaterial = (ComponentMaterial*)gameObjectChild->GetComponent(ComponentType::MATERIAL);
+			ComponentMesh* componentMesh = (ComponentMesh*)gameObjectChild->GetComponent(ComponentType::MESH);
+
+			if (componentMaterial != nullptr && componentMesh != nullptr)
 			{
-				math::float4x4 model = math::float4x4::identity;
-
-				for (auto &component : gameObjectChild->components)
-				{
-					if (component->componentType == ComponentType::TRANSFORM)
-					{
-						model = (dynamic_cast<ComponentTransformation*>(component))->localModelMatrix;
-					}
-				}
-
-				Material* material = nullptr;
-
-				for (auto &component : gameObjectChild->components)
-				{
-					if (component->componentType == ComponentType::MATERIAL)
-					{
-						material = &(dynamic_cast<ComponentMaterial*>(component))->material;
-					}
-				}
-
-				for (auto &component : gameObjectChild->components)
-				{
-					if (component->componentType == ComponentType::MESH)
-					{
-						Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
-
-						RenderMesh(mesh, *material, App->shader->program,
-							model, view, projection);
-
-					}
-				}
+				RenderMesh(componentMesh->mesh, componentMaterial->material, App->shader->program,
+					transformation->globalModelMatrix, view, projection);
 			}
+
+
 		}
+	}
+}
+
+void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
+{
+	ComponentTransformation* transform = (ComponentTransformation*)gameObject->GetComponent(ComponentType::TRANSFORMATION);
+
+	if (transform != nullptr)
+	{
+		if (gameObject->parent == nullptr)
+		{
+			transform->globalModelMatrix = transform->localModelMatrix;
+		}
+		else
+		{
+			transform->globalModelMatrix = ((ComponentTransformation*)gameObject->parent->GetComponent(ComponentType::TRANSFORMATION))->globalModelMatrix*transform->localModelMatrix;
+		}
+	}
+
+	for (auto &gameObjectChild : gameObject->childrens)
+	{
+		CalculateGameObjectGlobalMatrix(gameObjectChild);
 	}
 }

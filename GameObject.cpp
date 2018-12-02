@@ -14,3 +14,19 @@ GameObject::~GameObject()
 void GameObject::update()
 {
 }
+
+Component* GameObject::GetComponent(ComponentType componentType)
+{
+	Component* result = nullptr;
+
+	for (auto &component : components)
+	{
+		if (component->componentType == componentType)
+		{
+			result = component;
+			break;
+		}
+	}
+
+	return result;
+}

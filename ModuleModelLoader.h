@@ -37,10 +37,10 @@ private:
 	void CleanUpMeshesAndTextures(const GameObject* gameObject);
 	void GenerateMesh(Mesh& meshStruct);
 	void GenerateMaterial(Material& materialStruct);
-	void CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node, GameObject* gameObjectParent);
+	void CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node ,GameObject* gameObjectParent);
 	void CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh);
 	void CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex);
-	void CreateTransformationComponent(const aiNode* node, GameObject* gameObjectMesh);
+	void CreateTransformationComponent(const aiNode* node, GameObject* gameObject);
 
 };
 

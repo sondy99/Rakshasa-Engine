@@ -2,6 +2,7 @@
 #define __GAMEOBJECT_H__
 
 #include "Globals.h"
+#include "Component.h"
 
 #include <vector>
 #include <string>
@@ -15,6 +16,7 @@ public:
 	~GameObject();
 
 	void update();
+	Component* GameObject::GetComponent(ComponentType componentType);
 public:
 	std::string uuid = "";
 	std::string name = nullptr;

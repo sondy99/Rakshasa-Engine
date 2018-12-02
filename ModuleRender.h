@@ -42,6 +42,7 @@ private:
 	void manageFpsAndMsList();
 	void InitFrameBuffer(int width, int height);
 	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection);
+	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 private:
 	unsigned frameBufferObject = 0u;
 	unsigned renderBufferObject = 0u;

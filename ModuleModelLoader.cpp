@@ -42,6 +42,8 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 	{
 		gameObjectParent->name = std::string(scene->mRootNode->mName.C_Str());
 
+		CreateTransformationComponent(scene->mRootNode, gameObjectParent);
+
 		CreateGameObjectsFromNode(scene, scene->mRootNode, gameObjectParent);
 
 		aiReleaseImport(scene);
@@ -213,7 +215,7 @@ void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNo
 	gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
 }
 
-void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameObject* gameObjectMesh)
+void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameObject* gameObject)
 {
 	aiVector3D translation;
 	aiVector3D scaling;
@@ -225,7 +227,7 @@ void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameOb
 	float3 scale = { scaling.x, scaling.y, scaling.z };
 	Quat quatRotation = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
-	gameObjectMesh->components.push_back(new ComponentTransformation(gameObjectMesh, ComponentType::TRANSFORM, position, scale, quatRotation));
+	gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
 }
 
 void ModuleModelLoader::DrawProperties()
