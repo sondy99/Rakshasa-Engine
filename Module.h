@@ -3,10 +3,6 @@
 
 #include "Globals.h"
 
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_sdl.h"
-#include "Imgui/imgui_impl_opengl3.h"
-
 class Application;
 
 class Module

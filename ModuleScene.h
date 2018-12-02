@@ -18,8 +18,10 @@ public:
 	void DrawProperties();
 public:
 	GameObject* root = nullptr;
+	GameObject* gameObjectSelected = nullptr;
 	bool toggleSceneProperties = true;
 private:
+	void SetGameObjectSelected(GameObject* gameObject);
 	void DrawTreeNode(GameObject * gameObjectParent);
 };
 

@@ -9,6 +9,8 @@ class ComponentMaterial : public Component
 public:
 	ComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material);
 	~ComponentMaterial();
+
+	void DrawProperties() override;
 public:
 	Material material;
 };

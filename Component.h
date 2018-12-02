@@ -22,9 +22,9 @@ public:
 	virtual void enable() {};
 	virtual void update() {};
 	virtual void disable() {};
+	virtual void DrawProperties() {};
 public:
 	ComponentType componentType;
-	bool active = false;
 	const GameObject* gameObjectParent = nullptr;
 };
 

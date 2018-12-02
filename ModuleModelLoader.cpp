@@ -147,8 +147,6 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 	meshStruct.material = mesh->mMaterialIndex;
 	meshStruct.verticesNumber = mesh->mNumVertices;
 	meshStruct.indicesNumber = mesh->mNumFaces * 3;
-
-	//meshes.push_back(meshStruct);
 }
 
 void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
@@ -165,8 +163,6 @@ void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
 		materialStruct.texture0 = auxMaterialStruct.texture0;
 		materialStruct.width = auxMaterialStruct.width;
 		materialStruct.height = auxMaterialStruct.height;
-
-		//materials.push_back(materialStruct);
 	}
 }
 
@@ -194,6 +190,8 @@ void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const ai
 
 void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh)
 {
+	CreateTransformationComponent(node, gameObjectMesh);
+
 	Mesh meshStruct;
 	meshStruct.mesh = scene->mMeshes[node->mMeshes[0]];
 	GenerateMesh(meshStruct);
@@ -204,8 +202,6 @@ void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* 
 	{
 		CreateMaterialComponent(scene, node, gameObjectMesh, meshStruct.mesh->mMaterialIndex);
 	}
-
-	CreateTransformationComponent(node, gameObjectMesh);
 }
 
 void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex)
@@ -228,25 +224,35 @@ void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameOb
 	float3 position = { translation.x, translation.y, translation.z };
 	float3 scale = { scaling.x, scaling.y, scaling.z };
 	Quat quatRotation = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-	
+
 	gameObjectMesh->components.push_back(new ComponentTransformation(gameObjectMesh, ComponentType::TRANSFORM, position, scale, quatRotation));
 }
 
 void ModuleModelLoader::DrawProperties()
 {
+	GameObject* gameObjectSelected = App->scene->gameObjectSelected;
+
 	if (toggleModelProperties)
 	{
 		ImGui::Begin("Model", &toggleModelProperties);
-		/*ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
-		if (ImGui::CollapsingHeader("Textures", ImGuiTreeNodeFlags_DefaultOpen))
+
+		if (gameObjectSelected != nullptr)
 		{
-			for (auto &texture : materials)
+			ImGui::Text("Name: %s", gameObjectSelected->name.c_str());
+			ImGui::Text("Model selected has %d childs.", gameObjectSelected->childrens.size());
+			ImGui::NewLine();
+			ImGui::Checkbox("Active", &gameObjectSelected->active);
+			ImGui::NewLine();
+			
+			if (gameObjectSelected->components.size() > 0)
 			{
-				ImGui::Text("Size:  Width: %d | Height: %d", texture.width, texture.height);
-				float size = ImGui::GetWindowWidth();
-				ImGui::Image((ImTextureID)texture.texture0, { size, size });
+				for (auto &component : gameObjectSelected->components)
+				{
+					component->DrawProperties();
+				}
 			}
-		}*/
+		}
+
 		ImGui::End();
 	}
 }

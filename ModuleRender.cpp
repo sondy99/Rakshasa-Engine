@@ -161,25 +161,28 @@ void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
 
 void ModuleRender::DrawProperties()
 {
-	if (toggleRenderProperties && minFps != 0.0f && minFps != 100.0f)
+	if (toggleRenderProperties)
 	{
 		ImGui::Begin("Render properties", &toggleRenderProperties);
-		/*char minFpsMessage[35];
-		sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
-		ImGui::Text(minFpsMessage);
+		if (minFps != 0.0f && minFps != 100.0f)
+		{
+			char minFpsMessage[35];
+			sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
+			ImGui::Text(minFpsMessage);
 
-		char message[20];
-		sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);*/
-		//ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
+			char message[20];
+			sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
+			ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
 
-		ImGui::Separator();
+			ImGui::Separator();
 
-		//char minMsMessage[40];
-		//sprintf_s(minMsMessage, 40, "Max millisecod per second %0.1f", maxMs);
-		//ImGui::Text(minMsMessage);
+			char minMsMessage[40];
+			sprintf_s(minMsMessage, 40, "Max millisecod per second %0.1f", maxMs);
+			ImGui::Text(minMsMessage);
 
-		//sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
-		//ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+			sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
+			ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
+		}
 
 		ImGui::End();
 	}
@@ -271,43 +274,46 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 {
 	for (auto &gameObjectChild : gameObject->childrens)
 	{
-		if (gameObjectChild->childrens.size() > 0)
+		if (gameObjectChild->active) 
 		{
-			//TODO: change this to not use recursivity
-			RenderComponentFromGameObject(gameObjectChild, view, projection);
-		}
-
-		if (gameObjectChild->components.size() > 0)
-		{
-			math::float4x4 model = math::float4x4::identity;
-
-			for (auto &component : gameObjectChild->components)
+			if (gameObjectChild->childrens.size() > 0)
 			{
-				if (component->componentType == ComponentType::TRANSFORM)
-				{
-					model = (dynamic_cast<ComponentTransformation*>(component))->localMatrix;
-				}
+				//TODO: change this to not use recursivity
+				RenderComponentFromGameObject(gameObjectChild, view, projection);
 			}
 
-			Material* material = nullptr;
-
-			for (auto &component : gameObjectChild->components)
+			if (gameObjectChild->components.size() > 0)
 			{
-				if (component->componentType == ComponentType::MATERIAL)
+				math::float4x4 model = math::float4x4::identity;
+
+				for (auto &component : gameObjectChild->components)
 				{
-					material = &(dynamic_cast<ComponentMaterial*>(component))->material;
+					if (component->componentType == ComponentType::TRANSFORM)
+					{
+						model = (dynamic_cast<ComponentTransformation*>(component))->localMatrix;
+					}
 				}
-			}
 
-			for (auto &component : gameObjectChild->components)
-			{
-				if (component->componentType == ComponentType::MESH)
+				Material* material = nullptr;
+
+				for (auto &component : gameObjectChild->components)
 				{
-					Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
+					if (component->componentType == ComponentType::MATERIAL)
+					{
+						material = &(dynamic_cast<ComponentMaterial*>(component))->material;
+					}
+				}
 
-					RenderMesh(mesh, *material, App->shader->program,
-						model, view, projection);
+				for (auto &component : gameObjectChild->components)
+				{
+					if (component->componentType == ComponentType::MESH)
+					{
+						Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
 
+						RenderMesh(mesh, *material, App->shader->program,
+							model, view, projection);
+
+					}
 				}
 			}
 		}

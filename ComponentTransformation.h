@@ -9,6 +9,8 @@ class ComponentTransformation : public Component
 public:
 	ComponentTransformation(GameObject* gameObjectParent, ComponentType componentType, float3 position, float3 scale, Quat rotation);
 	~ComponentTransformation();
+
+	void DrawProperties() override;
 public:
 	float3 position = { 0.0f, 0.0f, 0.0f };
 	float3 rotationVec = { 0.0f, 0.0f, 0.0f };

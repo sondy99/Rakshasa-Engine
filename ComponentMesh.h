@@ -9,6 +9,8 @@ class ComponentMesh : public Component
 public:
 	ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
 	~ComponentMesh();
+
+	void DrawProperties() override;
 public:
 	Mesh mesh;
 };

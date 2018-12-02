@@ -90,15 +90,36 @@ void ModuleScene::DrawProperties()
 	ImGui::End();
 }
 
+void ModuleScene::SetGameObjectSelected(GameObject * gameObject)
+{
+	if (gameObjectSelected != nullptr)
+	{
+		gameObjectSelected->isSelected = false;
+	}
+	 
+	gameObjectSelected = gameObject;
+	gameObjectSelected->isSelected = true;
+}
+
 void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 {
-	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (root->childrens.empty()) {
-		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+		nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	bool gameObjectOpen = ImGui::TreeNodeEx(gameObjectParent->uuid.c_str(), node_flags, gameObjectParent->name.c_str());
+	if (gameObjectParent->isSelected)
+	{
+		nodeFlags = ImGuiTreeNodeFlags_Selected;
+	}
+
+	bool gameObjectOpen = ImGui::TreeNodeEx(gameObjectParent->uuid.c_str(), nodeFlags, gameObjectParent->name.c_str());
+	
+	if (ImGui::IsItemClicked(0))
+	{
+		SetGameObjectSelected(gameObjectParent);
+	}
 
 	if (gameObjectOpen)
 	{

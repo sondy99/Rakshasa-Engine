@@ -19,6 +19,8 @@ public:
 	std::string uuid = "";
 	std::string name = nullptr;
 	GameObject* parent = nullptr;
+	bool isSelected = false;
+	bool active = true;
 
 	std::vector<Component*> components;
 	std::vector<GameObject*> childrens;
