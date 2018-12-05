@@ -18,7 +18,7 @@ public:
 	void update();
 	Component* GameObject::GetComponent(ComponentType componentType);
 public:
-	std::string uuid = "";
+	char uuid[37];
 	std::string name = nullptr;
 	GameObject* parent = nullptr;
 	bool isSelected = false;

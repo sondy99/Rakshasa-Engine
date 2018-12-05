@@ -4,6 +4,8 @@
 
 #include "ModuleModelLoader.h"
 
+#include <string>
+
 ModuleScene::ModuleScene()
 {
 }
@@ -19,24 +21,24 @@ bool ModuleScene::Init()
 
 	root = new GameObject("root", nullptr);
 
-	//GameObject* nivelUno = new GameObject("primer nivel uno", root);
-	//GameObject* subnivelTres = new GameObject("sub nivel tres", nivelUno);
-	//nivelUno->childrens.push_back(subnivelTres);
+	GameObject* nivelUno = new GameObject("primer nivel uno", root);
+	GameObject* subnivelTres = new GameObject("sub nivel tres", nivelUno);
+	nivelUno->childrens.push_back(subnivelTres);
 
-	//root->childrens.push_back(nivelUno);
+	root->childrens.push_back(nivelUno);
 
-	//GameObject* nivelDos = new GameObject("primer nivel dos", root);
-	//GameObject* subnivelUno = new GameObject("sub nivel uno", nivelDos);
-	//nivelDos->childrens.push_back(subnivelUno);
-	//GameObject* subnivelDos = new GameObject("sub nivel dos", nivelDos);
-	//nivelDos->childrens.push_back(subnivelDos);
-	//GameObject* subsubniveluno = new GameObject("subsub nivel uno", subnivelDos);
-	//subnivelDos->childrens.push_back(subsubniveluno);
+	GameObject* nivelDos = new GameObject("primer nivel dos", root);
+	GameObject* subnivelUno = new GameObject("sub nivel uno", nivelDos);
+	nivelDos->childrens.push_back(subnivelUno);
+	GameObject* subnivelDos = new GameObject("sub nivel dos", nivelDos);
+	nivelDos->childrens.push_back(subnivelDos);
+	GameObject* subsubniveluno = new GameObject("subsub nivel uno", subnivelDos);
+	subnivelDos->childrens.push_back(subsubniveluno);
 
-	//root->childrens.push_back(nivelDos);
+	root->childrens.push_back(nivelDos);
 
-	//GameObject* nivelTres = new GameObject("primer nivel tres", root);
-	//root->childrens.push_back(nivelTres);
+	GameObject* nivelTres = new GameObject("primer nivel tres", root);
+	root->childrens.push_back(nivelTres);
 		
 	LoadModel("BakerHouse.FBX");
 
@@ -76,7 +78,7 @@ void ModuleScene::DrawProperties()
 		node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	bool rootOpen = ImGui::TreeNodeEx(root->uuid.c_str(), node_flags, root->name.c_str());
+	bool rootOpen = ImGui::TreeNodeEx(root->uuid, node_flags, root->name.c_str());
 
 	if (rootOpen)
 	{
@@ -106,7 +108,7 @@ void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (root->childrens.empty()) {
-		nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 	}
 
 	if (gameObjectParent->isSelected)
@@ -114,11 +116,41 @@ void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 		nodeFlags = ImGuiTreeNodeFlags_Selected;
 	}
 
-	bool gameObjectOpen = ImGui::TreeNodeEx(gameObjectParent->uuid.c_str(), nodeFlags, gameObjectParent->name.c_str());
+	bool gameObjectOpen = ImGui::TreeNodeEx(gameObjectParent->uuid, nodeFlags, gameObjectParent->name.c_str());
 	
 	if (ImGui::IsItemClicked(0))
 	{
 		SetGameObjectSelected(gameObjectParent);
+	}
+
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+	{
+		ImGui::SetDragDropPayload("uuidGameObject", gameObjectParent->uuid, 37);
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("uuidGameObject"))
+		{
+			char uuidGameObjectToMove[37];
+			sprintf_s(uuidGameObjectToMove, (char*)payload->Data);
+
+			GameObject* gameObjectToMove = GetGameObjectByName(root, uuidGameObjectToMove);
+
+			if (gameObjectToMove != nullptr)
+			{
+				std::vector<GameObject*>::iterator position = std::find(gameObjectToMove->parent->childrens.begin(), gameObjectToMove->parent->childrens.end(), gameObjectToMove);
+
+				if (position != gameObjectToMove->parent->childrens.end())
+				{
+					gameObjectToMove->parent->childrens.erase(position);
+				}
+
+				gameObjectToMove->parent = gameObjectParent;
+				gameObjectParent->childrens.push_back(gameObjectToMove);
+			}
+		}
 	}
 
 	if (gameObjectOpen)
@@ -129,5 +161,30 @@ void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 		}
 
 		ImGui::TreePop();
+	}}
+
+GameObject* ModuleScene::GetGameObjectByName(GameObject* gameObject, char uuidObjectName[37])
+{
+	GameObject* result = nullptr;
+
+	for (auto &gameObjectChild : gameObject->childrens)
+	{
+		if (gameObjectChild->childrens.size() > 0)
+		{
+			//TODO: change this to not use recursivity
+			result = GetGameObjectByName(gameObjectChild, uuidObjectName);
+		}
+
+		if (result == nullptr && (strcmp(gameObjectChild->uuid, uuidObjectName) == 0))
+		{
+			result = gameObjectChild;
+			break;
+		}
+		else if (result != nullptr)
+		{
+			break;
+		}
 	}
+
+	return result;
 }

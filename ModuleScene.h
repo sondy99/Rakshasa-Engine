@@ -23,6 +23,7 @@ public:
 private:
 	void SetGameObjectSelected(GameObject* gameObject);
 	void DrawTreeNode(GameObject * gameObjectParent);
+	GameObject* ModuleScene::GetGameObjectByName(GameObject* gameObject, char uuidObjectName[37]);
 };
 
 #endif __MODULESCENE_H_

@@ -4,7 +4,9 @@
 GameObject::GameObject(const char* name, GameObject* parent) : name(name), parent(parent)
 {
 	xg::Guid guid = xg::newGuid();
-	uuid = guid.str();
+
+	std::string uuidAux = guid.str();
+	sprintf_s(uuid, uuidAux.c_str());
 }
 
 GameObject::~GameObject()
