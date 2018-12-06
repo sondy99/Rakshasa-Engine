@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Component.h"
 
-#include <vector>
+#include <list>
 #include <string>
 
 class Component;
@@ -24,8 +24,8 @@ public:
 	bool isSelected = false;
 	bool active = true;
 
-	std::vector<Component*> components;
-	std::vector<GameObject*> childrens;
+	std::list<Component*> components;
+	std::list<GameObject*> childrens;
 };
 
 #endif __GAMEOBJECT_H__

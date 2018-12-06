@@ -4,6 +4,8 @@
 
 #include "ModuleModelLoader.h"
 
+#include "ComponentTransformation.h"
+
 #include <string>
 
 ModuleScene::ModuleScene()
@@ -18,28 +20,8 @@ ModuleScene::~ModuleScene()
 
 bool ModuleScene::Init()
 {
-
 	root = new GameObject("root", nullptr);
-
-	GameObject* nivelUno = new GameObject("primer nivel uno", root);
-	GameObject* subnivelTres = new GameObject("sub nivel tres", nivelUno);
-	nivelUno->childrens.push_back(subnivelTres);
-
-	root->childrens.push_back(nivelUno);
-
-	GameObject* nivelDos = new GameObject("primer nivel dos", root);
-	GameObject* subnivelUno = new GameObject("sub nivel uno", nivelDos);
-	nivelDos->childrens.push_back(subnivelUno);
-	GameObject* subnivelDos = new GameObject("sub nivel dos", nivelDos);
-	nivelDos->childrens.push_back(subnivelDos);
-	GameObject* subsubniveluno = new GameObject("subsub nivel uno", subnivelDos);
-	subnivelDos->childrens.push_back(subsubniveluno);
-
-	root->childrens.push_back(nivelDos);
-
-	GameObject* nivelTres = new GameObject("primer nivel tres", root);
-	root->childrens.push_back(nivelTres);
-		
+			
 	LoadModel("BakerHouse.FBX");
 
 	return true;
@@ -47,21 +29,30 @@ bool ModuleScene::Init()
 
 void ModuleScene::LoadModel(const char * modelPath)
 {
-	GameObject* gameObject = CreateGameObject("gameObject", nullptr);
+	GameObject* gameObject = CreateGameObject("gameObject", root, false);
 
 	App->modelLoader->Load(modelPath, gameObject);
 }
 
-GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
+GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, bool withTransformation)
 {
-	GameObject* gameObjectParent = new GameObject(name, parent);
+	GameObject* gameObject = new GameObject(name, parent);
 
-	if(parent == nullptr)
+	if(parent == root)
 	{
-		root->childrens.push_back(gameObjectParent);
+		root->childrens.push_back(gameObject);
 	}
 
-	return gameObjectParent;
+	if (withTransformation)
+	{
+		float3 position = { 0.0f,0.0f,0.0f };
+		float3 scale = { 1.0f,1.0f,1.0f };
+		Quat quatRotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
+
+		gameObject->components.push_back(new ComponentTransformation(parent, ComponentType::TRANSFORMATION, position, scale, quatRotation));
+	}
+
+	return gameObject;
 }
 
 void ModuleScene::DrawProperties() 
@@ -72,6 +63,11 @@ void ModuleScene::DrawProperties()
 		return;
 	}
 
+	if (ImGui::Button("Transform to model identity"))
+	{
+		CreateGameObject("genericGameObject", root, true);
+	}
+
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (root->childrens.empty()) {
@@ -79,6 +75,8 @@ void ModuleScene::DrawProperties()
 	}
 
 	bool rootOpen = ImGui::TreeNodeEx(root->uuid, node_flags, root->name.c_str());
+
+	DragAndDropManagement(root);
 
 	if (rootOpen)
 	{
@@ -123,35 +121,7 @@ void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 		SetGameObjectSelected(gameObjectParent);
 	}
 
-	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-	{
-		ImGui::SetDragDropPayload("uuidGameObject", gameObjectParent->uuid, 37);
-		ImGui::EndDragDropSource();
-	}
-
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("uuidGameObject"))
-		{
-			char uuidGameObjectToMove[37];
-			sprintf_s(uuidGameObjectToMove, (char*)payload->Data);
-
-			GameObject* gameObjectToMove = GetGameObjectByName(root, uuidGameObjectToMove);
-
-			if (gameObjectToMove != nullptr)
-			{
-				std::vector<GameObject*>::iterator position = std::find(gameObjectToMove->parent->childrens.begin(), gameObjectToMove->parent->childrens.end(), gameObjectToMove);
-
-				if (position != gameObjectToMove->parent->childrens.end())
-				{
-					gameObjectToMove->parent->childrens.erase(position);
-				}
-
-				gameObjectToMove->parent = gameObjectParent;
-				gameObjectParent->childrens.push_back(gameObjectToMove);
-			}
-		}
-	}
+	DragAndDropManagement(gameObjectParent);
 
 	if (gameObjectOpen)
 	{
@@ -163,7 +133,7 @@ void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
 		ImGui::TreePop();
 	}}
 
-GameObject* ModuleScene::GetGameObjectByName(GameObject* gameObject, char uuidObjectName[37])
+GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37])
 {
 	GameObject* result = nullptr;
 
@@ -172,7 +142,7 @@ GameObject* ModuleScene::GetGameObjectByName(GameObject* gameObject, char uuidOb
 		if (gameObjectChild->childrens.size() > 0)
 		{
 			//TODO: change this to not use recursivity
-			result = GetGameObjectByName(gameObjectChild, uuidObjectName);
+			result = GetGameObjectByUUID(gameObjectChild, uuidObjectName);
 		}
 
 		if (result == nullptr && (strcmp(gameObjectChild->uuid, uuidObjectName) == 0))
@@ -187,4 +157,32 @@ GameObject* ModuleScene::GetGameObjectByName(GameObject* gameObject, char uuidOb
 	}
 
 	return result;
+}
+
+void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
+{
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+	{
+		ImGui::SetDragDropPayload("uuidGameObject", gameObjectParent->uuid, 37);
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("uuidGameObject"))
+		{
+			char uuidGameObjectToMove[37];
+			sprintf_s(uuidGameObjectToMove, (char*)payload->Data);
+
+			GameObject* gameObjectToMove = GetGameObjectByUUID(root, uuidGameObjectToMove);
+
+			if (gameObjectToMove != nullptr)
+			{
+				gameObjectToMove->parent->childrens.remove(gameObjectToMove);
+
+				gameObjectToMove->parent = gameObjectParent;
+				gameObjectParent->childrens.push_back(gameObjectToMove);
+			}
+		}
+	}
 }

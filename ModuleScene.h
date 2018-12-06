@@ -14,7 +14,7 @@ public:
 	bool Init() override;
 
 	void LoadModel(const char* modelPath);
-	GameObject* CreateGameObject(const char* name, GameObject* parent);
+	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void DrawProperties();
 public:
 	GameObject* root = nullptr;
@@ -23,7 +23,8 @@ public:
 private:
 	void SetGameObjectSelected(GameObject* gameObject);
 	void DrawTreeNode(GameObject * gameObjectParent);
-	GameObject* ModuleScene::GetGameObjectByName(GameObject* gameObject, char uuidObjectName[37]);
+	GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);
+	void DragAndDropManagement(GameObject* gameObjectParent);
 };
 
 #endif __MODULESCENE_H_

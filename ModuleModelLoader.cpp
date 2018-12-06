@@ -174,7 +174,7 @@ void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const ai
 	{
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent);
+			GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent, false);
 
 			if (node->mChildren[i]->mMeshes != nullptr)
 			{

@@ -301,22 +301,24 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 
 void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 {
-	ComponentTransformation* transform = (ComponentTransformation*)gameObject->GetComponent(ComponentType::TRANSFORMATION);
+	ComponentTransformation* transformation = (ComponentTransformation*)gameObject->GetComponent(ComponentType::TRANSFORMATION);
 
-	if (transform != nullptr)
+	if (transformation != nullptr)
 	{
-		if (gameObject->parent == nullptr)
+		if (gameObject->parent == App->scene->root || gameObject->parent == nullptr)
 		{
-			transform->globalModelMatrix = transform->localModelMatrix;
+			transformation->globalModelMatrix = transformation->localModelMatrix;
 		}
 		else
 		{
-			transform->globalModelMatrix = ((ComponentTransformation*)gameObject->parent->GetComponent(ComponentType::TRANSFORMATION))->globalModelMatrix*transform->localModelMatrix;
+			ComponentTransformation* transformationParent = (ComponentTransformation*)gameObject->parent->GetComponent(ComponentType::TRANSFORMATION);
+			transformation->globalModelMatrix = transformationParent->globalModelMatrix*transformation->localModelMatrix;
 		}
 	}
 
 	for (auto &gameObjectChild : gameObject->childrens)
 	{
+		//TODO: change this to not use recursivity
 		CalculateGameObjectGlobalMatrix(gameObjectChild);
 	}
 }
