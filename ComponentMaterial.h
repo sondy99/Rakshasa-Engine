@@ -7,10 +7,12 @@
 class ComponentMaterial : public Component
 {
 public:
+	ComponentMaterial();
 	ComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material);
 	~ComponentMaterial();
 
 	void DrawProperties() override;
+	Component* clone() override;
 public:
 	Material material;
 };

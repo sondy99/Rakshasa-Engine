@@ -7,10 +7,12 @@
 class ComponentTransformation : public Component
 {
 public:
+	ComponentTransformation();
 	ComponentTransformation(GameObject* gameObjectParent, ComponentType componentType, float3 position, float3 scale, Quat rotation);
 	~ComponentTransformation();
 
 	void DrawProperties() override;
+	Component* clone() override;
 	void UnpdateLocalModelMatrix();
 public:
 	bool identity = true;

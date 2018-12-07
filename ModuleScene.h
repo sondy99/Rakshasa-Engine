@@ -19,7 +19,8 @@ public:
 public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;
-	GameObject* gameObjectToBedeleted = nullptr;
+	GameObject* gameObjectToBeDeleted = nullptr;
+	GameObject* gameObjectToBeDuplicated = nullptr;
 	bool toggleSceneProperties = true;
 private:
 	void DrawTreeNode(GameObject * gameObject);
@@ -27,6 +28,7 @@ private:
 	GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);
 	void DragAndDropManagement(GameObject* gameObjectParent);
 	void ClickManagement(GameObject* gameObject);
+	void ManageDuplicationAndDeletionGameObject();
 };
 
 #endif __MODULESCENE_H_

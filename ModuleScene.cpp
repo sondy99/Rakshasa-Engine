@@ -80,12 +80,7 @@ void ModuleScene::DrawProperties()
 	{
 		DragAndDropManagement(root);
 
-		if (gameObjectToBedeleted != nullptr)
-		{
-			gameObjectToBedeleted->remove();
-			gameObjectToBedeleted = nullptr;
-			gameObjectSelected = nullptr;
-		}
+		ManageDuplicationAndDeletionGameObject();
 
 		for (std::list<GameObject*>::iterator iterator = root->childrens.begin(); iterator != root->childrens.end(); ++iterator)
 		{
@@ -211,13 +206,30 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 		{
 			if (ImGui::MenuItem("Duplicate"))
 			{
-
+				gameObjectToBeDuplicated = gameObject;
 			}
 			if (ImGui::MenuItem("Delete"))
 			{
-				gameObjectToBedeleted = gameObject;
+				gameObjectToBeDeleted = gameObject;
 			}
 			ImGui::EndPopup();
 		}
 	}
+}
+
+void ModuleScene::ManageDuplicationAndDeletionGameObject()
+{
+	if (gameObjectToBeDeleted != nullptr)
+	{
+		gameObjectToBeDeleted->remove();
+		gameObjectToBeDeleted = nullptr;
+		gameObjectSelected = nullptr;
+	}
+
+	if (gameObjectToBeDuplicated != nullptr)
+	{
+		gameObjectToBeDuplicated->duplicate(nullptr);
+		gameObjectToBeDuplicated = nullptr;
+	}
+
 }

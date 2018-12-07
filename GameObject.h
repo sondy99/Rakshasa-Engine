@@ -17,6 +17,8 @@ public:
 
 	void update();
 	void remove();
+	void duplicate(GameObject* newGameObjectParent);
+	GameObject* clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
 public:
 	char uuid[37];

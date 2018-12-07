@@ -1,5 +1,9 @@
 #include "ComponentTransformation.h"
 
+ComponentTransformation::ComponentTransformation()
+{
+}
+
 ComponentTransformation::ComponentTransformation(GameObject* gameObjectParent,
 	ComponentType componentType, float3 position, float3 scale, Quat rotation) :
 	Component(gameObjectParent, componentType),
@@ -129,4 +133,20 @@ void ComponentTransformation::DrawProperties()
 			localModelMatrix.Set(float4x4::FromTRS(position, rotation, scale));
 		}
 	}
+}
+
+Component* ComponentTransformation::clone()
+{
+	ComponentTransformation* result = new ComponentTransformation();
+
+	result->componentType = componentType;
+	result->position = position;
+	result->scale = scale;
+	result->rotation = rotation;
+	result->identity = identity;
+
+	result->localModelMatrix = localModelMatrix;
+	result->globalModelMatrix = globalModelMatrix;
+
+	return result;
 }

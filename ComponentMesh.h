@@ -7,10 +7,12 @@
 class ComponentMesh : public Component
 {
 public:
+	ComponentMesh();
 	ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
 	~ComponentMesh();
 
 	void DrawProperties() override;
+	Component* clone() override;
 public:
 	Mesh mesh;
 };

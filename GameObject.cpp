@@ -41,6 +41,43 @@ void GameObject::remove()
 	}
 }
 
+void GameObject::duplicate(GameObject* newGameObjectParent)
+{
+	GameObject* newGameObject = clone();
+
+	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
+	{
+		Component* clonedComponenet = (*iterator)->clone();
+		clonedComponenet->gameObjectParent = newGameObject;
+
+		newGameObject->components.push_back(clonedComponenet);
+	}
+
+	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
+	{
+		(*iterator)->duplicate(newGameObject);
+	}
+
+	if (newGameObjectParent == nullptr)
+	{
+		parent->childrens.push_back(newGameObject);
+	}
+	else 
+	{
+		newGameObject->parent = newGameObjectParent;
+		newGameObjectParent->childrens.push_back(newGameObject);
+	}
+}
+
+GameObject* GameObject::clone()
+{
+	GameObject* result = new GameObject(name.c_str(), parent);
+
+	result->active = active;
+
+	return result;
+}
+
 Component* GameObject::GetComponent(ComponentType componentType)
 {
 	Component* result = nullptr;
