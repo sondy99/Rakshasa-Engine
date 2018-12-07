@@ -21,6 +21,24 @@ enum update_status
 
 #define myDegreesToRadians(x) x*(3.141592f/180.0f)
 
+#define RELEASE( x )\
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+#define RELEASE_ARRAY( x )\
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }
+
 // Configuration -----------
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 640

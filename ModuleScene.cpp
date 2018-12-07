@@ -76,13 +76,20 @@ void ModuleScene::DrawProperties()
 
 	bool rootOpen = ImGui::TreeNodeEx(root->uuid, node_flags, root->name.c_str());
 
-	DragAndDropManagement(root);
-
-	if (rootOpen)
+	if (rootOpen && !root->childrens.empty())
 	{
-		for (auto &gameObjectChild : root->childrens) 
+		DragAndDropManagement(root);
+
+		if (gameObjectToBedeleted != nullptr)
 		{
-			DrawTreeNode(gameObjectChild);
+			gameObjectToBedeleted->remove();
+			gameObjectToBedeleted = nullptr;
+			gameObjectSelected = nullptr;
+		}
+
+		for (std::list<GameObject*>::iterator iterator = root->childrens.begin(); iterator != root->childrens.end(); ++iterator)
+		{
+			DrawTreeNode(*iterator);
 		}
 		ImGui::TreePop();
 	}
@@ -90,48 +97,46 @@ void ModuleScene::DrawProperties()
 	ImGui::End();
 }
 
+void ModuleScene::DrawTreeNode(GameObject * gameObject)
+{
+	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+	if (gameObject->childrens.empty()) {
+		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+	}
+
+	if (gameObject->isSelected)
+	{
+		nodeFlags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	bool gameObjectOpen = ImGui::TreeNodeEx(gameObject->uuid, nodeFlags, gameObject->name.c_str());
+	
+	DragAndDropManagement(gameObject);
+	ClickManagement(gameObject);
+	
+	if (gameObjectOpen)
+	{
+		for (std::list<GameObject*>::iterator iterator = gameObject->childrens.begin(); iterator != gameObject->childrens.end(); ++iterator)
+		{
+			DrawTreeNode(*iterator);
+		}
+
+		ImGui::TreePop();
+	}
+}
+
+
 void ModuleScene::SetGameObjectSelected(GameObject * gameObject)
 {
 	if (gameObjectSelected != nullptr)
 	{
 		gameObjectSelected->isSelected = false;
 	}
-	 
+
 	gameObjectSelected = gameObject;
 	gameObjectSelected->isSelected = true;
 }
-
-void ModuleScene::DrawTreeNode(GameObject * gameObjectParent)
-{
-	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
-
-	if (root->childrens.empty()) {
-		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
-	}
-
-	if (gameObjectParent->isSelected)
-	{
-		nodeFlags = ImGuiTreeNodeFlags_Selected;
-	}
-
-	bool gameObjectOpen = ImGui::TreeNodeEx(gameObjectParent->uuid, nodeFlags, gameObjectParent->name.c_str());
-	
-	if (ImGui::IsItemClicked(0))
-	{
-		SetGameObjectSelected(gameObjectParent);
-	}
-
-	DragAndDropManagement(gameObjectParent);
-
-	if (gameObjectOpen)
-	{
-		for (auto &gameObjectChild : gameObjectParent->childrens)
-		{
-			DrawTreeNode(gameObjectChild);
-		}
-
-		ImGui::TreePop();
-	}}
 
 GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37])
 {
@@ -183,6 +188,36 @@ void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
 				gameObjectToMove->parent = gameObjectParent;
 				gameObjectParent->childrens.push_back(gameObjectToMove);
 			}
+		}
+	}
+}
+
+void ModuleScene::ClickManagement(GameObject* gameObject)
+{
+	if (ImGui::IsItemClicked(0))
+	{
+		SetGameObjectSelected(gameObject);
+	}
+
+	if (ImGui::IsItemClicked(1))
+	{
+		SetGameObjectSelected(gameObject);
+		ImGui::OpenPopup("GameObjectContextualMenu");
+	}
+
+	if (gameObject->isSelected)
+	{
+		if (ImGui::BeginPopup("GameObjectContextualMenu"))
+		{
+			if (ImGui::MenuItem("Duplicate"))
+			{
+
+			}
+			if (ImGui::MenuItem("Delete"))
+			{
+				gameObjectToBedeleted = gameObject;
+			}
+			ImGui::EndPopup();
 		}
 	}
 }

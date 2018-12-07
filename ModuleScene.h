@@ -19,12 +19,14 @@ public:
 public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;
+	GameObject* gameObjectToBedeleted = nullptr;
 	bool toggleSceneProperties = true;
 private:
+	void DrawTreeNode(GameObject * gameObject);
 	void SetGameObjectSelected(GameObject* gameObject);
-	void DrawTreeNode(GameObject * gameObjectParent);
 	GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);
 	void DragAndDropManagement(GameObject* gameObjectParent);
+	void ClickManagement(GameObject* gameObject);
 };
 
 #endif __MODULESCENE_H_

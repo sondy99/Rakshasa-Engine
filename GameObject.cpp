@@ -1,6 +1,9 @@
 #include "GameObject.h"
 #include "crossguid/guid.hpp"
 
+#include "Application.h"
+#include "ModuleScene.h"
+
 GameObject::GameObject(const char* name, GameObject* parent) : name(name), parent(parent)
 {
 	xg::Guid guid = xg::newGuid();
@@ -15,6 +18,27 @@ GameObject::~GameObject()
 
 void GameObject::update()
 {
+}
+
+void GameObject::remove()
+{
+	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
+	{
+		RELEASE(*iterator);
+		iterator = components.erase(iterator);
+	}
+
+	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
+	{
+		(*iterator)->remove();
+		RELEASE(*iterator);
+		iterator = childrens.erase(iterator);
+	}
+
+	if (parent == App->scene->root) 
+	{
+		parent->childrens.remove(this);
+	}
 }
 
 Component* GameObject::GetComponent(ComponentType componentType)
