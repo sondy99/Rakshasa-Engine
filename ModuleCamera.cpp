@@ -110,14 +110,11 @@ math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& 
 	cameraSide.Normalize();
 	math::float3 auxCameraUp = cameraSide.Cross(cameraFront);
 
-	math::float4x4 matrix;
-	matrix[0][0] = cameraSide.x; matrix[0][1] = cameraSide.y; matrix[0][2] = cameraSide.z;
-	matrix[1][0] = auxCameraUp.x; matrix[1][1] = auxCameraUp.y; matrix[1][2] = auxCameraUp.z;
-	matrix[2][0] = -cameraFront.x; matrix[2][1] = -cameraFront.y; matrix[2][2] = -cameraFront.z;
-	matrix[0][3] = -cameraSide.Dot(cameraPosition); matrix[1][3] = -auxCameraUp.Dot(cameraPosition); matrix[2][3] = cameraFront.Dot(cameraPosition);
-	matrix[3][0] = 0.0f; matrix[3][1] = 0.0f; matrix[3][2] = 0.0f; matrix[3][3] = 1.0f;
+	frustum.pos = cameraPosition;
+	frustum.front = cameraFront;
+	frustum.up = auxCameraUp;
 
-	return matrix;
+	return frustum.ViewMatrix();
 }
 
 math::float4x4 ModuleCamera::ProjectionMatrix()

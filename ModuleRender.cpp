@@ -84,9 +84,9 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::Update()
 {
-	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua)
+	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 
 	App->environment->DrawReferenceGround();
 	App->environment->DrawReferenceAxis();
@@ -198,8 +198,7 @@ void ModuleRender::DrawSceneWindow()
 
 	App->camera->SetScreenNewScreenSize(size.x, size.y);
 
-	ImGui::Image((ImTextureID)App->renderer->renderTexture,
-		{ size.x, size.y }, { 0,1 }, { 1,0 });
+	ImGui::Image((ImTextureID)App->renderer->renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 
 	ImGui::End();
 }

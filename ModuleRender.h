@@ -26,10 +26,8 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 	
-	void RenderMesh(const Mesh& mesh, 
-		const Material& material, 
-		unsigned program, const math::float4x4& model,
-		const math::float4x4& view, const math::float4x4& proj);
+	void RenderMesh(const Mesh& mesh, const Material& material, unsigned program, 
+		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	void DrawProperties();
 	void DrawSceneWindow();
 public:
