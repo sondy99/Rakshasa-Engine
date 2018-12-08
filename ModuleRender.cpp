@@ -92,7 +92,7 @@ update_status ModuleRender::Update()
 	math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
 
 	RenderUsingSpecificFrameBuffer(frameBufferScene, App->camera->sceneCamera, viewScene, projectionScene);
-	
+
 	if (componentCameraGameSelected != nullptr)
 	{
 		math::float4x4 viewGame = componentCameraGameSelected->LookAt(componentCameraGameSelected->cameraPosition,
@@ -192,7 +192,7 @@ void ModuleRender::DrawProperties()
 void ModuleRender::DrawCameraSceneWindow()
 {
 	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
-	
+
 	if (ImGui::IsWindowFocused())
 	{
 		App->camera->selectedCamera = App->camera->sceneCamera;
@@ -211,26 +211,48 @@ void ModuleRender::DrawCameraSceneWindow()
 void ModuleRender::DrawCameraGameWindow()
 {
 	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
-	
-	GameObject* cameraGameObject = App->scene->GetGameCamera();
 
-	if (cameraGameObject != nullptr)
+	std::list<GameObject*> camerasGameObject = App->scene->GetGameCameras();
+
+	if (camerasGameObject.size() > 0)
 	{
-		componentCameraGameSelected = (ComponentCamera*)cameraGameObject->GetComponent(ComponentType::CAMERA);
+		//static const char* currentGameObjecteName = camerasGameObject.front()->name.c_str();
+		static const char* currentGameObjecteName = NULL;
 
-		if (ImGui::IsWindowFocused())
+		if (ImGui::BeginCombo("##combo", currentGameObjecteName)) // The second parameter is the label previewed before opening the combo.
 		{
-			App->camera->selectedCamera = componentCameraGameSelected;
-			App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
+			for (std::list<GameObject*>::iterator iterator = camerasGameObject.begin(); iterator != camerasGameObject.end(); ++iterator)
+			{
+				bool isSelected = (currentGameObjecteName == (*iterator)->name.c_str());
+				if (ImGui::Selectable((*iterator)->name.c_str(), isSelected))
+				{
+					currentGameObjecteName = (*iterator)->name.c_str();
+					componentCameraGameSelected = (ComponentCamera*)(*iterator)->GetComponent(ComponentType::CAMERA);
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndCombo();
 		}
 
-		ImVec2 size = ImGui::GetWindowSize();
+		if (componentCameraGameSelected)
+		{
+			if (ImGui::IsWindowFocused())
+			{
+				App->camera->selectedCamera = componentCameraGameSelected;
+				App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
+			}
 
-		componentCameraGameSelected->SetScreenNewScreenSize(size.x, size.y);
+			ImVec2 size = ImGui::GetWindowSize();
 
-		ImGui::Image((ImTextureID)frameBufferGame.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+			componentCameraGameSelected->SetScreenNewScreenSize(size.x, size.y);
+
+			ImGui::Image((ImTextureID)frameBufferGame.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+		}
 	}
-	
+
 	ImGui::End();
 }
 
@@ -311,7 +333,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 			if (gameObjectChild->childrens.size() > 0)
 			{
 				ComponentCamera* camera = (ComponentCamera*)gameObjectChild->GetComponent(ComponentType::CAMERA);
-				
+
 				if (camera == nullptr)
 				{
 					//TODO: change this to not use recursivity

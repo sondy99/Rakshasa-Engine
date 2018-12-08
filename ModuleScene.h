@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#include "list";
+
 class GameObject;
 
 class ModuleScene : public Module
@@ -16,7 +18,7 @@ public:
 	void LoadModel(const char* modelPath);
 	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void DrawProperties();
-	GameObject* GetGameCamera();
+	std::list<GameObject*> GetGameCameras();
 public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;
@@ -28,9 +30,11 @@ private:
 	void DragAndDropManagement(GameObject* gameObjectParent);
 	void ClickManagement(GameObject* gameObject);
 	void ManageDuplicationAndDeletionGameObject();
+	void CreateGameObjectCamera();
 private:
 	GameObject* gameObjectToBeDeleted = nullptr;
 	GameObject* gameObjectToBeDuplicated = nullptr;
+	int cameraCounter = 1;
 };
 
 #endif __MODULESCENE_H_

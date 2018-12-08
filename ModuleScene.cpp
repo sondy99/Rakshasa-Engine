@@ -23,8 +23,7 @@ bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
 
-	GameObject* camera = CreateGameObject("Camera", root, false);
-	camera->components.push_back((new ComponentCamera(camera, ComponentType::CAMERA)));
+	CreateGameObjectCamera();
 
 	LoadModel("BakerHouse.FBX");
 
@@ -67,10 +66,16 @@ void ModuleScene::DrawProperties()
 		return;
 	}
 
-	if (ImGui::Button("Transform to model identity"))
+	if (ImGui::Button("Create generic game object"))
 	{
 		CreateGameObject("genericGameObject", root, true);
 	}
+
+	if (ImGui::Button("Create camera"))
+	{
+		CreateGameObjectCamera();
+	}
+	
 
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
@@ -96,9 +101,9 @@ void ModuleScene::DrawProperties()
 	ImGui::End();
 }
 
-GameObject * ModuleScene::GetGameCamera()
+std::list<GameObject*> ModuleScene::GetGameCameras()
 {
-	GameObject* result = nullptr;
+	std::list<GameObject*> result;
 
 	for (std::list<GameObject*>::iterator iterator = root->childrens.begin(); iterator != root->childrens.end(); ++iterator)
 	{
@@ -108,7 +113,7 @@ GameObject * ModuleScene::GetGameCamera()
 
 			if (camera != nullptr)
 			{
-				result = *iterator;
+				result.push_back(*iterator);
 			}
 			
 		}
@@ -257,4 +262,11 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 		gameObjectToBeDuplicated = nullptr;
 	}
 
+}
+
+void ModuleScene::CreateGameObjectCamera()
+{
+	std::string cameraName = "Camera." + std::to_string(cameraCounter++);
+	GameObject* camera = CreateGameObject(cameraName.c_str(), root, false);
+	camera->components.push_back((new ComponentCamera(camera, ComponentType::CAMERA)));
 }
