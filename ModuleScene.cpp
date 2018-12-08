@@ -221,7 +221,7 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 {
 	if (gameObjectToBeDeleted != nullptr)
 	{
-		gameObjectToBeDeleted->remove();
+		gameObjectToBeDeleted->remove(gameObjectToBeDeleted);
 		gameObjectToBeDeleted = nullptr;
 		gameObjectSelected = nullptr;
 	}

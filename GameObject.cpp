@@ -1,9 +1,6 @@
 #include "GameObject.h"
 #include "crossguid/guid.hpp"
 
-#include "Application.h"
-#include "ModuleScene.h"
-
 GameObject::GameObject(const char* name, GameObject* parent) : name(name), parent(parent)
 {
 	xg::Guid guid = xg::newGuid();
@@ -20,7 +17,7 @@ void GameObject::update()
 {
 }
 
-void GameObject::remove()
+void GameObject::remove(GameObject* mainObjectToDelete)
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 	{
@@ -30,12 +27,12 @@ void GameObject::remove()
 
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
 	{
-		(*iterator)->remove();
+		(*iterator)->remove(nullptr);
 		RELEASE(*iterator);
 		iterator = childrens.erase(iterator);
 	}
 
-	if (parent == App->scene->root) 
+	if (mainObjectToDelete != nullptr && mainObjectToDelete == this)
 	{
 		parent->childrens.remove(this);
 	}

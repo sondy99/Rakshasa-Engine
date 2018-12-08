@@ -16,7 +16,7 @@ public:
 	~GameObject();
 
 	void update();
-	void remove();
+	void remove(GameObject* mainObjectToDelete);
 	void duplicate(GameObject* newGameObjectParent);
 	GameObject* clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
