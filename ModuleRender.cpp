@@ -88,10 +88,10 @@ update_status ModuleRender::Update()
 {
 	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
 
-	math::float4x4 viewScene = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
-	math::float4x4 projectionScene = App->camera->ProjectionMatrix();
+	math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
+	math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
 
-	RenderUsingSpecificFrameBuffer(frameBufferScene, viewScene, projectionScene);
+	RenderUsingSpecificFrameBuffer(frameBufferScene, App->camera->sceneCamera, viewScene, projectionScene);
 	
 	if (componentCameraGameSelected != nullptr)
 	{
@@ -99,7 +99,7 @@ update_status ModuleRender::Update()
 			componentCameraGameSelected->cameraFront, componentCameraGameSelected->cameraUp);
 		math::float4x4 projectionGame = componentCameraGameSelected->ProjectionMatrix();
 
-		RenderUsingSpecificFrameBuffer(frameBufferGame, viewGame, projectionGame);
+		RenderUsingSpecificFrameBuffer(frameBufferGame, componentCameraGameSelected, viewGame, projectionGame);
 	}
 
 	return UPDATE_CONTINUE;
@@ -191,7 +191,13 @@ void ModuleRender::DrawProperties()
 
 void ModuleRender::DrawCameraSceneWindow()
 {
-	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
+	
+	if (ImGui::IsWindowFocused())
+	{
+		App->camera->selectedCamera = App->camera->sceneCamera;
+		App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
+	}
 
 	ImVec2 size = ImGui::GetWindowSize();
 
@@ -204,14 +210,20 @@ void ModuleRender::DrawCameraSceneWindow()
 
 void ModuleRender::DrawCameraGameWindow()
 {
-	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
+	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
+	
 	GameObject* cameraGameObject = App->scene->GetGameCamera();
 
 	if (cameraGameObject != nullptr)
 	{
 		componentCameraGameSelected = (ComponentCamera*)cameraGameObject->GetComponent(ComponentType::CAMERA);
-		
+
+		if (ImGui::IsWindowFocused())
+		{
+			App->camera->selectedCamera = componentCameraGameSelected;
+			App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
+		}
+
 		ImVec2 size = ImGui::GetWindowSize();
 
 		componentCameraGameSelected->SetScreenNewScreenSize(size.x, size.y);
@@ -346,7 +358,7 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 	}
 }
 
-void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, math::float4x4 view, math::float4x4 projection)
+void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 
@@ -356,7 +368,7 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, App->camera->screenWidth, App->camera->screenHeight, view, projection);
+	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, camera->screenWidth, camera->screenHeight, view, projection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 

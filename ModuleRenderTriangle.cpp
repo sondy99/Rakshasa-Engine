@@ -7,6 +7,8 @@
 #include "ModuleCamera.h"
 #include "ModuleEnvironment.h"
 
+#include "ComponentCamera.h"
+
 #include "GL/glew.h"
 #include "SDL.h"
 
@@ -70,8 +72,8 @@ update_status ModuleRenderTriangle::Update()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-	math::float4x4 projection = App->camera->ProjectionMatrix();
-	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
+	math::float4x4 projection = App->camera->sceneCamera->ProjectionMatrix();
+	math::float4x4 view = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
 	math::float4x4 model = math::float4x4::identity;
 
 	glUseProgram(App->shader->program);

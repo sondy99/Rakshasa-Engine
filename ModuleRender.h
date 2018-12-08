@@ -51,7 +51,7 @@ private:
 	void InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit);
 	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
-	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, math::float4x4 view, math::float4x4 projection);
+	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
 private:
 	FrameBufferStruct frameBufferScene;
 	FrameBufferStruct frameBufferGame;
