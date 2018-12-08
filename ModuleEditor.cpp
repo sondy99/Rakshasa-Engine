@@ -95,7 +95,8 @@ void ModuleEditor::WindowManager()
 	App->scene->DrawProperties();
 	DrawConsole();
 
-	App->renderer->DrawSceneWindow();
+	App->renderer->DrawCameraSceneWindow();
+	App->renderer->DrawCameraGameWindow();
 }
 
 void ModuleEditor::InitImGuiFrame()

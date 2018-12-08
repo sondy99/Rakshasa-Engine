@@ -600,23 +600,21 @@ bool ModuleDebugDraw::CleanUp()
     return true;
 }
 
+void ModuleDebugDraw::Draw(unsigned fbo, unsigned fb_width, unsigned fb_height, math::float4x4 view, math::float4x4 projection)
+{
+	implementation->width = fb_width;
+	implementation->height = fb_height;
+	implementation->mvpMatrix = projection * view;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	dd::flush();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 update_status  ModuleDebugDraw::Update()
 {
 	return UPDATE_CONTINUE;
 }
 
-void ModuleDebugDraw::Draw(unsigned fbo, unsigned fb_width, unsigned fb_height)
-{
-	math::float4x4 proj = App->camera->ProjectionMatrix();
-	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
-
-    implementation->width     = fb_width;
-    implementation->height    = fb_height;
-    implementation->mvpMatrix = proj * view;
-
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    dd::flush();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
 
 

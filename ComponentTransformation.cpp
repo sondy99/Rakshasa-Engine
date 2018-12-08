@@ -62,7 +62,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("2");
 		if (ImGui::InputFloat("", &position.y,
 			0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Z:");
@@ -70,7 +72,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("3");
 		if (ImGui::InputFloat("", &position.z,
 			0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::PopID();
 
 		math::float3 auxRotation = rotation.ToEulerXYZ();
@@ -81,7 +85,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("4");
 		if (ImGui::InputFloat("", &auxRotation.x, 0.0f, 0.0f, "%.3f",
 			ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Y:");
@@ -89,7 +95,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("5");
 		if (ImGui::InputFloat("", &auxRotation.y, 0.0f, 0.0f, "%.3f",
 			ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Z:");
@@ -97,7 +105,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("6");
 		if (ImGui::InputFloat("", &auxRotation.z, 0.0f, 0.0f, "%.3f",
 			ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::PopID();
 		auxRotation *= 0.0174532925199432957f;
 		rotation = rotation.FromEulerXYZ(auxRotation.x, auxRotation.y, auxRotation.z);
@@ -108,7 +118,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("7");
 		if (ImGui::InputFloat("", &scale.x, 0.0f, 0.0f, "%.3f",
 			ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Y:");
@@ -116,7 +128,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("8");
 		if (ImGui::InputFloat("", &scale.y, 0.0f, 0.0f, "%.3f",
 			ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Z:");
@@ -124,7 +138,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("9");
 		if (ImGui::InputFloat("", &scale.z, 0.0f, 0.0f, "%.3f",
 			ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::PopID();
 		ImGui::PopItemWidth();
 

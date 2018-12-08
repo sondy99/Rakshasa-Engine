@@ -8,11 +8,20 @@
 
 #include "ModuleModelLoader.h"
 
+class ComponentCamera;
+
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
 struct Mesh;
 struct Material;
+
+struct FrameBufferStruct
+{
+	unsigned frameBufferObject = 0u;
+	unsigned renderBufferObject = 0u;
+	unsigned renderTexture = 0u;
+};
 
 class ModuleRender : public Module
 {
@@ -29,7 +38,8 @@ public:
 	void RenderMesh(const Mesh& mesh, const Material& material, unsigned program, 
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	void DrawProperties();
-	void DrawSceneWindow();
+	void DrawCameraSceneWindow();
+	void DrawCameraGameWindow();
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;
@@ -38,13 +48,14 @@ public:
 private:
 	void FpsCount();
 	void manageFpsAndMsList();
-	void InitFrameBuffer(int width, int height);
+	void InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit);
 	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
+	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, math::float4x4 view, math::float4x4 projection);
 private:
-	unsigned frameBufferObject = 0u;
-	unsigned renderBufferObject = 0u;
-	unsigned renderTexture = 0u;
+	FrameBufferStruct frameBufferScene;
+	FrameBufferStruct frameBufferGame;
+	ComponentCamera* componentCameraGameSelected = nullptr;
 	bool sceneEnabled = true;
 
 	float lastTickTime = 0.0f;

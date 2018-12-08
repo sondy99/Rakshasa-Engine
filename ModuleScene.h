@@ -16,11 +16,10 @@ public:
 	void LoadModel(const char* modelPath);
 	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void DrawProperties();
+	GameObject* GetGameCamera();
 public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;
-	GameObject* gameObjectToBeDeleted = nullptr;
-	GameObject* gameObjectToBeDuplicated = nullptr;
 	bool toggleSceneProperties = true;
 private:
 	void DrawTreeNode(GameObject * gameObject);
@@ -29,6 +28,9 @@ private:
 	void DragAndDropManagement(GameObject* gameObjectParent);
 	void ClickManagement(GameObject* gameObject);
 	void ManageDuplicationAndDeletionGameObject();
+private:
+	GameObject* gameObjectToBeDeleted = nullptr;
+	GameObject* gameObjectToBeDuplicated = nullptr;
 };
 
 #endif __MODULESCENE_H_

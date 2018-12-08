@@ -5,6 +5,7 @@
 #include "ModuleModelLoader.h"
 
 #include "ComponentTransformation.h"
+#include "ComponentCamera.h"
 
 #include <string>
 
@@ -21,7 +22,10 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
-			
+
+	GameObject* camera = CreateGameObject("Camera", root, false);
+	camera->components.push_back((new ComponentCamera(camera, ComponentType::CAMERA)));
+
 	LoadModel("BakerHouse.FBX");
 
 	return true;
@@ -90,6 +94,27 @@ void ModuleScene::DrawProperties()
 	}
 
 	ImGui::End();
+}
+
+GameObject * ModuleScene::GetGameCamera()
+{
+	GameObject* result = nullptr;
+
+	for (std::list<GameObject*>::iterator iterator = root->childrens.begin(); iterator != root->childrens.end(); ++iterator)
+	{
+		if ((*iterator)->components.size() > 0)
+		{
+			ComponentCamera* camera = (ComponentCamera*)(*iterator)->GetComponent(ComponentType::CAMERA);
+
+			if (camera != nullptr)
+			{
+				result = *iterator;
+			}
+			
+		}
+	}
+
+	return result;
 }
 
 void ModuleScene::DrawTreeNode(GameObject * gameObject)

@@ -14,6 +14,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransformation.h"
+#include "ComponentCamera.h"
 
 #include "SDL.h"
 #include "GL/glew.h"
@@ -62,7 +63,8 @@ bool ModuleRender::Init()
 
 	App->shader->LoadShaders(App->shader->program, "default.vs", "default.fs");
 
-	InitFrameBuffer(App->window->width, App->window->height);
+	InitFrameBuffer(App->window->width, App->window->height, frameBufferScene);
+	InitFrameBuffer(App->window->width, App->window->height, frameBufferGame);
 
 	return true;
 }
@@ -86,24 +88,19 @@ update_status ModuleRender::Update()
 {
 	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+	math::float4x4 viewScene = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
+	math::float4x4 projectionScene = App->camera->ProjectionMatrix();
 
-	App->environment->DrawReferenceGround();
-	App->environment->DrawReferenceAxis();
+	RenderUsingSpecificFrameBuffer(frameBufferScene, viewScene, projectionScene);
+	
+	if (componentCameraGameSelected != nullptr)
+	{
+		math::float4x4 viewGame = componentCameraGameSelected->LookAt(componentCameraGameSelected->cameraPosition,
+			componentCameraGameSelected->cameraFront, componentCameraGameSelected->cameraUp);
+		math::float4x4 projectionGame = componentCameraGameSelected->ProjectionMatrix();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	App->debugDraw->Draw(frameBufferObject, App->camera->screenWidth, App->camera->screenHeight);
-
-	math::float4x4 projection = App->camera->ProjectionMatrix();
-	math::float4x4 view = App->camera->LookAt(App->camera->cameraPosition, App->camera->cameraFront, App->camera->cameraUp);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
-
-	RenderComponentFromGameObject(App->scene->root, view, projection);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		RenderUsingSpecificFrameBuffer(frameBufferGame, viewGame, projectionGame);
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -124,8 +121,10 @@ update_status ModuleRender::PostUpdate()
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
-	glDeleteFramebuffers(1, &frameBufferObject);
-	glDeleteRenderbuffers(1, &renderBufferObject);
+	glDeleteFramebuffers(1, &frameBufferScene.frameBufferObject);
+	glDeleteRenderbuffers(1, &frameBufferScene.renderBufferObject);
+	glDeleteFramebuffers(1, &frameBufferGame.frameBufferObject);
+	glDeleteRenderbuffers(1, &frameBufferGame.renderBufferObject);
 
 	return true;
 }
@@ -190,7 +189,7 @@ void ModuleRender::DrawProperties()
 	}
 }
 
-void ModuleRender::DrawSceneWindow()
+void ModuleRender::DrawCameraSceneWindow()
 {
 	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
@@ -198,8 +197,28 @@ void ModuleRender::DrawSceneWindow()
 
 	App->camera->SetScreenNewScreenSize(size.x, size.y);
 
-	ImGui::Image((ImTextureID)App->renderer->renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+	ImGui::Image((ImTextureID)frameBufferScene.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 
+	ImGui::End();
+}
+
+void ModuleRender::DrawCameraGameWindow()
+{
+	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+	GameObject* cameraGameObject = App->scene->GetGameCamera();
+
+	if (cameraGameObject != nullptr)
+	{
+		componentCameraGameSelected = (ComponentCamera*)cameraGameObject->GetComponent(ComponentType::CAMERA);
+		
+		ImVec2 size = ImGui::GetWindowSize();
+
+		componentCameraGameSelected->SetScreenNewScreenSize(size.x, size.y);
+
+		ImGui::Image((ImTextureID)frameBufferGame.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+	}
+	
 	ImGui::End();
 }
 
@@ -234,16 +253,16 @@ void ModuleRender::manageFpsAndMsList()
 
 }
 
-void ModuleRender::InitFrameBuffer(int width, int height)
+void ModuleRender::InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit)
 {
-	glDeleteFramebuffers(1, &frameBufferObject);
-	glDeleteRenderbuffers(1, &renderBufferObject);
+	glDeleteFramebuffers(1, &frameBufferToInit.frameBufferObject);
+	glDeleteRenderbuffers(1, &frameBufferToInit.renderBufferObject);
 
-	glGenFramebuffers(1, &frameBufferObject);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
+	glGenFramebuffers(1, &frameBufferToInit.frameBufferObject);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToInit.frameBufferObject);
 
-	glGenTextures(1, &renderTexture);
-	glBindTexture(GL_TEXTURE_2D, renderTexture);
+	glGenTextures(1, &frameBufferToInit.renderTexture);
+	glBindTexture(GL_TEXTURE_2D, frameBufferToInit.renderTexture);
 
 	glTexImage2D(
 		GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL
@@ -253,15 +272,15 @@ void ModuleRender::InitFrameBuffer(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glFramebufferTexture2D(
-		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0
+		GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frameBufferToInit.renderTexture, 0
 	);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glGenRenderbuffers(1, &renderBufferObject);
-	glBindRenderbuffer(GL_RENDERBUFFER, renderBufferObject);
+	glGenRenderbuffers(1, &frameBufferToInit.renderBufferObject);
+	glBindRenderbuffer(GL_RENDERBUFFER, frameBufferToInit.renderBufferObject);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBufferObject);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, frameBufferToInit.renderBufferObject);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
@@ -279,8 +298,13 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 		{
 			if (gameObjectChild->childrens.size() > 0)
 			{
-				//TODO: change this to not use recursivity
-				RenderComponentFromGameObject(gameObjectChild, view, projection);
+				ComponentCamera* camera = (ComponentCamera*)gameObjectChild->GetComponent(ComponentType::CAMERA);
+				
+				if (camera == nullptr)
+				{
+					//TODO: change this to not use recursivity
+					RenderComponentFromGameObject(gameObjectChild, view, projection);
+				}
 			}
 
 			ComponentTransformation* transformation = (ComponentTransformation*)gameObjectChild->GetComponent(ComponentType::TRANSFORMATION);
@@ -320,4 +344,23 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 		//TODO: change this to not use recursivity
 		CalculateGameObjectGlobalMatrix(gameObjectChild);
 	}
+}
+
+void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, math::float4x4 view, math::float4x4 projection)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
+
+	App->environment->DrawReferenceGround();
+	App->environment->DrawReferenceAxis();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, App->camera->screenWidth, App->camera->screenHeight, view, projection);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
+
+	RenderComponentFromGameObject(App->scene->root, view, projection);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

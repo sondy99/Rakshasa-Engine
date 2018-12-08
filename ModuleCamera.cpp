@@ -18,6 +18,7 @@ ModuleCamera::~ModuleCamera()
 bool ModuleCamera::Init()
 {
 	InitFrustum();
+	FocusObject(sceneCenter);
 	return true;
 }
 
@@ -106,7 +107,7 @@ void ModuleCamera::RotateCamera(CameraMovement cameraSide)
 math::float4x4 ModuleCamera::LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp)
 {
 	cameraFront.Normalize();
-	cameraSide = cameraFront.Cross(cameraUp);
+	math::float3 cameraSide = cameraFront.Cross(cameraUp);
 	cameraSide.Normalize();
 	math::float3 auxCameraUp = cameraSide.Cross(cameraFront);
 
@@ -284,14 +285,11 @@ void ModuleCamera::DrawProperties()
 		if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			float camPos[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
-			ImGui::InputFloat3("Camera position", camPos, "%.3f");
-			ImGui::Separator();
+			ImGui::InputFloat3("Camera position", camPos, "%.3f", ImGuiInputTextFlags_ReadOnly);
 			float vectorFront[3] = { cameraFront.x, cameraFront.y, cameraFront.z };
-			ImGui::InputFloat3("Vector front", vectorFront, "%.3f");
-			float vectorSide[3] = { cameraSide.x, cameraSide.y, cameraSide.z };
-			ImGui::InputFloat3("Vector side", vectorSide, "%.3f");
+			ImGui::InputFloat3("Vector front", vectorFront, "%.3f", ImGuiInputTextFlags_ReadOnly);
 			float vectorUp[3] = { cameraUp.x, cameraUp.y, cameraUp.z };
-			ImGui::InputFloat3("Vector up", vectorUp, "%.3f");
+			ImGui::InputFloat3("Vector up", vectorUp, "%.3f", ImGuiInputTextFlags_ReadOnly);
 			ImGui::Separator();
 			ImGui::InputFloat("Pitch", &pitch, 0, 0, 0);
 			ImGui::InputFloat("Yaw", &yaw, 0, 0, 0);

@@ -172,6 +172,9 @@
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="crossguid\Guid.cpp" />
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -441,6 +444,9 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="crossguid\Guid.hpp" />
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
