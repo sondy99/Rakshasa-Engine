@@ -3,6 +3,9 @@
 
 #include "Module.h"
 
+class ComponentCamera;
+class ComponentMesh;
+
 class ModuleEnvironment : public Module
 {
 public:
@@ -13,6 +16,8 @@ public:
 
 	void DrawReferenceGround();
 	void DrawReferenceAxis();
+	void DrawFrustum(ComponentCamera* camera);
+	void DrawBoundingBox(ComponentMesh* mesh);
 };
 
 #endif __ModuleEnvironment_H__

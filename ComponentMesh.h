@@ -15,6 +15,7 @@ public:
 	Component* clone() override;
 public:
 	Mesh mesh;
+	AABB boundingBox;
 };
 
 #endif __COMPONENTMESH_H__

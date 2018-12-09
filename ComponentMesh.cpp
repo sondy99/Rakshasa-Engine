@@ -1,5 +1,9 @@
 #include "ComponentMesh.h"
 
+#include <assimp/scene.h>
+
+#include "MathGeoLib.h"
+
 ComponentMesh::ComponentMesh()
 {
 }
@@ -7,6 +11,10 @@ ComponentMesh::ComponentMesh()
 ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
 	: Component(gameObjectParent, componentType), mesh(mesh)
 {
+	aiMesh* aiMesh = mesh.mesh;
+
+	boundingBox.SetNegativeInfinity();
+	boundingBox.Enclose((float3*)aiMesh->mVertices, mesh.verticesNumber);
 }
 
 ComponentMesh::~ComponentMesh()

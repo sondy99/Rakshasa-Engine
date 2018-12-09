@@ -16,11 +16,18 @@ struct SDL_Rect;
 struct Mesh;
 struct Material;
 
+enum class FrameBufferType
+{
+	SCENE,
+	GAME
+};
+
 struct FrameBufferStruct
 {
 	unsigned frameBufferObject = 0u;
 	unsigned renderBufferObject = 0u;
 	unsigned renderTexture = 0u;
+	FrameBufferType frameBufferType;
 };
 
 class ModuleRender : public Module
@@ -49,7 +56,7 @@ private:
 	void FpsCount();
 	void manageFpsAndMsList();
 	void InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit);
-	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection);
+	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
 	void manageComboBoxCamera(std::list<GameObject*> camerasGameObject);

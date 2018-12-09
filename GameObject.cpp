@@ -90,3 +90,8 @@ Component* GameObject::GetComponent(ComponentType componentType)
 
 	return result;
 }
+
+AABB GameObject::GetBoundingBox() const
+{
+	return AABB();
+}

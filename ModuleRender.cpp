@@ -63,7 +63,9 @@ bool ModuleRender::Init()
 
 	App->shader->LoadShaders(App->shader->program, "default.vs", "default.fs");
 
+	frameBufferScene.frameBufferType = FrameBufferType::SCENE;
 	InitFrameBuffer(App->window->width, App->window->height, frameBufferScene);
+	frameBufferGame.frameBufferType = FrameBufferType::GAME;
 	InitFrameBuffer(App->window->width, App->window->height, frameBufferGame);
 
 	return true;
@@ -334,7 +336,7 @@ void ModuleRender::InitFrameBuffer(int width, int height, FrameBufferStruct &fra
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::float4x4 view, math::float4x4 projection)
+void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType)
 {
 	for (auto &gameObjectChild : gameObject->childrens)
 	{
@@ -347,7 +349,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 				if (camera == nullptr)
 				{
 					//TODO: change this to not use recursivity
-					RenderComponentFromGameObject(gameObjectChild, view, projection);
+					RenderComponentFromGameObject(gameObjectChild, view, projection, frameBufferType);
 				}
 			}
 
@@ -359,9 +361,12 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 			{
 				RenderMesh(componentMesh->mesh, componentMaterial->material, App->shader->program,
 					transformation->globalModelMatrix, view, projection);
+
+				if (gameObjectChild->isSelected && frameBufferType == FrameBufferType::SCENE)
+				{
+					App->environment->DrawBoundingBox(componentMesh);
+				}
 			}
-
-
 		}
 	}
 }
@@ -397,15 +402,22 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 	App->environment->DrawReferenceGround();
 	App->environment->DrawReferenceAxis();
 
+	if (frameBufferToRender.frameBufferType == FrameBufferType::SCENE && componentCameraGameSelected != nullptr)
+	{
+		App->environment->DrawFrustum(componentCameraGameSelected);
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	
 	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, camera->screenWidth, camera->screenHeight, view, projection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 
-	RenderComponentFromGameObject(App->scene->root, view, projection);
+	RenderComponentFromGameObject(App->scene->root, view, projection, frameBufferToRender.frameBufferType);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, camera->screenWidth, camera->screenHeight, view, projection);
 }
 

@@ -4,9 +4,13 @@
 #include "ModuleShader.h"
 #include "debugdraw.h"
 #include "MathGeoLib.h"
+#include "ComponentCamera.h"
+#include "ComponentMesh.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
+
+#include "MathGeoLib.h"
 
 ModuleEnvironment::ModuleEnvironment()
 {
@@ -34,3 +38,12 @@ void ModuleEnvironment::DrawReferenceAxis()
 	dd::axisTriad(math::float4x4::identity, axis_size*0.125f, axis_size*1.25f, 0, false);
 }
 
+void ModuleEnvironment::DrawBoundingBox(ComponentMesh* mesh)
+{
+	dd::aabb(mesh->boundingBox.minPoint, mesh->boundingBox.maxPoint, dd::colors::Yellow);
+}
+
+void ModuleEnvironment::DrawFrustum(ComponentCamera* camera)
+{
+	dd::frustum((camera->frustum.ProjectionMatrix() * camera->frustum.ViewMatrix()).Inverted(), dd::colors::Cyan);
+}

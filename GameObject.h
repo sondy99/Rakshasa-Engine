@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include "Component.h"
 
+#include "MathGeoLib.h"
+
 #include <list>
 #include <string>
 
@@ -20,6 +22,8 @@ public:
 	void duplicate(GameObject* newGameObjectParent);
 	GameObject* clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
+
+	AABB GetBoundingBox() const;
 public:
 	char uuid[37];
 	std::string name = nullptr;
@@ -29,6 +33,8 @@ public:
 
 	std::list<Component*> components;
 	std::list<GameObject*> childrens;
+private:
+	AABB localBoundingBox;
 };
 
 #endif __GAMEOBJECT_H__
