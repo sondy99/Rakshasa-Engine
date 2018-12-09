@@ -212,6 +212,7 @@ void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
 
 				gameObjectToMove->parent = gameObjectParent;
 				gameObjectParent->childrens.push_back(gameObjectToMove);
+				gameObjectParent->UpdateBoundingBox();
 			}
 		}
 	}

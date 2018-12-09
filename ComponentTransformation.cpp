@@ -1,5 +1,9 @@
 #include "ComponentTransformation.h"
 
+#include "GameObject.h"
+
+#include "MathGeoLib/include/Geometry/AABB.h"
+
 ComponentTransformation::ComponentTransformation()
 {
 }
@@ -9,14 +13,14 @@ ComponentTransformation::ComponentTransformation(GameObject* gameObjectParent,
 	Component(gameObjectParent, componentType),
 	position(position), scale(scale), rotation(rotation)
 {
-	UnpdateLocalModelMatrix();
+	UpdateLocalModelMatrix();
 }
 
 ComponentTransformation::~ComponentTransformation()
 {
 }
 
-void ComponentTransformation::UnpdateLocalModelMatrix()
+void ComponentTransformation::UpdateLocalModelMatrix()
 {
 	if (!identity)
 	{
@@ -33,6 +37,8 @@ void ComponentTransformation::DrawProperties()
 	bool changed = false;
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
+		UpdateLocalModelMatrix();
+
 		ImGui::Checkbox("Watch as model identity", &identity);
 		
 		if (ImGui::Button("Transform to model identity"))
@@ -43,9 +49,6 @@ void ComponentTransformation::DrawProperties()
 			rotation = { 0.0f,0.0f,0.0f,1.0f };
 		}
 
-
-		UnpdateLocalModelMatrix();
-
 		ImGui::NewLine();
 		ImGui::PushItemWidth(75);
 		ImGui::Text("Position:");
@@ -54,7 +57,9 @@ void ComponentTransformation::DrawProperties()
 		ImGui::PushID("1");
 		if (ImGui::InputFloat("", &position.x,
 			0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		{
 			changed = true;
+		}
 		ImGui::SameLine();
 		ImGui::PopID();
 		ImGui::Text("Y:");

@@ -13,7 +13,7 @@ public:
 
 	void DrawProperties() override;
 	Component* clone() override;
-	void UnpdateLocalModelMatrix();
+	void UpdateLocalModelMatrix();
 public:
 	bool identity = true;
 

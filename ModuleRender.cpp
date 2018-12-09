@@ -268,6 +268,14 @@ void ModuleRender::manageComboBoxCamera(std::list<GameObject*> camerasGameObject
 	}
 }
 
+void ModuleRender::RenderBoundingBox(GameObject * gameObject, FrameBufferType frameBufferType)
+{
+	if (gameObject->isSelected && frameBufferType == FrameBufferType::SCENE)
+	{
+		App->environment->DrawBoundingBox(gameObject);
+	}
+}
+
 void ModuleRender::FpsCount()
 {
 	++frameCounter;
@@ -358,18 +366,16 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 			ComponentMesh* componentMesh = (ComponentMesh*)gameObjectChild->GetComponent(ComponentType::MESH);
 
 			if ((componentMaterial != nullptr && componentMesh != nullptr) &&
-				(componentCameraGameSelected == nullptr || componentCameraGameSelected->frustum.Intersects(componentMesh->boundingBox)))	
+				(componentCameraGameSelected == nullptr || componentCameraGameSelected->frustum.Intersects(gameObjectChild->boundingBox)))
 			{
 				RenderMesh(componentMesh->mesh, componentMaterial->material, App->shader->program,
 					transformation->globalModelMatrix, view, projection);
 
-				if (gameObjectChild->isSelected && frameBufferType == FrameBufferType::SCENE)
-				{
-					App->environment->DrawBoundingBox(componentMesh);
-				}
+				RenderBoundingBox(gameObjectChild, frameBufferType);
 			}
 		}
 	}
+	RenderBoundingBox(gameObject, frameBufferType);
 }
 
 void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
@@ -387,6 +393,8 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 			ComponentTransformation* transformationParent = (ComponentTransformation*)gameObject->parent->GetComponent(ComponentType::TRANSFORMATION);
 			transformation->globalModelMatrix = transformationParent->globalModelMatrix*transformation->localModelMatrix;
 		}
+
+		gameObject->UpdateBoundingBoxTransformation();
 	}
 
 	for (auto &gameObjectChild : gameObject->childrens)

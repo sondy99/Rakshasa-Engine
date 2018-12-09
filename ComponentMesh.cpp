@@ -37,6 +37,7 @@ Component * ComponentMesh::clone()
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;
 	result->mesh = mesh;
+	result->boundingBox = boundingBox;
 
 	return result;
 }

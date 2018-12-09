@@ -23,7 +23,8 @@ public:
 	GameObject* clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
 
-	AABB GetBoundingBox() const;
+	void UpdateBoundingBox();
+	void UpdateBoundingBoxTransformation();
 public:
 	char uuid[37];
 	std::string name = nullptr;
@@ -33,8 +34,9 @@ public:
 
 	std::list<Component*> components;
 	std::list<GameObject*> childrens;
-private:
-	AABB localBoundingBox;
+
+	AABB originalboundingBox = AABB();
+	AABB boundingBox = AABB();
 };
 
 #endif __GAMEOBJECT_H__

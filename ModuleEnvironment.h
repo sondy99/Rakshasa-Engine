@@ -4,7 +4,7 @@
 #include "Module.h"
 
 class ComponentCamera;
-class ComponentMesh;
+class GameObject;
 
 class ModuleEnvironment : public Module
 {
@@ -17,7 +17,7 @@ public:
 	void DrawReferenceGround();
 	void DrawReferenceAxis();
 	void DrawFrustum(ComponentCamera* camera);
-	void DrawBoundingBox(ComponentMesh* mesh);
+	void DrawBoundingBox(GameObject* gameObject);
 };
 
 #endif __ModuleEnvironment_H__

@@ -17,7 +17,7 @@ class Component
 {
 public:
 	Component() {};
-	Component(const GameObject* gameObjectParent, ComponentType componentType) : gameObjectParent(gameObjectParent), componentType(componentType) {};
+	Component(GameObject* gameObjectParent, ComponentType componentType) : gameObjectParent(gameObjectParent), componentType(componentType) {};
 	virtual ~Component() {};
 
 	virtual void enable() {};
@@ -27,7 +27,7 @@ public:
 	virtual Component* clone() { return new Component(gameObjectParent, componentType); };
 public:
 	ComponentType componentType;
-	const GameObject* gameObjectParent = nullptr;
+	GameObject* gameObjectParent = nullptr;
 };
 
 #endif __COMPONENT_H__

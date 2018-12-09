@@ -1,6 +1,9 @@
 #include "GameObject.h"
 #include "crossguid/guid.hpp"
 
+#include "ComponentMesh.h"
+#include "ComponentTransformation.h"
+
 GameObject::GameObject(const char* name, GameObject* parent) : name(name), parent(parent)
 {
 	xg::Guid guid = xg::newGuid();
@@ -27,6 +30,7 @@ void GameObject::remove(GameObject* mainObjectToDelete)
 
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
 	{
+		//TODO: change this to not use recursivity
 		(*iterator)->remove(nullptr);
 		RELEASE(*iterator);
 		iterator = childrens.erase(iterator);
@@ -41,7 +45,7 @@ void GameObject::remove(GameObject* mainObjectToDelete)
 void GameObject::duplicate(GameObject* newGameObjectParent)
 {
 	GameObject* newGameObject = clone();
-
+	
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
 	{
 		Component* clonedComponenet = (*iterator)->clone();
@@ -52,6 +56,7 @@ void GameObject::duplicate(GameObject* newGameObjectParent)
 
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
 	{
+		//TODO: change this to not use recursivity
 		(*iterator)->duplicate(newGameObject);
 	}
 
@@ -59,11 +64,12 @@ void GameObject::duplicate(GameObject* newGameObjectParent)
 	{
 		parent->childrens.push_back(newGameObject);
 	}
-	else 
+	else
 	{
 		newGameObject->parent = newGameObjectParent;
 		newGameObjectParent->childrens.push_back(newGameObject);
 	}
+
 }
 
 GameObject* GameObject::clone()
@@ -71,6 +77,8 @@ GameObject* GameObject::clone()
 	GameObject* result = new GameObject(name.c_str(), parent);
 
 	result->active = active;
+	result->boundingBox = boundingBox;
+	result->originalboundingBox = originalboundingBox;
 
 	return result;
 }
@@ -91,7 +99,48 @@ Component* GameObject::GetComponent(ComponentType componentType)
 	return result;
 }
 
-AABB GameObject::GetBoundingBox() const
+void GameObject::UpdateBoundingBox()
 {
-	return AABB();
+	std::vector<float3> minMaxPointsAABB;
+
+	ComponentMesh* componentMesh = (ComponentMesh*)GetComponent(ComponentType::MESH);
+
+	if (componentMesh != nullptr)
+	{
+		minMaxPointsAABB.push_back(componentMesh->boundingBox.minPoint);
+		minMaxPointsAABB.push_back(componentMesh->boundingBox.maxPoint);
+	}
+
+	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
+	{
+		(*iterator)->UpdateBoundingBoxTransformation();
+
+		minMaxPointsAABB.push_back((*iterator)->boundingBox.minPoint);
+		minMaxPointsAABB.push_back((*iterator)->boundingBox.maxPoint);
+	}
+
+	if (minMaxPointsAABB.size() > 0)
+	{
+		originalboundingBox = boundingBox.MinimalEnclosingAABB(&minMaxPointsAABB[0], minMaxPointsAABB.size());
+		boundingBox = originalboundingBox;
+	}
+}
+
+void GameObject::UpdateBoundingBoxTransformation()
+{
+	ComponentTransformation* transformation = (ComponentTransformation*)GetComponent(ComponentType::TRANSFORMATION);
+
+	if (transformation != nullptr)
+	{
+		boundingBox = originalboundingBox;
+		boundingBox.TransformAsAABB(transformation->globalModelMatrix);
+	}
+
+	for (auto &gameObjectChild : childrens)
+	{
+		ComponentTransformation* transformation = (ComponentTransformation*)gameObjectChild->GetComponent(ComponentType::TRANSFORMATION);
+
+		//TODO: change this to not use recursivity
+		gameObjectChild->UpdateBoundingBoxTransformation();
+	}
 }

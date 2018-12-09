@@ -4,8 +4,9 @@
 #include "ModuleShader.h"
 #include "debugdraw.h"
 #include "MathGeoLib.h"
+
 #include "ComponentCamera.h"
-#include "ComponentMesh.h"
+#include "GameObject.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
@@ -38,9 +39,9 @@ void ModuleEnvironment::DrawReferenceAxis()
 	dd::axisTriad(math::float4x4::identity, axis_size*0.125f, axis_size*1.25f, 0, false);
 }
 
-void ModuleEnvironment::DrawBoundingBox(ComponentMesh* mesh)
+void ModuleEnvironment::DrawBoundingBox(GameObject* gameObject)
 {
-	dd::aabb(mesh->boundingBox.minPoint, mesh->boundingBox.maxPoint, dd::colors::Yellow);
+	dd::aabb(gameObject->boundingBox.minPoint, gameObject->boundingBox.maxPoint, dd::colors::Yellow);
 }
 
 void ModuleEnvironment::DrawFrustum(ComponentCamera* camera)
