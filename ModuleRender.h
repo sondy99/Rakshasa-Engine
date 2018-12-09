@@ -44,6 +44,7 @@ public:
 	
 	void RenderMesh(const Mesh& mesh, const Material& material, unsigned program, 
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
+	
 	void DrawProperties();
 	void DrawCameraSceneWindow();
 	void DrawCameraGameWindow();
@@ -54,12 +55,12 @@ public:
 	bool toggleRenderProperties = true;
 private:
 	void FpsCount();
-	void manageFpsAndMsList();
+	void ManageFpsAndMsList();
 	void InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit);
 	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
-	void manageComboBoxCamera(std::list<GameObject*> camerasGameObject);
+	void ManageComboBoxCamera(std::list<GameObject*> camerasGameObject);
 	void RenderBoundingBox(GameObject * gameObject, FrameBufferType frameBufferType);
 private:
 	FrameBufferStruct frameBufferScene;

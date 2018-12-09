@@ -156,7 +156,7 @@ void ComponentTransformation::DrawProperties()
 	}
 }
 
-Component* ComponentTransformation::clone()
+Component* ComponentTransformation::Clone()
 {
 	ComponentTransformation* result = new ComponentTransformation();
 

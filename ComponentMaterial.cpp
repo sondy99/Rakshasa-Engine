@@ -22,7 +22,7 @@ void ComponentMaterial::DrawProperties()
 	}
 }
 
-Component * ComponentMaterial::clone()
+Component * ComponentMaterial::Clone()
 {
 	ComponentMaterial* result = new ComponentMaterial();
 

@@ -20,11 +20,11 @@ public:
 	Component(GameObject* gameObjectParent, ComponentType componentType) : gameObjectParent(gameObjectParent), componentType(componentType) {};
 	virtual ~Component() {};
 
-	virtual void enable() {};
-	virtual void update() {};
-	virtual void disable() {};
+	virtual void Enable() {};
+	virtual void Update() {};
+	virtual void Disable() {};
 	virtual void DrawProperties() {};
-	virtual Component* clone() { return new Component(gameObjectParent, componentType); };
+	virtual Component* Clone() { return new Component(gameObjectParent, componentType); };
 public:
 	ComponentType componentType;
 	GameObject* gameObjectParent = nullptr;

@@ -64,7 +64,7 @@ void ComponentCamera::DrawProperties()
 	}
 }
 
-Component* ComponentCamera::clone()
+Component* ComponentCamera::Clone()
 {
 	ComponentCamera* result = new ComponentCamera();
 

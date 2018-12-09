@@ -208,7 +208,7 @@ void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
 
 			if (gameObjectToMove != nullptr)
 			{
-				gameObjectToMove->parent->childrens.remove(gameObjectToMove);
+				gameObjectToMove->parent->childrens.Remove(gameObjectToMove);
 
 				gameObjectToMove->parent = gameObjectParent;
 				gameObjectParent->childrens.push_back(gameObjectToMove);
@@ -252,14 +252,14 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 {
 	if (gameObjectToBeDeleted != nullptr)
 	{
-		gameObjectToBeDeleted->remove(gameObjectToBeDeleted);
+		gameObjectToBeDeleted->Remove(gameObjectToBeDeleted);
 		gameObjectToBeDeleted = nullptr;
 		gameObjectSelected = nullptr;
 	}
 
 	if (gameObjectToBeDuplicated != nullptr)
 	{
-		gameObjectToBeDuplicated->duplicate(nullptr);
+		gameObjectToBeDuplicated->Duplicate(nullptr);
 		gameObjectToBeDuplicated = nullptr;
 	}
 

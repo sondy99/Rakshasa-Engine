@@ -30,7 +30,7 @@ void ComponentMesh::DrawProperties()
 	}
 }
 
-Component * ComponentMesh::clone()
+Component * ComponentMesh::Clone()
 {
 	ComponentMesh* result = new ComponentMesh();
 

@@ -12,7 +12,7 @@ public:
 	~ComponentMesh();
 
 	void DrawProperties() override;
-	Component* clone() override;
+	Component* Clone() override;
 public:
 	Mesh mesh;
 	AABB boundingBox;

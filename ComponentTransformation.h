@@ -12,7 +12,7 @@ public:
 	~ComponentTransformation();
 
 	void DrawProperties() override;
-	Component* clone() override;
+	Component* Clone() override;
 	void UpdateLocalModelMatrix();
 public:
 	bool identity = true;

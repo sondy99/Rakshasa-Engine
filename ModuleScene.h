@@ -26,7 +26,7 @@ public:
 private:
 	void DrawTreeNode(GameObject * gameObject);
 	void SetGameObjectSelected(GameObject* gameObject);
-	GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);
+	GameObject* GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);
 	void DragAndDropManagement(GameObject* gameObjectParent);
 	void ClickManagement(GameObject* gameObject);
 	void ManageDuplicationAndDeletionGameObject();

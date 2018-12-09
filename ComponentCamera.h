@@ -12,7 +12,7 @@ public:
 	~ComponentCamera();
 
 	void DrawProperties() override;
-	Component* clone() override;
+	Component* Clone() override;
 
 	math::float4x4 ProjectionMatrix();
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);

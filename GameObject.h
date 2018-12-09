@@ -17,10 +17,10 @@ public:
 	GameObject(const char* name, GameObject* parent);
 	~GameObject();
 
-	void update();
-	void remove(GameObject* mainObjectToDelete);
-	void duplicate(GameObject* newGameObjectParent);
-	GameObject* clone();
+	void Update();
+	void Remove(GameObject* mainObjectToDelete);
+	void Duplicate(GameObject* newGameObjectParent);
+	GameObject* Clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
 
 	void UpdateBoundingBox();

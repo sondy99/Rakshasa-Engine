@@ -75,7 +75,7 @@ update_status ModuleRender::PreUpdate()
 {
 	BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue);
 
-	manageFpsAndMsList();
+	ManageFpsAndMsList();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -216,7 +216,7 @@ void ModuleRender::DrawCameraGameWindow()
 
 	std::list<GameObject*> camerasGameObject = App->scene->GetGameCameras();
 
-	manageComboBoxCamera(camerasGameObject);
+	ManageComboBoxCamera(camerasGameObject);
 	if (camerasGameObject.size() > 0)
 	{
 		if (componentCameraGameSelected)
@@ -238,7 +238,7 @@ void ModuleRender::DrawCameraGameWindow()
 	ImGui::End();
 }
 
-void ModuleRender::manageComboBoxCamera(std::list<GameObject*> camerasGameObject)
+void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject)
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
 	
@@ -290,7 +290,7 @@ void ModuleRender::FpsCount()
 	}
 }
 
-void ModuleRender::manageFpsAndMsList()
+void ModuleRender::ManageFpsAndMsList()
 {
 	fpsList.erase(fpsList.begin());
 	fpsList.push_back(fps);

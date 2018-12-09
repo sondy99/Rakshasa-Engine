@@ -16,11 +16,11 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::update()
+void GameObject::Update()
 {
 }
 
-void GameObject::remove(GameObject* mainObjectToDelete)
+void GameObject::Remove(GameObject* mainObjectToDelete)
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 	{
@@ -31,24 +31,24 @@ void GameObject::remove(GameObject* mainObjectToDelete)
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
 	{
 		//TODO: change this to not use recursivity
-		(*iterator)->remove(nullptr);
+		(*iterator)->Remove(nullptr);
 		RELEASE(*iterator);
 		iterator = childrens.erase(iterator);
 	}
 
 	if (mainObjectToDelete != nullptr && mainObjectToDelete == this)
 	{
-		parent->childrens.remove(this);
+		parent->childrens.Remove(this);
 	}
 }
 
-void GameObject::duplicate(GameObject* newGameObjectParent)
+void GameObject::Duplicate(GameObject* newGameObjectParent)
 {
-	GameObject* newGameObject = clone();
+	GameObject* newGameObject = Clone();
 	
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
 	{
-		Component* clonedComponenet = (*iterator)->clone();
+		Component* clonedComponenet = (*iterator)->Clone();
 		clonedComponenet->gameObjectParent = newGameObject;
 
 		newGameObject->components.push_back(clonedComponenet);
@@ -57,7 +57,7 @@ void GameObject::duplicate(GameObject* newGameObjectParent)
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
 	{
 		//TODO: change this to not use recursivity
-		(*iterator)->duplicate(newGameObject);
+		(*iterator)->Duplicate(newGameObject);
 	}
 
 	if (newGameObjectParent == nullptr)
@@ -72,7 +72,7 @@ void GameObject::duplicate(GameObject* newGameObjectParent)
 
 }
 
-GameObject* GameObject::clone()
+GameObject* GameObject::Clone()
 {
 	GameObject* result = new GameObject(name.c_str(), parent);
 

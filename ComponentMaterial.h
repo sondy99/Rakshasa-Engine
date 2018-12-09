@@ -12,7 +12,7 @@ public:
 	~ComponentMaterial();
 
 	void DrawProperties() override;
-	Component* clone() override;
+	Component* Clone() override;
 public:
 	Material material;
 };
