@@ -52,6 +52,7 @@ private:
 	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
+	void manageComboBoxCamera(std::list<GameObject*> camerasGameObject);
 private:
 	FrameBufferStruct frameBufferScene;
 	FrameBufferStruct frameBufferGame;

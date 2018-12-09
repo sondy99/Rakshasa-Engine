@@ -214,29 +214,9 @@ void ModuleRender::DrawCameraGameWindow()
 
 	std::list<GameObject*> camerasGameObject = App->scene->GetGameCameras();
 
+	manageComboBoxCamera(camerasGameObject);
 	if (camerasGameObject.size() > 0)
 	{
-		//static const char* currentGameObjecteName = camerasGameObject.front()->name.c_str();
-		static const char* currentGameObjecteName = NULL;
-
-		if (ImGui::BeginCombo("##combo", currentGameObjecteName)) // The second parameter is the label previewed before opening the combo.
-		{
-			for (std::list<GameObject*>::iterator iterator = camerasGameObject.begin(); iterator != camerasGameObject.end(); ++iterator)
-			{
-				bool isSelected = (currentGameObjecteName == (*iterator)->name.c_str());
-				if (ImGui::Selectable((*iterator)->name.c_str(), isSelected))
-				{
-					currentGameObjecteName = (*iterator)->name.c_str();
-					componentCameraGameSelected = (ComponentCamera*)(*iterator)->GetComponent(ComponentType::CAMERA);
-					if (isSelected)
-					{
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-			}
-			ImGui::EndCombo();
-		}
-
 		if (componentCameraGameSelected)
 		{
 			if (ImGui::IsWindowFocused())
@@ -254,6 +234,36 @@ void ModuleRender::DrawCameraGameWindow()
 	}
 
 	ImGui::End();
+}
+
+void ModuleRender::manageComboBoxCamera(std::list<GameObject*> camerasGameObject)
+{
+	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
+	
+	if (camerasGameObject.size() > 0)
+	{
+		if (ImGui::BeginCombo("##combo", labelCurrentCameraGameObjecteName))
+		{
+			for (std::list<GameObject*>::iterator iterator = camerasGameObject.begin(); iterator != camerasGameObject.end(); ++iterator)
+			{
+				bool isSelected = (labelCurrentCameraGameObjecteName == (*iterator)->name.c_str());
+				if (ImGui::Selectable((*iterator)->name.c_str(), isSelected))
+				{
+					labelCurrentCameraGameObjecteName = (*iterator)->name.c_str();
+					componentCameraGameSelected = (ComponentCamera*)(*iterator)->GetComponent(ComponentType::CAMERA);
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+	else
+	{
+		labelCurrentCameraGameObjecteName = "Select a camera";
+	}
 }
 
 void ModuleRender::FpsCount()
@@ -398,3 +408,4 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
