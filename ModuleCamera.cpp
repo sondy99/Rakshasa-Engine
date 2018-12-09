@@ -22,7 +22,7 @@ bool ModuleCamera::Init()
 	selectedCamera = sceneCamera;
 
 	selectedCamera->cameraPosition = math::float3(0.0f, 3.0f, 40.0f);
-	selectedCamera->InitFrustum();
+	selectedCamera->InitFrustum(nullptr);
 	
 	return true;
 }

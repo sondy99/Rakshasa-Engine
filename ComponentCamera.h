@@ -19,7 +19,7 @@ public:
 	
 	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 
-	void InitFrustum();
+	void InitFrustum(GameObject* gameObjectParent);
 
 	void SetHorizontalFOV(float& fovXDegrees);
 	void SetVerticalFOV(float& fovYDegrees);

@@ -340,7 +340,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 {
 	for (auto &gameObjectChild : gameObject->childrens)
 	{
-		if (gameObjectChild->active)
+		if (gameObjectChild->active)			
 		{
 			if (gameObjectChild->childrens.size() > 0)
 			{
@@ -357,7 +357,8 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 			ComponentMaterial* componentMaterial = (ComponentMaterial*)gameObjectChild->GetComponent(ComponentType::MATERIAL);
 			ComponentMesh* componentMesh = (ComponentMesh*)gameObjectChild->GetComponent(ComponentType::MESH);
 
-			if (componentMaterial != nullptr && componentMesh != nullptr)
+			if ((componentMaterial != nullptr && componentMesh != nullptr) &&
+				(componentCameraGameSelected == nullptr || componentCameraGameSelected->frustum.Intersects(componentMesh->boundingBox)))	
 			{
 				RenderMesh(componentMesh->mesh, componentMaterial->material, App->shader->program,
 					transformation->globalModelMatrix, view, projection);

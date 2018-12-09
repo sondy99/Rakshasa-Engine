@@ -2,27 +2,27 @@
 
 ComponentCamera::ComponentCamera()
 {
-	InitFrustum();
+	InitFrustum(nullptr);
 }
 
 ComponentCamera::ComponentCamera(GameObject* gameObjectParent, ComponentType componentType)
 	: Component(gameObjectParent, componentType)
 {
-	InitFrustum();
+	InitFrustum(gameObjectParent);
 }
 
 ComponentCamera::~ComponentCamera()
 {
 }
 
-void ComponentCamera::InitFrustum()
+void ComponentCamera::InitFrustum(GameObject* gameObjectParent)
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.pos = float3::zero;
 	frustum.front = -float3::unitZ;
 	frustum.up = float3::unitY;
 	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 350.0f;
+	frustum.farPlaneDistance = gameObjectParent != nullptr ? 100.0f : 350.0f;
 
 	SetVerticalFOV(fovY);
 }
