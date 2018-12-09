@@ -10024,11 +10024,11 @@ static void ImGui::DockContextPruneUnusedSettingsNodes(ImGuiContext* ctx)
             continue;
         ImGuiDockContextPruneNodeData* data_root = (data->RootID == settings->ID) ? data : pool.GetByKey(data->RootID);
 
-        bool Remove = false;
-        Remove |= (data->CountWindows == 1 && settings->ParentID == 0 && data->CountChildNodes == 0 && !settings->IsCentralNode);  // Floating root node with only 1 window
-        Remove |= (data->CountWindows == 0 && settings->ParentID == 0 && data->CountChildNodes == 0); // Leaf nodes with 0 window
-        Remove |= (data_root->CountChildWindows == 0);
-        if (Remove)
+        bool remove = false;
+		remove |= (data->CountWindows == 1 && settings->ParentID == 0 && data->CountChildNodes == 0 && !settings->IsCentralNode);  // Floating root node with only 1 window
+		remove |= (data->CountWindows == 0 && settings->ParentID == 0 && data->CountChildNodes == 0); // Leaf nodes with 0 window
+		remove |= (data_root->CountChildWindows == 0);
+        if (remove)
         {
             DockSettingsRemoveReferencesToNodes(&settings->ID, 1);
             settings->ID = 0;
@@ -10570,11 +10570,11 @@ static void ImGui::DockNodeUpdateVisibleFlagAndInactiveChilds(ImGuiDockNode* nod
         IM_ASSERT(window->DockNode == node);
 
         bool node_was_active = (node->LastFrameActive + 1 == g.FrameCount);
-        bool Remove = false;
-        Remove |= node_was_active && (window->LastFrameActive + 1 < g.FrameCount);
-        Remove |= node_was_active && (node->WantCloseAll || node->WantCloseTabID == window->ID) && window->HasCloseButton && !(window->Flags & ImGuiWindowFlags_UnsavedDocument);  // Submit all _expected_ closure from last frame
-        Remove |= (window->DockTabWantClose);
-        if (!Remove)
+        bool remove = false;
+		remove |= node_was_active && (window->LastFrameActive + 1 < g.FrameCount);
+		remove |= node_was_active && (node->WantCloseAll || node->WantCloseTabID == window->ID) && window->HasCloseButton && !(window->Flags & ImGuiWindowFlags_UnsavedDocument);  // Submit all _expected_ closure from last frame
+		remove |= (window->DockTabWantClose);
+        if (!remove)
             continue;
         window->DockTabWantClose = false;
         if (node->Windows.Size == 1 && !node->IsCentralNode)

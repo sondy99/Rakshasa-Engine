@@ -25,7 +25,7 @@ MATH_BEGIN_NAMESPACE
 #ifdef _MSC_VER
 #define MULTI_LINE_MACRO_BEGIN do { \
 	__pragma(warning(push)) \
-	__pragma(warning(Disable:4127))
+	__pragma(warning(disable:4127))
 
 #define MULTI_LINE_MACRO_END \
 	} while(0) \

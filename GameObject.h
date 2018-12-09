@@ -18,8 +18,8 @@ public:
 	~GameObject();
 
 	void Update();
-	void Remove(GameObject* mainObjectToDelete);
-	void Duplicate(GameObject* newGameObjectParent);
+	void RemoveGameObject(GameObject* mainObjectToDelete);
+	void DuplicateGameObject(GameObject* newGameObjectParent);
 	GameObject* Clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
 
