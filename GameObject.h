@@ -18,6 +18,9 @@ public:
 	~GameObject();
 
 	void Update();
+
+	void DrawProperties();
+
 	void RemoveGameObject(GameObject* mainObjectToDelete);
 	void DuplicateGameObject(GameObject* newGameObjectParent);
 	GameObject* Clone();

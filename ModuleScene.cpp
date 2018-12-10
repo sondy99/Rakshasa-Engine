@@ -71,7 +71,7 @@ void ModuleScene::DrawProperties()
 		CreateGameObject("genericGameObject", root, true);
 	}
 
-	if (ImGui::Button("Create camera"))
+	if (ImGui::Button("Create camera game object "))
 	{
 		CreateGameObjectCamera();
 	}

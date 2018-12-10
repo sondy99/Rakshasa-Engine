@@ -20,6 +20,20 @@ void GameObject::Update()
 {
 }
 
+void GameObject::DrawProperties()
+{
+	if (ImGui::CollapsingHeader("Game Object"))
+	{
+		ImGui::NewLine();
+		ImGui::Text("Game name:");
+		ImGui::SameLine();
+		ImGui::InputText("##", &name[0], 40);
+		ImGui::Text("Model selected has %d childs.", childrens.size());
+		ImGui::Checkbox("Active", &active);
+		ImGui::NewLine();
+	}
+}
+
 void GameObject::RemoveGameObject(GameObject* mainObjectToDelete)
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)

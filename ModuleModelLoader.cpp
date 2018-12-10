@@ -243,13 +243,11 @@ void ModuleModelLoader::DrawProperties()
 		if (gameObjectSelected != nullptr)
 		{
 			ImGui::Text("Name: %s", gameObjectSelected->name.c_str());
-			ImGui::Text("Model selected has %d childs.", gameObjectSelected->childrens.size());
-			ImGui::NewLine();
-			ImGui::Checkbox("Active", &gameObjectSelected->active);
-			ImGui::NewLine();
 			
 			if (gameObjectSelected->components.size() > 0)
 			{
+				gameObjectSelected->DrawProperties();
+
 				for (auto &component : gameObjectSelected->components)
 				{
 					component->DrawProperties();
