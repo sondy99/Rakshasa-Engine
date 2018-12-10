@@ -25,7 +25,7 @@ bool ModuleScene::Init()
 
 	CreateGameObjectCamera();
 
-	LoadModel("BakerHouse.FBX");
+	LoadModel("Assets\\BakerHouse.FBX");
 
 	return true;
 }

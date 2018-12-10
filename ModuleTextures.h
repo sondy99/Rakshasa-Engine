@@ -7,6 +7,8 @@
 #include "Globals.h"
 #include "GL/glew.h"
 
+#include "string"
+
 struct SDL_Texture;
 struct aiMesh;
 struct aiMaterial;
@@ -37,7 +39,7 @@ public:
 
 	bool Init() override;
 
-	Material Load(const char* path);
+	Material Load(std::string path);
 	void Unload(unsigned id);
 
 };

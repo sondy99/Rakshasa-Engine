@@ -169,12 +169,12 @@ void ModuleRender::DrawProperties()
 		ImGui::Begin("Render properties", &toggleRenderProperties);
 		if (minFps != 0.0f && minFps != 100.0f)
 		{
-			/*char minFpsMessage[35];
-			sprintf_s(minFpsMessage, 35, "Slowest frame rate per second %0.1f", minFps);
+			char minFpsMessage[40];
+			sprintf_s(minFpsMessage, 40, "Slowest frame rate per second %0.1f", minFps);
 			ImGui::Text(minFpsMessage);
 
-			char message[20];
-			sprintf_s(message, 20, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
+			char message[40];
+			sprintf_s(message, 40, "Framerate %0.1f", fpsList[fpsList.size() - 1]);
 			ImGui::PlotHistogram("##Framerate", &fpsList[0], fpsList.size(), 0, message, 0.0f, 200.0f, ImVec2(310, 100));
 
 			ImGui::Separator();
@@ -183,8 +183,8 @@ void ModuleRender::DrawProperties()
 			sprintf_s(minMsMessage, 40, "Max millisecod per second %0.1f", maxMs);
 			ImGui::Text(minMsMessage);
 
-			sprintf_s(message, 20, "Milliseconds %0.1f", msList[msList.size() - 1]);
-			ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));*/
+			sprintf_s(message, 40, "Milliseconds %0.1f", msList[msList.size() - 1]);
+			ImGui::PlotHistogram("##Milliseconds", &msList[0], msList.size(), 0, message, 0.0f, 40.0f, ImVec2(310, 100));
 		}
 
 		ImGui::End();

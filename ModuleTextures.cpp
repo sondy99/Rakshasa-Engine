@@ -23,7 +23,7 @@ bool ModuleTextures::Init()
 	return true;
 }
 
-Material ModuleTextures::Load(const char* path)
+Material ModuleTextures::Load(std::string path)
 {
 	unsigned imageID;
 
@@ -35,42 +35,65 @@ Material ModuleTextures::Load(const char* path)
 
 	ilBindImage(imageID); 			
 
-	if (ilLoadImage(path)) {
-
-		ILinfo ImageInfo;
-		iluGetImageInfo(&ImageInfo);
-		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) {
-			iluFlipImage();
-		}
-
-		if (!ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE))
-		{
-			LOG("Image conversion failed - IL reports error: ");
-			LOG(iluErrorString(ilGetError()));
-			exit(-1);
-		}
-
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		width = ilGetInteger(IL_IMAGE_WIDTH);
-		height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT),
-			width, height,
-			0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
-			ilGetData());
-	}
-	else
+	for (int i = 0; i < 4; ++i)
 	{
-		LOG("Image load failed - IL reports error: ");
-		LOG(iluErrorString(ilGetError()));
-		exit(-1);
+		LOG("Loading texture %s", path.c_str());
+
+		if (ilLoadImage(path.c_str())) 
+		{
+
+			ILinfo ImageInfo;
+			iluGetImageInfo(&ImageInfo);
+			if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT) 
+			{
+				iluFlipImage();
+			}
+
+			if (!ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE))
+			{
+				LOG("Image conversion failed - IL reports error: ");
+				LOG(iluErrorString(ilGetError()));
+				exit(-1);
+			}
+
+			glGenTextures(1, &textureID);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+			width = ilGetInteger(IL_IMAGE_WIDTH);
+			height = ilGetInteger(IL_IMAGE_HEIGHT);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT),
+				width, height,
+				0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
+				ilGetData());
+
+			break;
+		}
+		else
+		{
+			LOG("Image load failed - IL reports error: ");
+			LOG(iluErrorString(ilGetError()));
+
+			switch (i)
+			{
+				case 0:
+					path = "Assets\\" + path;
+					break;
+				case 1:
+					path = "Assets\\Images\\" + path;
+					break;
+				case 2:
+					path = "Assets\\Materials\\" + path;
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	ilDeleteImages(1, &imageID); 
