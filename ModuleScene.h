@@ -33,7 +33,7 @@ private:
 private:
 	GameObject* gameObjectToBeDeleted = nullptr;
 	GameObject* gameObjectToBeDuplicated = nullptr;
-	int cameraCounter = 1;
+	int gameObjectCounter = 1;
 };
 
 #endif __MODULESCENE_H_

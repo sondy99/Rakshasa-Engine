@@ -66,7 +66,8 @@ void ModuleScene::DrawProperties()
 
 	if (ImGui::Button("Create generic game object"))
 	{
-		CreateGameObject("genericGameObject", root, true);
+		std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
+		CreateGameObject(genericGameObject.c_str(), root, true);
 	}	
 
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
