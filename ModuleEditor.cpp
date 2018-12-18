@@ -97,12 +97,15 @@ void ModuleEditor::WindowManager()
 	App->modelLoader->DrawProperties();
 	App->scene->DrawProperties();
 
-	ImGui::Begin("Game object", &toggleGameObjectProperties);
-	if (App->scene->gameObjectSelected != nullptr)
+	if (toggleGameObjectProperties)
 	{
-		App->scene->gameObjectSelected->DrawProperties();
+		ImGui::Begin("Game object", &toggleGameObjectProperties);
+		if (App->scene->gameObjectSelected != nullptr)
+		{
+			App->scene->gameObjectSelected->DrawProperties();
+		}
+		ImGui::End();
 	}
-	ImGui::End();
 
 	DrawConsole();
 

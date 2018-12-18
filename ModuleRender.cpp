@@ -368,7 +368,7 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 			ComponentTransformation* transformation = (ComponentTransformation*)gameObjectChild->GetComponent(ComponentType::TRANSFORMATION);
 			ComponentMaterial* componentMaterial = (ComponentMaterial*)gameObjectChild->GetComponent(ComponentType::MATERIAL);
 			ComponentMesh* componentMesh = (ComponentMesh*)gameObjectChild->GetComponent(ComponentType::MESH);
-
+			
 			if ((componentMaterial != nullptr && componentMesh != nullptr) &&
 				(componentCameraGameSelected == nullptr || componentCameraGameSelected->frustum.Intersects(gameObjectChild->boundingBox)))
 			{

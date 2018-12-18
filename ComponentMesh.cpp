@@ -30,6 +30,12 @@ void ComponentMesh::DrawProperties()
 {
 	if (ImGui::CollapsingHeader("Mesh"))
 	{
+		if (ImGui::SmallButton("Add"))
+		{
+		}
+		ImGui::SameLine();
+		DrawDeleteComponent();
+
 		ImGui::Text("Triangles count: %d", mesh.verticesNumber / 3);
 		ImGui::Text("Vertices count: %d", mesh.verticesNumber);
 	}

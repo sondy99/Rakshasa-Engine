@@ -26,37 +26,49 @@ void GameObject::DrawProperties()
 {
 	if (isSelected)
 	{
-		ImGui::NewLine();
-		ImGui::Text("Game name:");
-		ImGui::SameLine();
-		ImGui::InputText("##", &name[0], 40);
-		ImGui::Text("Model selected has %d childs.", childrens.size());
-		ImGui::Checkbox("Active", &active);
-		ImGui::NewLine();
-
-		if (ImGui::BeginMenu("New Component"))
+		if (ImGui::CollapsingHeader("Game object properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			if (ImGui::MenuItem("Mesh"))
-			{
-				CreateComponent(ComponentType::MESH);
-			}
-			if (ImGui::MenuItem("Material"))
-			{
-				CreateComponent(ComponentType::MATERIAL);
-			}
-			if (ImGui::MenuItem("Camera"))
-			{
-				CreateComponent(ComponentType::CAMERA);
-			}
-			ImGui::EndMenu();
-		}
+			ImGui::NewLine();
+			ImGui::Text("Game name:");
+			ImGui::SameLine();
+			ImGui::InputText("##", &name[0], 40);
+			ImGui::Text("Model selected has %d childs.", childrens.size());
+			ImGui::Checkbox("Active", &active);
+			ImGui::NewLine();
 
+			if (ImGui::BeginMenu("New Component"))
+			{
+				if (ImGui::MenuItem("Mesh"))
+				{
+					CreateComponent(ComponentType::MESH);
+				}
+				if (ImGui::MenuItem("Material"))
+				{
+					CreateComponent(ComponentType::MATERIAL);
+				}
+				if (ImGui::MenuItem("Camera"))
+				{
+					CreateComponent(ComponentType::CAMERA);
+				}
+				ImGui::EndMenu();
+			}
+		}
 
 		if (components.size() > 0)
 		{
-			for (auto &component : components)
+			for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 			{
-				component->DrawProperties();
+				if (!(*iterator)->isMarkToBeDeleted)
+				{
+					(*iterator)->DrawProperties(); 
+					iterator++;
+				}
+				else
+				{
+					RELEASE(*iterator);
+					iterator = components.erase(iterator);
+				}
+
 			}
 		}
 	}
