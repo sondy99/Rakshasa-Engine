@@ -50,7 +50,7 @@ GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, 
 		float3 scale = { 1.0f,1.0f,1.0f };
 		Quat quatRotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
 
-		gameObject->components.push_back(new ComponentTransformation(parent, ComponentType::TRANSFORMATION, position, scale, quatRotation));
+		gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
 	}
 
 	return gameObject;

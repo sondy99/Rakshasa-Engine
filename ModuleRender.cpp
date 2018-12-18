@@ -234,6 +234,10 @@ void ModuleRender::DrawCameraGameWindow()
 			ImGui::Image((ImTextureID)frameBufferGame.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 		}
 	}
+	else
+	{
+		componentCameraGameSelected = nullptr;
+	}
 
 	ImGui::End();
 }
