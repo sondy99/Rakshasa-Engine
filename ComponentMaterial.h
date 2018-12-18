@@ -8,6 +8,7 @@ class ComponentMaterial : public Component
 {
 public:
 	ComponentMaterial();
+	ComponentMaterial(GameObject* gameObjectParent, ComponentType componentType);
 	ComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material);
 	~ComponentMaterial();
 

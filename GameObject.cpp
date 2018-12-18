@@ -1,8 +1,10 @@
 #include "GameObject.h"
 #include "crossguid/guid.hpp"
 
-#include "ComponentMesh.h"
 #include "ComponentTransformation.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 
 GameObject::GameObject(const char* name, GameObject* parent) : name(name), parent(parent)
 {
@@ -31,6 +33,23 @@ void GameObject::DrawProperties()
 		ImGui::Text("Model selected has %d childs.", childrens.size());
 		ImGui::Checkbox("Active", &active);
 		ImGui::NewLine();
+
+		if (ImGui::BeginMenu("New Component"))
+		{
+			if (ImGui::MenuItem("Mesh"))
+			{
+				CreateComponent(ComponentType::MESH);
+			}
+			if (ImGui::MenuItem("Material"))
+			{
+				CreateComponent(ComponentType::MATERIAL);
+			}
+			if (ImGui::MenuItem("Camera"))
+			{
+				CreateComponent(ComponentType::CAMERA);
+			}
+			ImGui::EndMenu();
+		}
 	}
 }
 
@@ -59,7 +78,7 @@ void GameObject::RemoveGameObject(GameObject* mainObjectToDelete)
 void GameObject::DuplicateGameObject(GameObject* newGameObjectParent)
 {
 	GameObject* newGameObject = Clone();
-	
+
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
 	{
 		Component* clonedComponenet = (*iterator)->Clone();
@@ -156,5 +175,35 @@ void GameObject::UpdateBoundingBoxTransformation()
 
 		//TODO: change this to not use recursivity
 		gameObjectChild->UpdateBoundingBoxTransformation();
+	}
+}
+
+void GameObject::CreateComponent(ComponentType componentType)
+{
+	switch (componentType)
+	{
+	case ComponentType::MESH:
+	{
+		Component * mesh = GetComponent(ComponentType::MESH);
+		if (mesh == nullptr)
+		{
+			components.push_back((new ComponentMesh(this, ComponentType::MESH)));
+		}
+		else
+		{
+			LOG("Is not possible to add more than one mesh to an specific gameobject");
+		}
+	}
+	break;
+	case ComponentType::MATERIAL:
+	{
+		components.push_back((new ComponentMaterial(this, ComponentType::MATERIAL)));
+	}
+	break;
+	case ComponentType::CAMERA:
+	{
+		components.push_back((new ComponentCamera(this, ComponentType::CAMERA)));
+	}
+	break;
 	}
 }

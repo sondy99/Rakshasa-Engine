@@ -8,6 +8,11 @@ ComponentMesh::ComponentMesh()
 {
 }
 
+ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType)
+	: Component(gameObjectParent, componentType)
+{
+}
+
 ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
 	: Component(gameObjectParent, componentType), mesh(mesh)
 {

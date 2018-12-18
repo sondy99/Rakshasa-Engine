@@ -4,6 +4,11 @@ ComponentMaterial::ComponentMaterial()
 {
 }
 
+ComponentMaterial::ComponentMaterial(GameObject* gameObjectParent, ComponentType componentType)
+	: Component(gameObjectParent, componentType)
+{
+}
+
 ComponentMaterial::ComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material)
 	: Component(gameObjectParent, componentType), material(material)
 {

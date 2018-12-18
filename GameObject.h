@@ -40,6 +40,8 @@ public:
 
 	AABB originalboundingBox = AABB();
 	AABB boundingBox = AABB();
+private:
+	void CreateComponent(ComponentType componentType);
 };
 
 #endif __GAMEOBJECT_H__

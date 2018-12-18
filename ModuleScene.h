@@ -30,7 +30,6 @@ private:
 	void DragAndDropManagement(GameObject* gameObjectParent);
 	void ClickManagement(GameObject* gameObject);
 	void ManageDuplicationAndDeletionGameObject();
-	void CreateGameObjectCamera();
 private:
 	GameObject* gameObjectToBeDeleted = nullptr;
 	GameObject* gameObjectToBeDuplicated = nullptr;

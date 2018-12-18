@@ -22,9 +22,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
-
-	CreateGameObjectCamera();
-
+	
 	LoadModel("Assets\\BakerHouse.FBX");
 
 	return true;
@@ -69,13 +67,7 @@ void ModuleScene::DrawProperties()
 	if (ImGui::Button("Create generic game object"))
 	{
 		CreateGameObject("genericGameObject", root, true);
-	}
-
-	if (ImGui::Button("Create camera game object "))
-	{
-		CreateGameObjectCamera();
-	}
-	
+	}	
 
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
@@ -263,11 +255,4 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 		gameObjectToBeDuplicated = nullptr;
 	}
 
-}
-
-void ModuleScene::CreateGameObjectCamera()
-{
-	std::string cameraName = "Camera." + std::to_string(cameraCounter++);
-	GameObject* camera = CreateGameObject(cameraName.c_str(), root, false);
-	camera->components.push_back((new ComponentCamera(camera, ComponentType::CAMERA)));
 }
