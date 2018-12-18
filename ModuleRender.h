@@ -9,6 +9,8 @@
 #include "ModuleModelLoader.h"
 
 class ComponentCamera;
+class ComponentMesh;
+class ComponentMaterial;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -42,7 +44,7 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 	
-	void RenderMesh(const Mesh& mesh, const Material& material, unsigned program, 
+	void RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial, unsigned program,
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	
 	void DrawProperties();

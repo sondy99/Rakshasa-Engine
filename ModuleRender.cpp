@@ -131,19 +131,33 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::RenderMesh(const Mesh& mesh, const Material& material,
+void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
 	unsigned program, const math::float4x4& model,
 	const math::float4x4& view, const math::float4x4& proj)
 {
+	Mesh mesh = componentMesh.mesh;
+
+	if (componentMesh.isWireframeActive)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
 	glUseProgram(program);
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*)&view);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material.texture0);
-	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+	if (componentMaterial != nullptr)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, componentMaterial->material.texture0);
+		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+	}
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -369,10 +383,12 @@ void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::
 			ComponentMaterial* componentMaterial = (ComponentMaterial*)gameObjectChild->GetComponent(ComponentType::MATERIAL);
 			ComponentMesh* componentMesh = (ComponentMesh*)gameObjectChild->GetComponent(ComponentType::MESH);
 			
-			if ((componentMaterial != nullptr && componentMesh != nullptr) &&
-				(componentCameraGameSelected == nullptr || componentCameraGameSelected->frustum.Intersects(gameObjectChild->boundingBox)))
+			if ((componentMesh != nullptr) &&
+				(componentCameraGameSelected == nullptr ||
+					componentCameraGameSelected->frustum.Intersects(gameObjectChild->boundingBox) ||
+					!App->scene->isSceneCullingActive))
 			{
-				RenderMesh(componentMesh->mesh, componentMaterial->material, App->shader->program,
+				RenderMesh(*componentMesh, componentMaterial, App->shader->program,
 					transformation->globalModelMatrix, view, projection);
 
 				RenderBoundingBox(gameObjectChild, frameBufferType);

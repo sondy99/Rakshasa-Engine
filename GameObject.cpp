@@ -28,30 +28,40 @@ void GameObject::DrawProperties()
 	{
 		if (ImGui::CollapsingHeader("Game object properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::NewLine();
+			ImGui::Button("New Component");
+
+			if (ImGui::IsItemClicked(0))
+			{
+				ImGui::OpenPopup("NewComponentContextualMenu");
+			}
+
+			if (ImGui::BeginPopup("NewComponentContextualMenu"))
+			{
+				if (ImGui::Button("Mesh    "))
+				{
+					CreateComponent(ComponentType::MESH);
+				}
+				if (ImGui::Button("Material"))
+				{
+					CreateComponent(ComponentType::MATERIAL);
+				}
+				if (ImGui::Button("Camera  "))
+				{
+					CreateComponent(ComponentType::CAMERA);
+				}
+
+
+
+
+				ImGui::EndPopup();
+			}
+
+			ImGui::Separator();
 			ImGui::Text("Game name:");
 			ImGui::SameLine();
 			ImGui::InputText("##", &name[0], 40);
 			ImGui::Text("Model selected has %d childs.", childrens.size());
 			ImGui::Checkbox("Active", &active);
-			ImGui::NewLine();
-
-			if (ImGui::BeginMenu("New Component"))
-			{
-				if (ImGui::MenuItem("Mesh"))
-				{
-					CreateComponent(ComponentType::MESH);
-				}
-				if (ImGui::MenuItem("Material"))
-				{
-					CreateComponent(ComponentType::MATERIAL);
-				}
-				if (ImGui::MenuItem("Camera"))
-				{
-					CreateComponent(ComponentType::CAMERA);
-				}
-				ImGui::EndMenu();
-			}
 		}
 
 		if (components.size() > 0)

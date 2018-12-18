@@ -64,11 +64,27 @@ void ModuleScene::DrawProperties()
 		return;
 	}
 
-	if (ImGui::Button("Create generic game object"))
+	ImGui::Button("Scene options");
+	
+	if (ImGui::IsItemClicked(0))
 	{
-		std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
-		CreateGameObject(genericGameObject.c_str(), root, true);
-	}	
+		ImGui::OpenPopup("SceneOptionsContextualMenu");
+	}
+
+	if (ImGui::BeginPopup("SceneOptionsContextualMenu"))
+	{
+		if (ImGui::Button("Create generic game object"))
+		{
+			std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
+			CreateGameObject(genericGameObject.c_str(), root, true);
+		}
+
+		ImGui::Checkbox("Scene culling active", &isSceneCullingActive);
+
+		ImGui::EndPopup();
+	}
+	
+	ImGui::Separator();
 
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 

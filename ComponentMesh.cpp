@@ -38,6 +38,8 @@ void ComponentMesh::DrawProperties()
 
 		ImGui::Text("Triangles count: %d", mesh.verticesNumber / 3);
 		ImGui::Text("Vertices count: %d", mesh.verticesNumber);
+
+		ImGui::Checkbox("Wireframe active", &isWireframeActive);
 	}
 }
 

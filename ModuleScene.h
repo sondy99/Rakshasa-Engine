@@ -23,6 +23,7 @@ public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;
 	bool toggleSceneProperties = true;
+	bool isSceneCullingActive = true;
 private:
 	void DrawTreeNode(GameObject * gameObject);
 	void SetGameObjectSelected(GameObject* gameObject);

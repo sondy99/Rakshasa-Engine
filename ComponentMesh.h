@@ -17,6 +17,7 @@ public:
 public:
 	Mesh mesh;
 	AABB boundingBox;
+	bool isWireframeActive = false;
 };
 
 #endif __COMPONENTMESH_H__
