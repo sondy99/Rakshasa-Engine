@@ -24,7 +24,7 @@ void GameObject::Update()
 
 void GameObject::DrawProperties()
 {
-	if (ImGui::CollapsingHeader("Game Object"))
+	if (isSelected)
 	{
 		ImGui::NewLine();
 		ImGui::Text("Game name:");
@@ -49,6 +49,15 @@ void GameObject::DrawProperties()
 				CreateComponent(ComponentType::CAMERA);
 			}
 			ImGui::EndMenu();
+		}
+
+
+		if (components.size() > 0)
+		{
+			for (auto &component : components)
+			{
+				component->DrawProperties();
+			}
 		}
 	}
 }

@@ -32,7 +32,7 @@ public:
 public:
 	math::float4x4 transform = math::float4x4::identity;
 
-	bool toggleModelProperties = true;
+	bool toggleModelProperties = false;
 private:
 	void CleanUpMeshesAndTextures(const GameObject* gameObject);
 	void GenerateMesh(Mesh& meshStruct);

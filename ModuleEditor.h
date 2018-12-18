@@ -26,6 +26,7 @@ private:
 private:
 	bool toggleAboutMenu = false;
 	bool toggleConsole = true;
+	bool toggleGameObjectProperties = true;
 	ImGuiTextBuffer textBuffer;     
 	bool scrollDown;
 	bool exit = false;

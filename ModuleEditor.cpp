@@ -6,6 +6,7 @@
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
 #include "ModuleScene.h"
+#include "GameObject.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -49,10 +50,12 @@ update_status ModuleEditor::Update()
 
 		if (ImGui::BeginMenu("Windows")) {
 			ImGui::Checkbox("Game objects hierarchy", &App->scene->toggleSceneProperties);
+			ImGui::Checkbox("Game objects properties", &toggleGameObjectProperties);
 			ImGui::Checkbox("Render properties", &App->renderer->toggleRenderProperties);
 			ImGui::Checkbox("Camera properties", &App->camera->toggleCameraProperties);
 			ImGui::Checkbox("Model properties", &App->modelLoader->toggleModelProperties);
 			ImGui::Checkbox("Console", &toggleConsole);
+			
 			//ImGui::Checkbox("Window", &toggleWindow);
 			ImGui::EndMenu();
 		}
@@ -93,6 +96,14 @@ void ModuleEditor::WindowManager()
 	App->camera->DrawProperties();
 	App->modelLoader->DrawProperties();
 	App->scene->DrawProperties();
+
+	ImGui::Begin("Game object", &toggleGameObjectProperties);
+	if (App->scene->gameObjectSelected != nullptr)
+	{
+		App->scene->gameObjectSelected->DrawProperties();
+	}
+	ImGui::End();
+
 	DrawConsole();
 
 	App->renderer->DrawCameraSceneWindow();

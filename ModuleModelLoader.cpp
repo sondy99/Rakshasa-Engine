@@ -234,27 +234,9 @@ void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameOb
 
 void ModuleModelLoader::DrawProperties()
 {
-	GameObject* gameObjectSelected = App->scene->gameObjectSelected;
-
 	if (toggleModelProperties)
 	{
 		ImGui::Begin("Model", &toggleModelProperties);
-
-		if (gameObjectSelected != nullptr)
-		{
-			ImGui::Text("Name: %s", gameObjectSelected->name.c_str());
-			
-			if (gameObjectSelected->components.size() > 0)
-			{
-				gameObjectSelected->DrawProperties();
-
-				for (auto &component : gameObjectSelected->components)
-				{
-					component->DrawProperties();
-				}
-			}
-		}
-
 		ImGui::End();
 	}
 }
