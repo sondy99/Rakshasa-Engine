@@ -6,7 +6,7 @@
 
 void Component::DrawDeleteComponent()
 {
-	if (ImGui::SmallButton("Delete"))
+	if (ImGui::Button("Delete"))
 	{
 		isMarkToBeDeleted = true;
 	}

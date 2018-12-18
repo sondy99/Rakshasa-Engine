@@ -28,6 +28,11 @@ void GameObject::DrawProperties()
 	{
 		if (ImGui::CollapsingHeader("Game object properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			if (ImGui::Button("Delete"))
+			{
+				RemoveGameObject(this);
+			}
+			ImGui::SameLine();
 			ImGui::Button("New Component");
 
 			if (ImGui::IsItemClicked(0))
@@ -49,10 +54,6 @@ void GameObject::DrawProperties()
 				{
 					CreateComponent(ComponentType::CAMERA);
 				}
-
-
-
-
 				ImGui::EndPopup();
 			}
 
