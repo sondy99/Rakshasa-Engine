@@ -280,6 +280,14 @@ ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, C
 	return result;
 }
 
+void ModuleRender::RemoveMesh(Component* componentToBeRemove)
+{
+	if (componentToBeRemove->componentType == ComponentType::MESH)
+	{
+		meshes.remove((ComponentMesh*)componentToBeRemove);
+	}
+}
+
 void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject)
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";

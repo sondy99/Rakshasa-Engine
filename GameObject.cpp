@@ -80,8 +80,7 @@ void GameObject::DrawProperties()
 				}
 				else
 				{
-					RELEASE(*iterator);
-					iterator = components.erase(iterator);
+					iterator = RemoveComponent(iterator);
 				}
 
 			}
@@ -93,8 +92,7 @@ void GameObject::RemoveGameObject(GameObject* mainObjectToDelete)
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 	{
-		RELEASE(*iterator);
-		iterator = components.erase(iterator);
+		iterator = RemoveComponent(iterator);
 	}
 
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
@@ -242,4 +240,13 @@ void GameObject::CreateComponent(ComponentType componentType)
 	}
 	break;
 	}
+}
+
+std::list<Component*>::iterator GameObject::RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove)
+{
+	App->renderer->RemoveMesh(*iteratorComponentToBeRemove);
+	RELEASE(*iteratorComponentToBeRemove);
+	std::list<Component*>::iterator iterator = components.erase(iteratorComponentToBeRemove);
+	
+	return iterator;
 }

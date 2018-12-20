@@ -42,6 +42,7 @@ public:
 	AABB boundingBox = AABB();
 private:
 	void CreateComponent(ComponentType componentType);
+	std::list<Component*>::iterator RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove);
 };
 
 #endif __GAMEOBJECT_H__

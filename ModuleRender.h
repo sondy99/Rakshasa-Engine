@@ -11,6 +11,7 @@
 class GameObject;
 
 enum class ComponentType;
+class Component;
 class ComponentCamera;
 class ComponentMesh;
 class ComponentMaterial;
@@ -56,6 +57,7 @@ public:
 	ComponentMesh* CreateComponentMesh();
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType);
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
+	void RemoveMesh(Component* componentToBeRemove);
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;
