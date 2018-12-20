@@ -8,6 +8,9 @@
 
 #include "ModuleModelLoader.h"
 
+class GameObject;
+
+enum class ComponentType;
 class ComponentCamera;
 class ComponentMesh;
 class ComponentMaterial;
@@ -50,6 +53,9 @@ public:
 	void DrawProperties();
 	void DrawCameraSceneWindow();
 	void DrawCameraGameWindow();
+	ComponentMesh* CreateComponentMesh();
+	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType);
+	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;
@@ -59,7 +65,7 @@ private:
 	void FpsCount();
 	void ManageFpsAndMsList();
 	void InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit);
-	void RenderComponentFromGameObject(GameObject* gameObject, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
+	void RenderComponentFromMeshesList(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
 	void ManageComboBoxCamera(std::list<GameObject*> camerasGameObject);
@@ -81,6 +87,7 @@ private:
 
 	std::vector<float> fpsList;
 	std::vector<float> msList;
+	std::list<ComponentMesh*> meshes;
 };
 
 #endif __MODULERENDER_H__

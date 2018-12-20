@@ -1,6 +1,10 @@
 #include "GameObject.h"
 #include "crossguid/guid.hpp"
 
+#include "Application.h"
+
+#include "ModuleRender.h"
+
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
@@ -219,7 +223,7 @@ void GameObject::CreateComponent(ComponentType componentType)
 		Component * mesh = GetComponent(ComponentType::MESH);
 		if (mesh == nullptr)
 		{
-			components.push_back((new ComponentMesh(this, ComponentType::MESH)));
+			components.push_back((App->renderer->CreateComponentMesh(this, ComponentType::MESH)));
 		}
 		else
 		{

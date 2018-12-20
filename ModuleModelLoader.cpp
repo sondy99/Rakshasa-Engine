@@ -1,6 +1,8 @@
 #include "Globals.h"
 
 #include "Application.h"
+
+#include "ModuleRender.h"
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
@@ -200,7 +202,7 @@ void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* 
 	meshStruct.mesh = scene->mMeshes[node->mMeshes[0]];
 	GenerateMesh(meshStruct);
 
-	gameObjectMesh->components.push_back(new ComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
+	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
 	gameObjectMesh->UpdateBoundingBox();
 	if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
 	{

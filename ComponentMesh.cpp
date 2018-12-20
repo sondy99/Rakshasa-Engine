@@ -1,5 +1,9 @@
 #include "ComponentMesh.h"
 
+#include "Application.h"
+
+#include "ModuleRender.h"
+
 #include <assimp/scene.h>
 
 #include "MathGeoLib.h"
@@ -45,7 +49,7 @@ void ComponentMesh::DrawProperties()
 
 Component * ComponentMesh::Clone()
 {
-	ComponentMesh* result = new ComponentMesh();
+	ComponentMesh* result = App->renderer->CreateComponentMesh();
 
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;

@@ -256,6 +256,30 @@ void ModuleRender::DrawCameraGameWindow()
 	ImGui::End();
 }
 
+ComponentMesh* ModuleRender::CreateComponentMesh()
+{
+	ComponentMesh* result = new ComponentMesh();
+	meshes.push_back(result);
+
+	return result;
+}
+
+ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType)
+{
+	ComponentMesh* result = new ComponentMesh(gameObjectParent, componentType);
+	meshes.push_back(result);
+
+	return result;
+}
+
+ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
+{
+	ComponentMesh* result = new ComponentMesh(gameObjectParent, componentType, mesh);
+	meshes.push_back(result);
+
+	return result;
+}
+
 void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject)
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
@@ -288,7 +312,7 @@ void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject
 
 void ModuleRender::RenderBoundingBox(GameObject * gameObject, FrameBufferType frameBufferType)
 {
-	if (gameObject->isSelected && frameBufferType == FrameBufferType::SCENE)
+	if (gameObject != nullptr && gameObject->isSelected && frameBufferType == FrameBufferType::SCENE)
 	{
 		App->environment->DrawBoundingBox(gameObject);
 	}
@@ -362,40 +386,25 @@ void ModuleRender::InitFrameBuffer(int width, int height, FrameBufferStruct &fra
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ModuleRender::RenderComponentFromGameObject(GameObject * gameObject, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType)
+void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType)
 {
-	for (auto &gameObjectChild : gameObject->childrens)
+	for (auto &componentMesh : meshes)
 	{
-		if (gameObjectChild->active)			
+		if (componentMesh->gameObjectParent->active)
 		{
-			if (gameObjectChild->childrens.size() > 0)
-			{
-				ComponentCamera* camera = (ComponentCamera*)gameObjectChild->GetComponent(ComponentType::CAMERA);
+			ComponentTransformation* transformation = (ComponentTransformation*)componentMesh->gameObjectParent->GetComponent(ComponentType::TRANSFORMATION);
+			ComponentMaterial* componentMaterial = (ComponentMaterial*)componentMesh->gameObjectParent->GetComponent(ComponentType::MATERIAL);
 
-				if (camera == nullptr)
-				{
-					//TODO: change this to not use recursivity
-					RenderComponentFromGameObject(gameObjectChild, view, projection, frameBufferType);
-				}
-			}
-
-			ComponentTransformation* transformation = (ComponentTransformation*)gameObjectChild->GetComponent(ComponentType::TRANSFORMATION);
-			ComponentMaterial* componentMaterial = (ComponentMaterial*)gameObjectChild->GetComponent(ComponentType::MATERIAL);
-			ComponentMesh* componentMesh = (ComponentMesh*)gameObjectChild->GetComponent(ComponentType::MESH);
-			
 			if ((componentMesh != nullptr) &&
 				(componentCameraGameSelected == nullptr ||
-					componentCameraGameSelected->frustum.Intersects(gameObjectChild->boundingBox) ||
+					componentCameraGameSelected->frustum.Intersects(componentMesh->gameObjectParent->boundingBox) ||
 					!App->scene->isSceneCullingActive))
 			{
 				RenderMesh(*componentMesh, componentMaterial, App->shader->program,
 					transformation->globalModelMatrix, view, projection);
-
-				RenderBoundingBox(gameObjectChild, frameBufferType);
 			}
 		}
 	}
-	RenderBoundingBox(gameObject, frameBufferType);
 }
 
 void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
@@ -443,7 +452,9 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 
-	RenderComponentFromGameObject(App->scene->root, view, projection, frameBufferToRender.frameBufferType);
+	//RenderComponentFromGameObject(App->scene->root, view, projection, frameBufferToRender.frameBufferType);
+	RenderComponentFromMeshesList(view, projection, frameBufferToRender.frameBufferType);
+	RenderBoundingBox(App->scene->gameObjectSelected, frameBufferToRender.frameBufferType);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
