@@ -320,6 +320,11 @@ void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject
 
 void ModuleRender::RenderBoundingBox(GameObject * gameObject, FrameBufferType frameBufferType)
 {
+	for (std::list<GameObject*>::iterator iterator = App->scene->root->childrens.begin(); iterator != App->scene->root->childrens.end(); iterator++)
+	{
+		(*iterator)->UpdateBoundingBoxForGameObjectWithOutMesh();
+	}
+
 	if (gameObject != nullptr && gameObject->isSelected && frameBufferType == FrameBufferType::SCENE)
 	{
 		App->environment->DrawBoundingBox(gameObject);
@@ -405,7 +410,7 @@ void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::floa
 
 			if ((componentMesh != nullptr) &&
 				(componentCameraGameSelected == nullptr ||
-					componentCameraGameSelected->frustum.Intersects(componentMesh->gameObjectParent->boundingBox) ||
+					componentCameraGameSelected->frustum.Intersects(componentMesh->gameObjectParent->globalBoundingBox) ||
 					!App->scene->isSceneCullingActive))
 			{
 				RenderMesh(*componentMesh, componentMaterial, App->shader->program,
@@ -430,8 +435,6 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 			ComponentTransformation* transformationParent = (ComponentTransformation*)gameObject->parent->GetComponent(ComponentType::TRANSFORMATION);
 			transformation->globalModelMatrix = transformationParent->globalModelMatrix*transformation->localModelMatrix;
 		}
-
-		gameObject->UpdateBoundingBoxTransformation();
 	}
 
 	for (auto &gameObjectChild : gameObject->childrens)

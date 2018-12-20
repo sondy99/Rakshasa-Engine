@@ -47,9 +47,7 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 		CreateTransformationComponent(scene->mRootNode, gameObjectParent);
 
 		CreateGameObjectsFromNode(scene, scene->mRootNode, gameObjectParent);
-
-		gameObjectParent->UpdateBoundingBox();
-
+		
 		aiReleaseImport(scene);
 	}
 	else
@@ -203,7 +201,7 @@ void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* 
 	GenerateMesh(meshStruct);
 
 	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
-	gameObjectMesh->UpdateBoundingBox();
+	gameObjectMesh->UpdateBoundingBoxForGameObjectWithMesh();
 	if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
 	{
 		CreateMaterialComponent(scene, node, gameObjectMesh, meshStruct.mesh->mMaterialIndex);

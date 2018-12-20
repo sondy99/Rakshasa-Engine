@@ -221,7 +221,6 @@ void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
 
 				gameObjectToMove->parent = gameObjectParent;
 				gameObjectParent->childrens.push_back(gameObjectToMove);
-				gameObjectParent->UpdateBoundingBox();
 			}
 		}
 	}
@@ -259,6 +258,7 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 
 void ModuleScene::ManageDuplicationAndDeletionGameObject()
 {
+
 	if (gameObjectToBeDeleted != nullptr)
 	{
 		gameObjectToBeDeleted->RemoveGameObject(gameObjectToBeDeleted);
@@ -271,5 +271,4 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 		gameObjectToBeDuplicated->DuplicateGameObject(nullptr);
 		gameObjectToBeDuplicated = nullptr;
 	}
-
 }

@@ -144,8 +144,8 @@ GameObject* GameObject::Clone()
 	GameObject* result = new GameObject(name.c_str(), parent);
 
 	result->active = active;
-	result->boundingBox = boundingBox;
-	result->originalboundingBox = originalboundingBox;
+	result->globalBoundingBox = globalBoundingBox;
+	result->localBoundingBox = localBoundingBox;
 
 	return result;
 }
@@ -166,7 +166,9 @@ Component* GameObject::GetComponent(ComponentType componentType)
 	return result;
 }
 
-void GameObject::UpdateBoundingBox()
+
+
+void GameObject::UpdateBoundingBoxForGameObjectWithMesh()
 {
 	std::vector<float3> minMaxPointsAABB;
 
@@ -176,39 +178,54 @@ void GameObject::UpdateBoundingBox()
 	{
 		minMaxPointsAABB.push_back(componentMesh->boundingBox.minPoint);
 		minMaxPointsAABB.push_back(componentMesh->boundingBox.maxPoint);
-	}
+	
+		if (minMaxPointsAABB.size() > 0)
+		{
+			localBoundingBox = localBoundingBox.MinimalEnclosingAABB(&minMaxPointsAABB[0], minMaxPointsAABB.size());
 
-	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
-	{
-		(*iterator)->UpdateBoundingBoxTransformation();
+			ComponentTransformation* transformation = (ComponentTransformation*)GetComponent(ComponentType::TRANSFORMATION);
 
-		minMaxPointsAABB.push_back((*iterator)->boundingBox.minPoint);
-		minMaxPointsAABB.push_back((*iterator)->boundingBox.maxPoint);
-	}
-
-	if (minMaxPointsAABB.size() > 0)
-	{
-		originalboundingBox = boundingBox.MinimalEnclosingAABB(&minMaxPointsAABB[0], minMaxPointsAABB.size());
-		boundingBox = originalboundingBox;
+			if (transformation != nullptr)
+			{
+				globalBoundingBox = localBoundingBox;
+				globalBoundingBox.TransformAsAABB(transformation->globalModelMatrix);
+			}
+		}
 	}
 }
 
-void GameObject::UpdateBoundingBoxTransformation()
+void GameObject::UpdateBoundingBoxForGameObjectWithOutMesh()
 {
-	ComponentTransformation* transformation = (ComponentTransformation*)GetComponent(ComponentType::TRANSFORMATION);
-
-	if (transformation != nullptr)
-	{
-		boundingBox = originalboundingBox;
-		boundingBox.TransformAsAABB(transformation->globalModelMatrix);
-	}
-
 	for (auto &gameObjectChild : childrens)
 	{
-		ComponentTransformation* transformation = (ComponentTransformation*)gameObjectChild->GetComponent(ComponentType::TRANSFORMATION);
-
 		//TODO: change this to not use recursivity
-		gameObjectChild->UpdateBoundingBoxTransformation();
+		gameObjectChild->UpdateBoundingBoxForGameObjectWithOutMesh();
+	}
+
+	ComponentMesh* mesh = (ComponentMesh*)GetComponent(ComponentType::MESH);
+
+	if (mesh == nullptr)
+	{
+		std::vector<float3> minMaxPointsAABB;
+
+		for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
+		{
+			minMaxPointsAABB.push_back((*iterator)->globalBoundingBox.minPoint);
+			minMaxPointsAABB.push_back((*iterator)->globalBoundingBox.maxPoint);
+		}
+
+		if (minMaxPointsAABB.size() > 0)
+		{
+			localBoundingBox = localBoundingBox.MinimalEnclosingAABB(&minMaxPointsAABB[0], minMaxPointsAABB.size());
+
+			ComponentTransformation* transformation = (ComponentTransformation*)GetComponent(ComponentType::TRANSFORMATION);
+
+			if (transformation != nullptr)
+			{
+				globalBoundingBox = localBoundingBox;
+				globalBoundingBox.TransformAsAABB(transformation->globalModelMatrix);
+			}
+		}
 	}
 }
 

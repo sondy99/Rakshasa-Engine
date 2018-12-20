@@ -41,7 +41,7 @@ void ModuleEnvironment::DrawReferenceAxis()
 
 void ModuleEnvironment::DrawBoundingBox(GameObject* gameObject)
 {
-	dd::aabb(gameObject->boundingBox.minPoint, gameObject->boundingBox.maxPoint, dd::colors::Yellow);
+	dd::aabb(gameObject->globalBoundingBox.minPoint, gameObject->globalBoundingBox.maxPoint, dd::colors::Yellow);
 }
 
 void ModuleEnvironment::DrawFrustum(ComponentCamera* camera)
