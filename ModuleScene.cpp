@@ -39,10 +39,7 @@ GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, 
 {
 	GameObject* gameObject = new GameObject(name, parent);
 
-	if(parent == root)
-	{
-		root->childrens.push_back(gameObject);
-	}
+	parent->childrens.push_back(gameObject);
 
 	if (withTransformation)
 	{
@@ -108,27 +105,6 @@ void ModuleScene::DrawProperties()
 	}
 
 	ImGui::End();
-}
-
-std::list<GameObject*> ModuleScene::GetGameCameras()
-{
-	std::list<GameObject*> result;
-
-	for (std::list<GameObject*>::iterator iterator = root->childrens.begin(); iterator != root->childrens.end(); ++iterator)
-	{
-		if ((*iterator)->components.size() > 0)
-		{
-			ComponentCamera* camera = (ComponentCamera*)(*iterator)->GetComponent(ComponentType::CAMERA);
-
-			if (camera != nullptr)
-			{
-				result.push_back(*iterator);
-			}
-			
-		}
-	}
-
-	return result;
 }
 
 void ModuleScene::DrawTreeNode(GameObject * gameObject)
@@ -252,6 +228,11 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 	{
 		if (ImGui::BeginPopup("GameObjectContextualMenu"))
 		{
+			if (ImGui::MenuItem("New game object"))
+			{
+				std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
+				CreateGameObject(genericGameObject.c_str(), gameObject, true);
+			}
 			if (ImGui::MenuItem("Duplicate"))
 			{
 				gameObjectToBeDuplicated = gameObject;

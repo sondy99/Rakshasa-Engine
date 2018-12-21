@@ -9,6 +9,7 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleScene.h"
 #include "ModuleTextures.h"
+#include "ModuleCamera.h"
 
 #include "GameObject.h"
 #include "ComponentMesh.h"
@@ -228,10 +229,10 @@ void ModuleRender::DrawCameraGameWindow()
 {
 	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
 
-	std::list<GameObject*> camerasGameObject = App->scene->GetGameCameras();
+	std::list<ComponentCamera*> componentCameras = App->camera->cameras;
 
-	ManageComboBoxCamera(camerasGameObject);
-	if (camerasGameObject.size() > 0)
+	ManageComboBoxCamera(componentCameras);
+	if (componentCameras.size() > 0)
 	{
 		if (componentCameraGameSelected)
 		{
@@ -288,21 +289,21 @@ void ModuleRender::RemoveMesh(Component* componentToBeRemove)
 	}
 }
 
-void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject)
+void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras)
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
 	
-	if (camerasGameObject.size() > 0)
+	if (componentCameras.size() > 0)
 	{
 		if (ImGui::BeginCombo("##combo", labelCurrentCameraGameObjecteName))
 		{
-			for (std::list<GameObject*>::iterator iterator = camerasGameObject.begin(); iterator != camerasGameObject.end(); ++iterator)
+			for (std::list<ComponentCamera*>::iterator iterator = componentCameras.begin(); iterator != componentCameras.end(); ++iterator)
 			{
-				bool isSelected = (labelCurrentCameraGameObjecteName == (*iterator)->name.c_str());
-				if (ImGui::Selectable((*iterator)->name.c_str(), isSelected))
+				bool isSelected = (labelCurrentCameraGameObjecteName == (*iterator)->gameObjectParent->name.c_str());
+				if (ImGui::Selectable((*iterator)->gameObjectParent->name.c_str(), isSelected))
 				{
-					labelCurrentCameraGameObjecteName = (*iterator)->name.c_str();
-					componentCameraGameSelected = (ComponentCamera*)(*iterator)->GetComponent(ComponentType::CAMERA);
+					labelCurrentCameraGameObjecteName = (*iterator)->gameObjectParent->name.c_str();
+					componentCameraGameSelected = (ComponentCamera*)(*iterator);
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();

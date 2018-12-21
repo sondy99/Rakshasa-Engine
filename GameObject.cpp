@@ -4,6 +4,7 @@
 #include "Application.h"
 
 #include "ModuleRender.h"
+#include "ModuleCamera.h"
 
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
@@ -188,7 +189,7 @@ void GameObject::CreateComponent(ComponentType componentType)
 	break;
 	case ComponentType::CAMERA:
 	{
-		components.push_back((new ComponentCamera(this, ComponentType::CAMERA)));
+		components.push_back((App->camera->CreateComponentCamera(this, ComponentType::CAMERA)));
 	}
 	break;
 	}
@@ -197,6 +198,7 @@ void GameObject::CreateComponent(ComponentType componentType)
 std::list<Component*>::iterator GameObject::RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove)
 {
 	App->renderer->RemoveMesh(*iteratorComponentToBeRemove);
+	App->camera->RemoveCamera(*iteratorComponentToBeRemove);
 	RELEASE(*iteratorComponentToBeRemove);
 	std::list<Component*>::iterator iterator = components.erase(iteratorComponentToBeRemove);
 	

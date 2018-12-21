@@ -6,6 +6,9 @@
 #include "Point.h"
 #include "MathGeoLib.h"
 
+enum class ComponentType;
+class GameObject;
+class Component;
 class ComponentCamera;
 
 class ModuleCamera : public Module
@@ -34,11 +37,14 @@ public:
 	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 
 	void DrawProperties();
+	ComponentCamera* CreateComponentCamera(GameObject* gameObjectParent, ComponentType componentType);
+	void RemoveCamera(Component* componentToBeRemove);
 public:
 	bool toggleCameraProperties = true;
 
 	ComponentCamera* sceneCamera = nullptr;
 	ComponentCamera* selectedCamera = nullptr;
+	std::list<ComponentCamera*> cameras;
 	bool viewPortIsFocused = false;
 private:
 	void CameraMovementKeyboard();

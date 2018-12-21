@@ -18,7 +18,6 @@ public:
 	void LoadModel(const char* modelPath);
 	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void DrawProperties();
-	std::list<GameObject*> GetGameCameras();
 public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;

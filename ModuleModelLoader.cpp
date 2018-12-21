@@ -187,7 +187,6 @@ void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const ai
 				//TODO: change this to not use recursivity
 				CreateGameObjectsFromNode(scene, node->mChildren[i], gameObjectParent);
 			}
-			gameObjectParent->childrens.push_back(gameObjectMesh);
 		}
 	}
 }

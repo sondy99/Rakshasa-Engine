@@ -4,6 +4,10 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
 #include "ModuleRender.h"
+
+#include "GameObject.h"
+
+#include "Component.h"
 #include "ComponentCamera.h"
 
 ModuleCamera::ModuleCamera()
@@ -264,5 +268,21 @@ void ModuleCamera::DrawProperties()
 			ImGui::SliderFloat("Far Plane", &sceneCamera->frustum.farPlaneDistance, 0.1f, 500.0f);
 		}
 		ImGui::End();
+	}
+}
+
+ComponentCamera* ModuleCamera::CreateComponentCamera(GameObject * gameObjectParent, ComponentType componentType)
+{
+	ComponentCamera* result = new ComponentCamera(gameObjectParent, componentType);
+	cameras.push_back(result);
+
+	return result;
+}
+
+void ModuleCamera::RemoveCamera(Component * componentToBeRemove)
+{
+	if (componentToBeRemove->componentType == ComponentType::CAMERA)
+	{
+		cameras.remove((ComponentCamera*)componentToBeRemove);
 	}
 }
