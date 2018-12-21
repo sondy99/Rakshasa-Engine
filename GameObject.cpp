@@ -144,8 +144,6 @@ GameObject* GameObject::Clone()
 	GameObject* result = new GameObject(name.c_str(), parent);
 
 	result->active = active;
-	result->globalBoundingBox = globalBoundingBox;
-	result->localBoundingBox = localBoundingBox;
 
 	return result;
 }
@@ -164,69 +162,6 @@ Component* GameObject::GetComponent(ComponentType componentType)
 	}
 
 	return result;
-}
-
-
-
-void GameObject::UpdateBoundingBoxForGameObjectWithMesh()
-{
-	std::vector<float3> minMaxPointsAABB;
-
-	ComponentMesh* componentMesh = (ComponentMesh*)GetComponent(ComponentType::MESH);
-
-	if (componentMesh != nullptr)
-	{
-		minMaxPointsAABB.push_back(componentMesh->boundingBox.minPoint);
-		minMaxPointsAABB.push_back(componentMesh->boundingBox.maxPoint);
-	
-		if (minMaxPointsAABB.size() > 0)
-		{
-			localBoundingBox = localBoundingBox.MinimalEnclosingAABB(&minMaxPointsAABB[0], minMaxPointsAABB.size());
-
-			ComponentTransformation* transformation = (ComponentTransformation*)GetComponent(ComponentType::TRANSFORMATION);
-
-			if (transformation != nullptr)
-			{
-				globalBoundingBox = localBoundingBox;
-				globalBoundingBox.TransformAsAABB(transformation->globalModelMatrix);
-			}
-		}
-	}
-}
-
-void GameObject::UpdateBoundingBoxForGameObjectWithOutMesh()
-{
-	for (auto &gameObjectChild : childrens)
-	{
-		//TODO: change this to not use recursivity
-		gameObjectChild->UpdateBoundingBoxForGameObjectWithOutMesh();
-	}
-
-	ComponentMesh* mesh = (ComponentMesh*)GetComponent(ComponentType::MESH);
-
-	if (mesh == nullptr)
-	{
-		std::vector<float3> minMaxPointsAABB;
-
-		for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
-		{
-			minMaxPointsAABB.push_back((*iterator)->globalBoundingBox.minPoint);
-			minMaxPointsAABB.push_back((*iterator)->globalBoundingBox.maxPoint);
-		}
-
-		if (minMaxPointsAABB.size() > 0)
-		{
-			localBoundingBox = localBoundingBox.MinimalEnclosingAABB(&minMaxPointsAABB[0], minMaxPointsAABB.size());
-
-			ComponentTransformation* transformation = (ComponentTransformation*)GetComponent(ComponentType::TRANSFORMATION);
-
-			if (transformation != nullptr)
-			{
-				globalBoundingBox = localBoundingBox;
-				globalBoundingBox.TransformAsAABB(transformation->globalModelMatrix);
-			}
-		}
-	}
 }
 
 void GameObject::CreateComponent(ComponentType componentType)

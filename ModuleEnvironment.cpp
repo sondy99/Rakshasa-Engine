@@ -6,7 +6,7 @@
 #include "MathGeoLib.h"
 
 #include "ComponentCamera.h"
-#include "GameObject.h"
+#include "ComponentMesh.h"
 
 #include "GL/glew.h"
 #include "SDL.h"
@@ -39,12 +39,12 @@ void ModuleEnvironment::DrawReferenceAxis()
 	dd::axisTriad(math::float4x4::identity, axis_size*0.125f, axis_size*1.25f, 0, false);
 }
 
-void ModuleEnvironment::DrawBoundingBox(GameObject* gameObject)
+void ModuleEnvironment::DrawBoundingBox(const ComponentMesh& componentMesh)
 {
-	dd::aabb(gameObject->globalBoundingBox.minPoint, gameObject->globalBoundingBox.maxPoint, dd::colors::Yellow);
+	dd::aabb(componentMesh.globalBoundingBox.minPoint, componentMesh.globalBoundingBox.maxPoint, dd::colors::Yellow);
 }
 
-void ModuleEnvironment::DrawFrustum(ComponentCamera* camera)
+void ModuleEnvironment::DrawFrustum(const ComponentCamera& camera)
 {
-	dd::frustum((camera->frustum.ProjectionMatrix() * camera->frustum.ViewMatrix()).Inverted(), dd::colors::Cyan);
+	dd::frustum((camera.frustum.ProjectionMatrix() * camera.frustum.ViewMatrix()).Inverted(), dd::colors::Cyan);
 }

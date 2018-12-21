@@ -14,9 +14,11 @@ public:
 
 	void DrawProperties() override;
 	Component* Clone() override;
+	void UpdateGlobalBoundingBox();
 public:
 	Mesh mesh;
-	AABB boundingBox;
+	AABB localBoundingBox = AABB();
+	AABB globalBoundingBox = AABB();
 	bool isWireframeActive = false;
 };
 

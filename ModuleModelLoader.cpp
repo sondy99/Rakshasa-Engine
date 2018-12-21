@@ -201,7 +201,7 @@ void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* 
 	GenerateMesh(meshStruct);
 
 	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
-	gameObjectMesh->UpdateBoundingBoxForGameObjectWithMesh();
+
 	if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
 	{
 		CreateMaterialComponent(scene, node, gameObjectMesh, meshStruct.mesh->mMaterialIndex);

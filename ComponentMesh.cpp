@@ -2,6 +2,10 @@
 
 #include "Application.h"
 
+#include "GameObject.h"
+
+#include "ComponentTransformation.h"
+
 #include "ModuleRender.h"
 
 #include <assimp/scene.h>
@@ -22,8 +26,8 @@ ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType compone
 {
 	aiMesh* aiMesh = mesh.mesh;
 
-	boundingBox.SetNegativeInfinity();
-	boundingBox.Enclose((float3*)aiMesh->mVertices, mesh.verticesNumber);
+	localBoundingBox.SetNegativeInfinity();
+	localBoundingBox.Enclose((float3*)aiMesh->mVertices, mesh.verticesNumber);
 }
 
 ComponentMesh::~ComponentMesh()
@@ -54,7 +58,18 @@ Component * ComponentMesh::Clone()
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;
 	result->mesh = mesh;
-	result->boundingBox = boundingBox;
+	result->localBoundingBox = localBoundingBox;
 
 	return result;
+}
+
+void ComponentMesh::UpdateGlobalBoundingBox()
+{
+	ComponentTransformation* transformation = (ComponentTransformation*)gameObjectParent->GetComponent(ComponentType::TRANSFORMATION);
+
+	if (transformation != nullptr)
+	{
+		globalBoundingBox = localBoundingBox;
+		globalBoundingBox.TransformAsAABB(transformation->globalModelMatrix);
+	}
 }

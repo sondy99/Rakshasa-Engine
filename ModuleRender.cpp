@@ -318,19 +318,6 @@ void ModuleRender::ManageComboBoxCamera(std::list<GameObject*> camerasGameObject
 	}
 }
 
-void ModuleRender::RenderBoundingBox(GameObject * gameObject, FrameBufferType frameBufferType)
-{
-	for (std::list<GameObject*>::iterator iterator = App->scene->root->childrens.begin(); iterator != App->scene->root->childrens.end(); iterator++)
-	{
-		(*iterator)->UpdateBoundingBoxForGameObjectWithOutMesh();
-	}
-
-	if (gameObject != nullptr && gameObject->isSelected && frameBufferType == FrameBufferType::SCENE)
-	{
-		App->environment->DrawBoundingBox(gameObject);
-	}
-}
-
 void ModuleRender::FpsCount()
 {
 	++frameCounter;
@@ -403,6 +390,8 @@ void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::floa
 {
 	for (auto &componentMesh : meshes)
 	{
+		componentMesh->UpdateGlobalBoundingBox();
+
 		if (componentMesh->gameObjectParent->active)
 		{
 			ComponentTransformation* transformation = (ComponentTransformation*)componentMesh->gameObjectParent->GetComponent(ComponentType::TRANSFORMATION);
@@ -410,11 +399,16 @@ void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::floa
 
 			if ((componentMesh != nullptr) &&
 				(componentCameraGameSelected == nullptr ||
-					componentCameraGameSelected->frustum.Intersects(componentMesh->gameObjectParent->globalBoundingBox) ||
+					componentCameraGameSelected->frustum.Intersects(componentMesh->globalBoundingBox) ||
 					!App->scene->isSceneCullingActive))
 			{
 				RenderMesh(*componentMesh, componentMaterial, App->shader->program,
 					transformation->globalModelMatrix, view, projection);
+			}
+
+			if (componentMesh != nullptr && componentMesh->gameObjectParent->isSelected)
+			{
+				App->environment->DrawBoundingBox(*componentMesh);
 			}
 		}
 	}
@@ -453,7 +447,7 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 	if (frameBufferToRender.frameBufferType == FrameBufferType::SCENE && componentCameraGameSelected != nullptr)
 	{
-		App->environment->DrawFrustum(componentCameraGameSelected);
+		App->environment->DrawFrustum(*componentCameraGameSelected);
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -465,7 +459,6 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 	//RenderComponentFromGameObject(App->scene->root, view, projection, frameBufferToRender.frameBufferType);
 	RenderComponentFromMeshesList(view, projection, frameBufferToRender.frameBufferType);
-	RenderBoundingBox(App->scene->gameObjectSelected, frameBufferToRender.frameBufferType);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

@@ -25,9 +25,6 @@ public:
 	void DuplicateGameObject(GameObject* newGameObjectParent);
 	GameObject* Clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
-
-	void UpdateBoundingBoxForGameObjectWithMesh();
-	void UpdateBoundingBoxForGameObjectWithOutMesh();
 public:
 	char uuid[37];
 	std::string name = nullptr;
@@ -37,9 +34,6 @@ public:
 
 	std::list<Component*> components;
 	std::list<GameObject*> childrens;
-
-	AABB localBoundingBox = AABB();
-	AABB globalBoundingBox = AABB();
 private:
 	void CreateComponent(ComponentType componentType);
 	std::list<Component*>::iterator RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove);
