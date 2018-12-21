@@ -38,7 +38,7 @@ void ComponentMesh::DrawProperties()
 {
 	if (ImGui::CollapsingHeader("Mesh"))
 	{
-		if (ImGui::SmallButton("Add"))
+		if (ImGui::Button("Add"))
 		{
 		}
 		ImGui::SameLine();

@@ -22,7 +22,7 @@ void ComponentMaterial::DrawProperties()
 {
 	if (ImGui::CollapsingHeader("Texture"))
 	{
-		if (ImGui::SmallButton("Add"))
+		if (ImGui::Button("Add"))
 		{
 		}
 		ImGui::SameLine();

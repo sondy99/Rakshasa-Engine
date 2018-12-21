@@ -217,10 +217,19 @@ void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
 
 			if (gameObjectToMove != nullptr)
 			{
-				gameObjectToMove->parent->childrens.remove(gameObjectToMove);
+				bool isOneGameObjectIsParentOfOther = CheckIfOneGameObjectIsParentOfOther(*gameObjectToMove, *gameObjectParent);
 
-				gameObjectToMove->parent = gameObjectParent;
-				gameObjectParent->childrens.push_back(gameObjectToMove);
+				if (!isOneGameObjectIsParentOfOther) 
+				{
+					gameObjectToMove->parent->childrens.remove(gameObjectToMove);
+
+					gameObjectToMove->parent = gameObjectParent;
+					gameObjectParent->childrens.push_back(gameObjectToMove);
+				}
+				else 
+				{
+					LOG("Is not possible to drop a gameObject 'parent' into one of its sons");
+				}
 			}
 		}
 	}
@@ -271,4 +280,23 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 		gameObjectToBeDuplicated->DuplicateGameObject(nullptr);
 		gameObjectToBeDuplicated = nullptr;
 	}
+}
+
+bool ModuleScene::CheckIfOneGameObjectIsParentOfOther(const GameObject& gameObjectPossibleParent, const GameObject& gameObjectPossibleSon)
+{
+	bool result = false;
+
+	if (gameObjectPossibleSon.parent != nullptr)
+	{
+		if (gameObjectPossibleSon.parent == &gameObjectPossibleParent)
+		{
+			result = true;
+		}
+		else
+		{
+			result = CheckIfOneGameObjectIsParentOfOther(gameObjectPossibleParent, *gameObjectPossibleSon.parent);
+		}
+	}
+
+	return result;
 }
