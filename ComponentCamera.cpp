@@ -49,22 +49,89 @@ void ComponentCamera::DrawProperties()
 
 		if (ImGui::CollapsingHeader("Camera properties"))
 		{
-			float camPos[3] = { cameraPosition.x, cameraPosition.y, cameraPosition.z };
-			ImGui::InputFloat3("Camera position", camPos, "%.3f");
-			cameraPosition = math::float3(camPos[0], camPos[1], camPos[2]);
-			float vectorFront[3] = { cameraFront.x, cameraFront.y, cameraFront.z };
-			ImGui::InputFloat3("Vector front", vectorFront, "%.3f");
-			cameraFront = math::float3(vectorFront[0], vectorFront[1], vectorFront[2]);
-			float vectorUp[3] = { cameraUp.x, cameraUp.y, cameraUp.z };
-			ImGui::InputFloat3("Vector up", vectorUp, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::NewLine();
+			ImGui::PushItemWidth(75);
+			ImGui::Text("Position:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("10");
+			ImGui::InputFloat("", &cameraPosition.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("11");
+			ImGui::InputFloat("", &cameraPosition.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("12");
+			ImGui::InputFloat("", &cameraPosition.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::PopID();
+
+			ImGui::PushItemWidth(75);
+			ImGui::Text("Vector front:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("13");
+			ImGui::InputFloat("", &cameraFront.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("14");
+			ImGui::InputFloat("", &cameraFront.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("15");
+			ImGui::InputFloat("", &cameraFront.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::PopID();
+
+			ImGui::Text("Vector up:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("16");
+			ImGui::InputFloat("", &cameraUp.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("17");
+			ImGui::InputFloat("", &cameraUp.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("18");
+			ImGui::InputFloat("", &cameraUp.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::PopID();
+
 			ImGui::Separator();
-			ImGui::InputFloat("Pitch", &pitch, 0, 0, 0);
-			ImGui::InputFloat("Yaw", &yaw, 0, 0, 0);
+			ImGui::Text("Pitch:");
+			ImGui::PushID("19");
+			ImGui::InputFloat("##", &pitch, 0, 0, 0);
+			ImGui::PopID();
+			ImGui::Text("Yaw:");
+			ImGui::PushID("20");
+			ImGui::InputFloat("##", &yaw, 0, 0, 0);
+			ImGui::PopID();
 		}
 		if (ImGui::CollapsingHeader("Camera configurations"))
 		{
-			ImGui::SliderFloat("Near Plane", &frustum.nearPlaneDistance, 0.1f, frustum.farPlaneDistance);
-			ImGui::SliderFloat("Far Plane", &frustum.farPlaneDistance, 0.1f, 500.0f);
+			ImGui::PushItemWidth(200);
+			ImGui::Text("Near Plane:");
+			ImGui::PushItemWidth(100);
+			ImGui::PushID("21");
+			ImGui::SliderFloat("##", &frustum.nearPlaneDistance, 0.1f, frustum.farPlaneDistance);
+			ImGui::PopID();
+			ImGui::Text("Far Plane:");
+			ImGui::PushID("22");
+			ImGui::SliderFloat("##", &frustum.farPlaneDistance, 0.1f, 500.0f);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
 		}
 	}
 }

@@ -248,24 +248,103 @@ void ModuleCamera::DrawProperties()
 		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			float camPos[3] = { sceneCamera->cameraPosition.x, sceneCamera->cameraPosition.y, sceneCamera->cameraPosition.z };
-			ImGui::InputFloat3("Camera position", camPos, "%.3f", ImGuiInputTextFlags_ReadOnly);
-			float vectorFront[3] = { sceneCamera->cameraFront.x, sceneCamera->cameraFront.y, sceneCamera->cameraFront.z };
-			ImGui::InputFloat3("Vector front", vectorFront, "%.3f", ImGuiInputTextFlags_ReadOnly);
-			float vectorUp[3] = { sceneCamera->cameraUp.x, sceneCamera->cameraUp.y, sceneCamera->cameraUp.z };
-			ImGui::InputFloat3("Vector up", vectorUp, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::NewLine();
+			ImGui::PushItemWidth(75);
+			ImGui::Text("Position:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("1");
+			ImGui::InputFloat("", &sceneCamera->cameraPosition.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("2");
+			ImGui::InputFloat("", &sceneCamera->cameraPosition.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("3");
+			ImGui::InputFloat("", &sceneCamera->cameraPosition.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::PopID();
+
+			ImGui::PushItemWidth(75);
+			ImGui::Text("Vector front:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("4");
+			ImGui::InputFloat("", &sceneCamera->cameraFront.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("5");
+			ImGui::InputFloat("", &sceneCamera->cameraFront.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("6");
+			ImGui::InputFloat("", &sceneCamera->cameraFront.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::PopID();
+
+			ImGui::Text("Vector up:");
+			ImGui::Text("X:");
+			ImGui::SameLine();
+			ImGui::PushID("7");
+			ImGui::InputFloat("", &sceneCamera->cameraUp.x, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Y:");
+			ImGui::SameLine();
+			ImGui::PushID("8");
+			ImGui::InputFloat("", &sceneCamera->cameraUp.y, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine();
+			ImGui::PopID();
+			ImGui::Text("Z:");
+			ImGui::SameLine();
+			ImGui::PushID("9");
+			ImGui::InputFloat("", &sceneCamera->cameraUp.z, 0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_ReadOnly);
+			ImGui::PopID();
+
 			ImGui::Separator();
-			ImGui::InputFloat("Pitch", &sceneCamera->pitch, 0, 0, 0);
-			ImGui::InputFloat("Yaw", &sceneCamera->yaw, 0, 0, 0);
+			ImGui::PushItemWidth(200);
+			ImGui::Text("Pitch:");
+			ImGui::PushID("10");
+			ImGui::InputFloat("##", &sceneCamera->pitch, 0, 0, 0);
+			ImGui::PopID();
+			ImGui::Text("Yaw:");
+			ImGui::PushID("11");
+			ImGui::InputFloat("##", &sceneCamera->yaw, 0, 0, 0);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
 		}
 		if (ImGui::CollapsingHeader("Camera configurations", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::SliderFloat("Mov Speed", &sceneCamera->cameraSpeed, 0.0f, 100.0f);
-			ImGui::SliderFloat("Rot Speed", &sceneCamera->rotationSpeed, 0.0f, 100.0f);
-			ImGui::SliderFloat("Mouse Sens", &sceneCamera->mouseSensitivity, 0.0f, 1.0f);
+			ImGui::PushItemWidth(200);
+			ImGui::Text("Mov Speed:");
+			ImGui::PushID("12");
+			ImGui::SliderFloat("##", &sceneCamera->cameraSpeed, 0.0f, 100.0f);
+			ImGui::PopID();
+			ImGui::Text("Rot Speed:");
+			ImGui::PushID("13");
+			ImGui::SliderFloat("##", &sceneCamera->rotationSpeed, 0.0f, 100.0f);
+			ImGui::PopID();
+			ImGui::Text("Mouse Sens:");
+			ImGui::PushID("14");
+			ImGui::SliderFloat("##", &sceneCamera->mouseSensitivity, 0.0f, 1.0f);
+			ImGui::PopID();
 			ImGui::Separator();
-			ImGui::SliderFloat("Near Plane", &sceneCamera->frustum.nearPlaneDistance, 0.1f, sceneCamera->frustum.farPlaneDistance);
-			ImGui::SliderFloat("Far Plane", &sceneCamera->frustum.farPlaneDistance, 0.1f, 500.0f);
+			ImGui::Text("Near Plane:");
+			ImGui::PushID("15");
+			ImGui::SliderFloat("##", &sceneCamera->frustum.nearPlaneDistance, 0.1f, sceneCamera->frustum.farPlaneDistance);
+			ImGui::PopID();
+			ImGui::Text("Far Plane:");
+			ImGui::PushID("16");
+			ImGui::SliderFloat("##", &sceneCamera->frustum.farPlaneDistance, 0.1f, 500.0f);
+			ImGui::PopID();
+			ImGui::PopItemWidth();
 		}
 		ImGui::End();
 	}
