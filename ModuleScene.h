@@ -31,6 +31,7 @@ private:
 	void ClickManagement(GameObject* gameObject);
 	void ManageDuplicationAndDeletionGameObject();
 	bool CheckIfOneGameObjectIsParentOfOther(const GameObject& gameObjectPossibleParent, const GameObject& gameObjectPossibleSon);
+	void MoveUpDownGameObject(GameObject* gameObject, bool up);
 private:
 	GameObject* gameObjectToBeDeleted = nullptr;
 	GameObject* gameObjectToBeDuplicated = nullptr;

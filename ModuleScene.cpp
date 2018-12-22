@@ -233,6 +233,14 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 				std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
 				CreateGameObject(genericGameObject.c_str(), gameObject, true);
 			}
+			if (ImGui::MenuItem("Move up"))
+			{
+				MoveUpDownGameObject(gameObject, true);
+			}
+			if (ImGui::MenuItem("Move down"))
+			{
+				MoveUpDownGameObject(gameObject, false);
+			}
 			if (ImGui::MenuItem("Duplicate"))
 			{
 				gameObjectToBeDuplicated = gameObject;
@@ -280,4 +288,32 @@ bool ModuleScene::CheckIfOneGameObjectIsParentOfOther(const GameObject& gameObje
 	}
 
 	return result;
+}
+
+void ModuleScene::MoveUpDownGameObject(GameObject * gameObject, bool up)
+{
+	std::list<GameObject*>::iterator iterator = gameObject->parent->childrens.begin();
+
+	for (iterator; iterator != gameObject->parent->childrens.end(); ++iterator)
+	{
+		if ((*iterator)->uuid == gameObject->uuid)
+		{
+			break;
+		}
+	}
+
+	if (up)
+	{
+		if (iterator != gameObject->parent->childrens.begin())
+		{
+			std::swap(*iterator, *std::prev(iterator));
+		}
+	} 
+	else
+	{
+		if (*iterator != gameObject->parent->childrens.back())
+		{
+			std::swap(*iterator, *std::next(iterator));
+		}
+	}
 }
