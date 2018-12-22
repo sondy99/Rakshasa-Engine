@@ -41,7 +41,7 @@ private:
 	void CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh);
 	void CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex);
 	void CreateTransformationComponent(const aiNode* node, GameObject* gameObject);
-
+	void GenerateVAO(Mesh& mesh);
 };
 
 #endif __ModuleModelLoader_H__

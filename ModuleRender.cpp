@@ -160,19 +160,10 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 	}
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * mesh.verticesNumber));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-
+	glBindVertexArray(mesh.vao);
 	glDrawElements(GL_TRIANGLES, mesh.indicesNumber, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
 
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }

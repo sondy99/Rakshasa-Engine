@@ -115,11 +115,33 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 	glGenBuffers(1, &meshStruct.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
 
-	glBufferData(GL_ARRAY_BUFFER, (sizeof(float) * 3 + sizeof(float) * 2)*mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
+	unsigned offset = sizeof(math::float3);
+
+	if (mesh->HasNormals())
+	{
+		meshStruct.normalsOffset = offset;
+		offset += sizeof(math::float3);
+	}
+
+	if (mesh->HasTextureCoords(0))
+	{
+		meshStruct.texturesOffset = offset;
+		offset += sizeof(math::float2);
+	}
+
+	meshStruct.vertexSize = offset;
+
+	glBufferData(GL_ARRAY_BUFFER, meshStruct.vertexSize * mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh->mNumVertices, mesh->mVertices);
 
-	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->mNumVertices,
-		sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
+
+	if (mesh->HasNormals())
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, meshStruct.normalsOffset * mesh->mNumVertices, sizeof(float) * 3 * mesh->mNumVertices, mesh->mNormals);
+	}
+
+	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, meshStruct.texturesOffset * mesh->mNumVertices, sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
+
 	for (unsigned i = 0; i < mesh->mNumVertices; ++i)
 	{
 		texture_coords[i] = math::float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
@@ -151,6 +173,8 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 	meshStruct.material = mesh->mMaterialIndex;
 	meshStruct.verticesNumber = mesh->mNumVertices;
 	meshStruct.indicesNumber = mesh->mNumFaces * 3;
+
+	GenerateVAO(meshStruct);
 }
 
 void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
@@ -229,6 +253,38 @@ void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameOb
 	Quat quatRotation = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
 	gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
+}
+
+void ModuleModelLoader::GenerateVAO(Mesh & mesh)
+{
+	glGenVertexArrays(1, &mesh.vao);
+
+	glBindVertexArray(mesh.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	
+	if (mesh.normalsOffset != 0)
+	{
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(mesh.normalsOffset * mesh.verticesNumber));
+	}
+
+	if (mesh.texturesOffset != 0)
+	{
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(mesh.texturesOffset * mesh.verticesNumber));
+	}
+
+	glBindVertexArray(0);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ModuleModelLoader::DrawProperties()
