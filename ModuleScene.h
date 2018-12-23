@@ -24,6 +24,7 @@ public:
 	bool toggleSceneProperties = true;
 	bool isSceneCullingActive = true;
 private:
+	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);
 	void SetGameObjectSelected(GameObject* gameObject);
 	GameObject* GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);

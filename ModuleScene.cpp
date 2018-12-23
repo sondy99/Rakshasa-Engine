@@ -32,7 +32,7 @@ void ModuleScene::LoadModel(const char * modelPath)
 {
 	GameObject* gameObject = CreateGameObject("gameObject", root, false);
 
-	App->modelLoader->Load(modelPath, gameObject);
+	App->modelLoader->LoadModelFromFBX(modelPath, gameObject);
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, bool withTransformation)
@@ -75,6 +75,7 @@ void ModuleScene::DrawProperties()
 			std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
 			CreateGameObject(genericGameObject.c_str(), root, true);
 		}
+		DrawGeometryGameObjectButtons(root);
 
 		ImGui::Checkbox("Scene culling active", &isSceneCullingActive);
 
@@ -105,6 +106,35 @@ void ModuleScene::DrawProperties()
 	}
 
 	ImGui::End();
+}
+
+void ModuleScene::DrawGeometryGameObjectButtons(GameObject* gameObjectParent)
+{
+	if (ImGui::Button("Sphere  "))
+	{
+		GameObject* gameObject = CreateGameObject("Sphere", gameObjectParent, false);
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::SPHERE, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	if (ImGui::Button("Torus   "))
+	{
+		GameObject* gameObject = CreateGameObject("Torus", gameObjectParent, false);
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::TORUS, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	if (ImGui::Button("Cylinder"))
+	{
+		GameObject* gameObject = CreateGameObject("Cylinder", gameObjectParent, false);
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::CYLINDER, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	if (ImGui::Button("Cube    "))
+	{
+		GameObject* gameObject = CreateGameObject("Cube", gameObjectParent, false);
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::CUBE, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+	if (ImGui::Button("Plane   "))
+	{
+		GameObject* gameObject = CreateGameObject("Plane", gameObjectParent, false);
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::PLANE, float4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
 }
 
 void ModuleScene::DrawTreeNode(GameObject * gameObject)
@@ -228,11 +258,27 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 	{
 		if (ImGui::BeginPopup("GameObjectContextualMenu"))
 		{
-			if (ImGui::MenuItem("New game object"))
+			ImGui::Button("New game object");
+
+			if (ImGui::IsItemClicked(0))
 			{
-				std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
-				CreateGameObject(genericGameObject.c_str(), gameObject, true);
+				ImGui::OpenPopup("NewGameObjectsContextualMenu");
 			}
+
+			if (ImGui::BeginPopup("NewGameObjectsContextualMenu"))
+			{
+				if (ImGui::Button("Empty game object"))
+				{
+					std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
+					CreateGameObject(genericGameObject.c_str(), gameObject, true);
+				}
+				DrawGeometryGameObjectButtons(gameObject);
+
+				ImGui::EndPopup();
+			}
+
+			ImGui::Separator();
+
 			if (ImGui::MenuItem("Move up"))
 			{
 				MoveUpDownGameObject(gameObject, true);

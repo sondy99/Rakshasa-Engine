@@ -23,6 +23,16 @@
 
 #include <string>
 
+#pragma warning(push)
+#pragma warning(disable : 4996)  
+#pragma warning(disable : 4244)  
+#pragma warning(disable : 4305)  
+#pragma warning(disable : 4838)  
+
+#define PAR_SHAPES_IMPLEMENTATION
+#include "par_shapes.h"
+#pragma warning(pop)
+
 ModuleModelLoader::ModuleModelLoader()
 {
 }
@@ -36,7 +46,7 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
+void ModuleModelLoader::LoadModelFromFBX(const char* filePath, GameObject* gameObjectParent)
 {
 	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -55,6 +65,41 @@ void ModuleModelLoader::Load(const char* filePath, GameObject* gameObjectParent)
 		LOG(aiGetErrorString());
 	}
 
+}
+
+void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType, const math::float4& color)
+{
+	par_shapes_mesh_s* parMesh = nullptr;
+
+	switch (geometryType)
+	{
+	case GeometryType::SPHERE:
+		parMesh = par_shapes_create_parametric_sphere(30, 30);
+		break;
+	case GeometryType::TORUS:
+		parMesh = par_shapes_create_torus(30, 30, 0.5f);
+		break;
+	case GeometryType::CYLINDER:
+		parMesh = par_shapes_create_cylinder(30, 30);
+		break;
+	case GeometryType::PLANE:
+		parMesh = par_shapes_create_plane(30, 30);
+		break;
+	case GeometryType::CUBE:
+		parMesh = par_shapes_create_cube();
+		break;
+	}
+
+	if (parMesh != nullptr && parMesh)
+	{
+		par_shapes_scale(parMesh, 1.0f, 1.0f, 1.0f);
+
+		CreateTransformationComponent(gameObjectParent);
+
+		CreateMeshComponent(parMesh, gameObjectParent, color);
+
+		par_shapes_free_mesh(parMesh);
+	}
 }
 
 bool ModuleModelLoader::CleanUp()
@@ -108,10 +153,8 @@ void ModuleModelLoader::CleanUpMeshesAndTextures(const GameObject * gameObject)
 	}
 }
 
-void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
+void ModuleModelLoader::GenerateMesh(Mesh& meshStruct, aiMesh* mesh)
 {
-	const aiMesh* mesh = meshStruct.mesh;
-
 	glGenBuffers(1, &meshStruct.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
 
@@ -174,6 +217,71 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 	meshStruct.verticesNumber = mesh->mNumVertices;
 	meshStruct.indicesNumber = mesh->mNumFaces * 3;
 
+	meshStruct.vertices.resize(meshStruct.verticesNumber);
+	aiVector3D* auxVerticesPointer = mesh->mVertices;
+	for (unsigned i = 0u; i < meshStruct.verticesNumber; ++i)
+	{
+		meshStruct.vertices[i] = *((float3*)auxVerticesPointer++);
+	}
+
+	GenerateVAO(meshStruct);
+}
+
+void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh& meshStruct)
+{
+	assert(parShapeMesh != NULL);
+	
+	glGenBuffers(1, &meshStruct.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
+
+	unsigned offset = sizeof(math::float3);
+
+	if (parShapeMesh->normals)
+	{
+		meshStruct.normalsOffset = offset;
+		offset += sizeof(math::float3);
+	}
+
+	meshStruct.vertexSize = offset;
+	 
+	glBufferData(GL_ARRAY_BUFFER, meshStruct.vertexSize * parShapeMesh->npoints, nullptr, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(math::float3)*parShapeMesh->npoints, parShapeMesh->points);
+
+	if (parShapeMesh->normals)
+	{
+		glBufferSubData(GL_ARRAY_BUFFER, meshStruct.normalsOffset * parShapeMesh->npoints, sizeof(math::float3)*parShapeMesh->npoints, parShapeMesh->normals);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &meshStruct.ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshStruct.ibo);
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*parShapeMesh->ntriangles * 3, nullptr, GL_STATIC_DRAW);
+
+	unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
+		sizeof(unsigned)*parShapeMesh->ntriangles * 3, GL_MAP_WRITE_BIT);
+
+	for (unsigned i = 0; i< unsigned(parShapeMesh->ntriangles * 3); ++i)
+	{
+		*(indices++) = parShapeMesh->triangles[i];
+	}
+
+	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	meshStruct.material = 0;
+	meshStruct.verticesNumber = parShapeMesh->npoints;
+	meshStruct.indicesNumber = parShapeMesh->ntriangles * 3;
+
+	meshStruct.vertices.resize(meshStruct.verticesNumber);
+	for (unsigned i = 0u; i < meshStruct.verticesNumber; ++i)
+	{
+		meshStruct.vertices[i].x = parShapeMesh->points[i * 3];
+		meshStruct.vertices[i].y = parShapeMesh->points[(i * 3) + 1];
+		meshStruct.vertices[i].z = parShapeMesh->points[(i * 3) + 2];
+	}
+
 	GenerateVAO(meshStruct);
 }
 
@@ -187,7 +295,7 @@ void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
 
 	if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 	{
-		Material auxMaterialStruct = App->textures->Load(file.data);
+		Material auxMaterialStruct = App->textures->LoadModelFromFBX(file.data);
 		materialStruct.texture0 = auxMaterialStruct.texture0;
 		materialStruct.width = auxMaterialStruct.width;
 		materialStruct.height = auxMaterialStruct.height;
@@ -220,15 +328,33 @@ void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* 
 	CreateTransformationComponent(node, gameObjectMesh);
 
 	Mesh meshStruct;
-	meshStruct.mesh = scene->mMeshes[node->mMeshes[0]];
-	GenerateMesh(meshStruct);
+	aiMesh* mesh = scene->mMeshes[node->mMeshes[0]];
+	GenerateMesh(meshStruct, mesh);
 
 	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
 
-	if (scene->mMaterials[meshStruct.mesh->mMaterialIndex] != nullptr)
+	if (scene->mMaterials[mesh->mMaterialIndex] != nullptr)
 	{
-		CreateMaterialComponent(scene, node, gameObjectMesh, meshStruct.mesh->mMaterialIndex);
+		CreateMaterialComponent(scene, node, gameObjectMesh, mesh->mMaterialIndex);
 	}
+}
+
+void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s * parShapeMesh, GameObject * gameObjectMesh, const math::float4& color)
+{
+	Mesh meshStruct;
+	GenerateMesh(parShapeMesh, meshStruct);
+
+	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
+
+	CreateMaterialComponent(gameObjectMesh, color);
+}
+
+void ModuleModelLoader::CreateMaterialComponent(GameObject * gameObjectMesh, const math::float4& color)
+{
+	Material materialStruct;
+	materialStruct.color = color;
+
+	gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
 }
 
 void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex)
@@ -238,6 +364,15 @@ void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNo
 	GenerateMaterial(materialStruct);
 
 	gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+}
+
+void ModuleModelLoader::CreateTransformationComponent(GameObject * gameObject)
+{
+	float3 position = { 0.0f, 0.0f, 0.0f };
+	float3 scale = { 1.0f, 1.0f, 1.0f };
+	Quat quatRotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
+
+	gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
 }
 
 void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameObject* gameObject)

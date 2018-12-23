@@ -33,7 +33,17 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
-	if (viewPortIsFocused)
+	if (viewPortIsFocused && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		clickOnViewPort = true;
+	}
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_UP)
+	{
+		clickOnViewPort = false;
+		selectedCamera->firstMouse = true;
+	}
+
+	if (clickOnViewPort)
 	{
 		CameraMovementKeyboard();
 		CameraMovementMouse();

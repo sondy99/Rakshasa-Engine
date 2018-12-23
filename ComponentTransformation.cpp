@@ -32,6 +32,14 @@ void ComponentTransformation::UpdateLocalModelMatrix()
 	}
 }
 
+void ComponentTransformation::RotationToEuler()
+{
+	eulerRotation = rotation.ToEulerXYZ();
+	eulerRotation.x = math::RadToDeg(eulerRotation.x);
+	eulerRotation.y = math::RadToDeg(eulerRotation.y);
+	eulerRotation.z = math::RadToDeg(eulerRotation.z);
+}
+
 void ComponentTransformation::DrawProperties()
 {
 	bool changed = false;
@@ -44,9 +52,10 @@ void ComponentTransformation::DrawProperties()
 		if (ImGui::Button("Transform to model identity"))
 		{
 			localModelMatrix = math::float4x4::identity;
-			position = { 0.0f,0.0f,0.0f };
-			scale = { 1.0f,1.0f,1.0f };
-			rotation = { 0.0f,0.0f,0.0f,1.0f };
+			position = { 0.0f, 0.0f, 0.0f }; 
+			eulerRotation = { 0.0f, 0.0f, 0.0f };
+			scale = { 1.0f, 1.0f, 1.0f };
+			rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 		}
 
 		ImGui::NewLine();
@@ -55,8 +64,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("1");
-		if (ImGui::InputFloat("", &position.x,
-			0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &position.x, 0.1f, -1000.f, 1000.f))
 		{
 			changed = true;
 		}
@@ -65,8 +73,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("2");
-		if (ImGui::InputFloat("", &position.y,
-			0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &position.y, 0.1f, -1000.f, 1000.f))
 		{
 			changed = true;
 		}
@@ -75,21 +82,17 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("3");
-		if (ImGui::InputFloat("", &position.z,
-			0.0f, 0.0f, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &position.z, 0.1f, -1000.f, 1000.f))
 		{
 			changed = true;
 		}
 		ImGui::PopID();
 
-		math::float3 auxRotation = rotation.ToEulerXYZ();
-		auxRotation *= 57.295779513082320876f;
 		ImGui::Text("Rotation:");
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("4");
-		if (ImGui::InputFloat("", &auxRotation.x, 0.0f, 0.0f, "%.3f",
-			ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &eulerRotation.x, 0.5f, -180.f, 180.f))
 		{
 			changed = true;
 		}
@@ -98,8 +101,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("5");
-		if (ImGui::InputFloat("", &auxRotation.y, 0.0f, 0.0f, "%.3f",
-			ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &eulerRotation.y, 0.5f, -180.f, 180.f))
 		{
 			changed = true;
 		}
@@ -108,21 +110,19 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("6");
-		if (ImGui::InputFloat("", &auxRotation.z, 0.0f, 0.0f, "%.3f",
-			ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &eulerRotation.z, 0.5f, -180.f, 180.f))
 		{
 			changed = true;
 		}
 		ImGui::PopID();
-		auxRotation *= 0.0174532925199432957f;
-		rotation = rotation.FromEulerXYZ(auxRotation.x, auxRotation.y, auxRotation.z);
+		rotation = rotation.FromEulerXYZ(math::DegToRad(eulerRotation.x),
+			math::DegToRad(eulerRotation.y), math::DegToRad(eulerRotation.z));
 
 		ImGui::Text("Scale:");
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("7");
-		if (ImGui::InputFloat("", &scale.x, 0.0f, 0.0f, "%.3f",
-			ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &scale.x, 0.1f, 0.1f, 1000.f))
 		{
 			changed = true;
 		}
@@ -131,8 +131,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("8");
-		if (ImGui::InputFloat("", &scale.y, 0.0f, 0.0f, "%.3f",
-			ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &scale.y, 0.1f, 0.1f, 1000.f))
 		{
 			changed = true;
 		}
@@ -141,8 +140,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("9");
-		if (ImGui::InputFloat("", &scale.z, 0.0f, 0.0f, "%.3f",
-			ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::DragFloat("", &scale.z, 0.1f, 0.1f, 1000.f))
 		{
 			changed = true;
 		}
@@ -151,6 +149,7 @@ void ComponentTransformation::DrawProperties()
 
 		if (changed)
 		{
+			identity = false;
 			localModelMatrix.Set(float4x4::FromTRS(position, rotation, scale));
 		}
 	}

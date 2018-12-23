@@ -24,10 +24,8 @@ ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType compone
 ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
 	: Component(gameObjectParent, componentType), mesh(mesh)
 {
-	aiMesh* aiMesh = mesh.mesh;
-
 	localBoundingBox.SetNegativeInfinity();
-	localBoundingBox.Enclose((float3*)aiMesh->mVertices, mesh.verticesNumber);
+	localBoundingBox.Enclose(&mesh.vertices[0], mesh.verticesNumber);
 }
 
 ComponentMesh::~ComponentMesh()

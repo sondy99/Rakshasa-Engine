@@ -20,11 +20,11 @@ struct Mesh
 	unsigned ibo = 0;
 	unsigned material = 0;
 	unsigned verticesNumber = 0;
+	std::vector<float3> vertices;
 	unsigned indicesNumber = 0;
 	unsigned normalsOffset = 0;
 	unsigned texturesOffset = 0;
 	unsigned vertexSize = 0;
-	aiMesh* mesh = nullptr;
 };
 
 struct Material
@@ -32,6 +32,7 @@ struct Material
 	int width = 0;
 	int height = 0;
 	unsigned texture0 = 0;
+	math::float4 color = math::float4::zero;
 	aiMaterial* material = nullptr;
 };
 
@@ -43,7 +44,7 @@ public:
 
 	bool Init() override;
 
-	Material Load(std::string path);
+	Material LoadModelFromFBX(std::string path);
 	void Unload(unsigned id);
 
 };

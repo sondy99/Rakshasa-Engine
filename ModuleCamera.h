@@ -57,6 +57,7 @@ private:
 	void FocusObject(math::float3& objectCenterPos);
 private:
 	math::float3 sceneCenter = math::float3(0.0f, 0.0f, 0.0f);
+	bool clickOnViewPort = false;
 };
 
 #endif __MODULECAMERA_H_

@@ -23,7 +23,7 @@ bool ModuleTextures::Init()
 	return true;
 }
 
-Material ModuleTextures::Load(std::string path)
+Material ModuleTextures::LoadModelFromFBX(std::string path)
 {
 	unsigned imageID;
 

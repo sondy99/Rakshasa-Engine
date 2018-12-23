@@ -67,7 +67,13 @@ void GameObject::DrawProperties()
 			ImGui::SameLine();
 			ImGui::InputText("##", &name[0], 40);
 			ImGui::Text("Model selected has %d childs.", childrens.size());
-			ImGui::Checkbox("Active", &active);
+			
+			Component* componentMesh = GetComponent(ComponentType::MESH);
+
+			if (componentMesh != nullptr)
+			{
+				ImGui::Checkbox("Active", &active);
+			}
 		}
 
 		if (components.size() > 0)
