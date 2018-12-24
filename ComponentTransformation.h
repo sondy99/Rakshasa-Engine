@@ -15,7 +15,7 @@ public:
 	Component* Clone() override;
 	void UpdateLocalModelMatrix();
 public:
-	bool identity = true;
+	bool identity = false;
 
 	float3 position = { 0.0f, 0.0f, 0.0f };
 	float3 eulerRotation = { 0.0f, 0.0f, 0.0f };

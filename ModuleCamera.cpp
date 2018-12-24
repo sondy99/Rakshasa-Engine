@@ -25,7 +25,7 @@ bool ModuleCamera::Init()
 	sceneCamera = new ComponentCamera(nullptr, ComponentType::CAMERA);
 	selectedCamera = sceneCamera;
 
-	selectedCamera->cameraPosition = math::float3(0.0f, 3.0f, 40.0f);
+	selectedCamera->cameraPosition = math::float3(0.0f, 300.0f, 4000.0f);
 	selectedCamera->InitFrustum(nullptr);
 	
 	return true;
@@ -335,24 +335,20 @@ void ModuleCamera::DrawProperties()
 			ImGui::PushItemWidth(200);
 			ImGui::Text("Mov Speed:");
 			ImGui::PushID("12");
-			ImGui::SliderFloat("##", &sceneCamera->cameraSpeed, 0.0f, 100.0f);
-			ImGui::PopID();
-			ImGui::Text("Rot Speed:");
-			ImGui::PushID("13");
-			ImGui::SliderFloat("##", &sceneCamera->rotationSpeed, 0.0f, 100.0f);
+			ImGui::SliderFloat("##", &sceneCamera->cameraSpeed, 10.0f, 10000.0f);
 			ImGui::PopID();
 			ImGui::Text("Mouse Sens:");
-			ImGui::PushID("14");
+			ImGui::PushID("13");
 			ImGui::SliderFloat("##", &sceneCamera->mouseSensitivity, 0.0f, 1.0f);
 			ImGui::PopID();
 			ImGui::Separator();
 			ImGui::Text("Near Plane:");
-			ImGui::PushID("15");
-			ImGui::SliderFloat("##", &sceneCamera->frustum.nearPlaneDistance, 0.1f, sceneCamera->frustum.farPlaneDistance);
+			ImGui::PushID("14");
+			ImGui::SliderFloat("##", &sceneCamera->frustum.nearPlaneDistance, 10.0f, sceneCamera->frustum.farPlaneDistance);
 			ImGui::PopID();
 			ImGui::Text("Far Plane:");
-			ImGui::PushID("16");
-			ImGui::SliderFloat("##", &sceneCamera->frustum.farPlaneDistance, 0.1f, 500.0f);
+			ImGui::PushID("15");
+			ImGui::SliderFloat("##", &sceneCamera->frustum.farPlaneDistance, 10.0f, 50000.0f);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 		}

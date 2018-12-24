@@ -21,8 +21,8 @@ void ComponentCamera::InitFrustum(GameObject* gameObjectParent)
 	frustum.pos = float3::zero;
 	frustum.front = -float3::unitZ;
 	frustum.up = float3::unitY;
-	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = gameObjectParent != nullptr ? 100.0f : 350.0f;
+	frustum.nearPlaneDistance = 10.0f;
+	frustum.farPlaneDistance = gameObjectParent != nullptr ? 10000.0f : 35000.0f;
 
 	SetVerticalFOV(fovY);
 }
@@ -143,11 +143,11 @@ void ComponentCamera::DrawProperties()
 			ImGui::Text("Near Plane:");
 			ImGui::PushItemWidth(100);
 			ImGui::PushID("21");
-			ImGui::SliderFloat("##", &frustum.nearPlaneDistance, 0.1f, frustum.farPlaneDistance);
+			ImGui::SliderFloat("##", &frustum.nearPlaneDistance, 10.0f, frustum.farPlaneDistance);
 			ImGui::PopID();
 			ImGui::Text("Far Plane:");
 			ImGui::PushID("22");
-			ImGui::SliderFloat("##", &frustum.farPlaneDistance, 0.1f, 500.0f);
+			ImGui::SliderFloat("##", &frustum.farPlaneDistance, 10.0f, 50000.0f);
 			ImGui::PopID();
 			ImGui::PopItemWidth();
 		}

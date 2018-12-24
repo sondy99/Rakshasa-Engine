@@ -76,7 +76,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("1");
-		if (ImGui::DragFloat("", &position.x, 0.1f, -1000.f, 1000.f))
+		if (ImGui::DragFloat("", &position.x, 10.0f, -100000.f, 100000.f))
 		{
 			changed = true;
 		}
@@ -85,7 +85,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("2");
-		if (ImGui::DragFloat("", &position.y, 0.1f, -1000.f, 1000.f))
+		if (ImGui::DragFloat("", &position.y, 10.0f, -100000.f, 100000.f))
 		{
 			changed = true;
 		}
@@ -94,7 +94,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("3");
-		if (ImGui::DragFloat("", &position.z, 0.1f, -1000.f, 1000.f))
+		if (ImGui::DragFloat("", &position.z, 10.0f, -100000.f, 100000.f))
 		{
 			changed = true;
 		}
@@ -134,7 +134,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("X:");
 		ImGui::SameLine();
 		ImGui::PushID("7");
-		if (ImGui::DragFloat("", &scale.x, 0.1f, 0.1f, 1000.f))
+		if (ImGui::DragFloat("", &scale.x, 10.0f, 10.0f, 100000.f))
 		{
 			changed = true;
 		}
@@ -143,7 +143,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Y:");
 		ImGui::SameLine();
 		ImGui::PushID("8");
-		if (ImGui::DragFloat("", &scale.y, 0.1f, 0.1f, 1000.f))
+		if (ImGui::DragFloat("", &scale.y, 10.0f, 10.0f, 100000.f))
 		{
 			changed = true;
 		}
@@ -152,7 +152,7 @@ void ComponentTransformation::DrawProperties()
 		ImGui::Text("Z:");
 		ImGui::SameLine();
 		ImGui::PushID("9");
-		if (ImGui::DragFloat("", &scale.z, 0.1f, 0.1f, 1000.f))
+		if (ImGui::DragFloat("", &scale.z, 10.0f, 10.0f, 100000.f))
 		{
 			changed = true;
 		}

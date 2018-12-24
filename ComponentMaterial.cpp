@@ -41,7 +41,7 @@ void ComponentMaterial::DrawProperties()
 			}
 			ImGui::PopID();
 			ImGui::PushID("DeleteMaterial");
-			if (ImGui::Button("Delete material"))
+			if (ImGui::Button("Delete material "))
 			{
 				App->textures->RemoveMaterial(this);
 			}

@@ -51,7 +51,7 @@ void ComponentMesh::DrawProperties()
 			}
 			ImGui::PopID();
 			ImGui::PushID("DeleteMesh");
-			if (ImGui::Button("Delete mesh"))
+			if (ImGui::Button("Delete mesh     "))
 			{
 			}
 			ImGui::PopID();

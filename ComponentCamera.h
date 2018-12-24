@@ -26,7 +26,7 @@ public:
 public:
 	Frustum frustum;
 
-	math::float3 cameraPosition = math::float3(0.0f, 3.0f, 20.0f);
+	math::float3 cameraPosition = math::float3(0.0f, 300.0f, 2000.0f);
 	math::float3 cameraFront = math::float3(0.0f, 0.0f, -1.0f);
 	math::float3 cameraUp = math::float3(0.0f, 1.0f, 0.0f);
 
@@ -38,7 +38,7 @@ public:
 
 	float screenRatio = screenWidth / screenHeight;
 
-	float cameraSpeed = 15.0f;
+	float cameraSpeed = 1500.0f;
 	float rotationSpeed = 65.0f;
 	float mouseSensitivity = 0.2f;
 	float fov = 0.0f;
