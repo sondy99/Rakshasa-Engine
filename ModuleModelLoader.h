@@ -38,7 +38,7 @@ public:
 	bool CleanUp() override;
 
 	void LoadMaterialFromFBX(const char * filePath, GameObject* gameObjectParent);
-	void LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType, const math::float4& color);
+	void LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType);
 	void DrawProperties();
 public:
 	math::float4x4 transform = math::float4x4::identity;

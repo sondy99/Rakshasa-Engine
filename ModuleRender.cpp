@@ -435,7 +435,7 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 		else
 		{
 			ComponentTransformation* transformationParent = (ComponentTransformation*)gameObject->parent->GetComponent(ComponentType::TRANSFORMATION);
-			transformation->globalModelMatrix = transformationParent->globalModelMatrix*transformation->localModelMatrix;
+			transformation->globalModelMatrix = transformationParent->globalModelMatrix * transformation->localModelMatrix;
 		}
 	}
 

@@ -136,27 +136,27 @@ void ModuleScene::DrawGeometryGameObjectButtons(GameObject* gameObjectParent)
 	if (ImGui::Button("Sphere  "))
 	{
 		GameObject* gameObject = CreateGameObject("Sphere", gameObjectParent, false);
-		App->modelLoader->LoadGeometry(gameObject, GeometryType::SPHERE, float4(1.0f, 0.0f, 0.0f, 1.0f));
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::SPHERE);
 	}
 	if (ImGui::Button("Torus   "))
 	{
 		GameObject* gameObject = CreateGameObject("Torus", gameObjectParent, false);
-		App->modelLoader->LoadGeometry(gameObject, GeometryType::TORUS, float4(1.0f, 0.0f, 0.0f, 1.0f));
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::TORUS);
 	}
 	if (ImGui::Button("Cylinder"))
 	{
 		GameObject* gameObject = CreateGameObject("Cylinder", gameObjectParent, false);
-		App->modelLoader->LoadGeometry(gameObject, GeometryType::CYLINDER, float4(1.0f, 0.0f, 0.0f, 1.0f));
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::CYLINDER);
 	}
 	if (ImGui::Button("Cube    "))
 	{
 		GameObject* gameObject = CreateGameObject("Cube", gameObjectParent, false);
-		App->modelLoader->LoadGeometry(gameObject, GeometryType::CUBE, float4(1.0f, 0.0f, 0.0f, 1.0f));
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::CUBE);
 	}
 	if (ImGui::Button("Plane   "))
 	{
 		GameObject* gameObject = CreateGameObject("Plane", gameObjectParent, false);
-		App->modelLoader->LoadGeometry(gameObject, GeometryType::PLANE, float4(1.0f, 0.0f, 0.0f, 1.0f));
+		App->modelLoader->LoadGeometry(gameObject, GeometryType::PLANE);
 	}
 }
 

@@ -67,7 +67,7 @@ void ModuleModelLoader::LoadMaterialFromFBX(const char* filePath, GameObject* ga
 
 }
 
-void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType, const math::float4& color)
+void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType)
 {
 	par_shapes_mesh_s* parMesh = nullptr;
 
@@ -92,10 +92,11 @@ void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType 
 
 	if (parMesh != nullptr && parMesh)
 	{
-		par_shapes_scale(parMesh, 1.0f, 1.0f, 1.0f);
+		par_shapes_scale(parMesh, 100.0f, 100.0f, 100.0f);
 
 		CreateTransformationComponent(gameObjectParent);
 
+		math::float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
 		CreateMeshComponent(parMesh, gameObjectParent, color);
 
 		par_shapes_free_mesh(parMesh);
@@ -308,16 +309,18 @@ void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const ai
 	{
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent, false);
 
 			if (node->mChildren[i]->mMeshes != nullptr)
 			{
+				GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent, false);
 				CreateMeshComponent(scene, node->mChildren[i], gameObjectMesh);
 			}
 			else
 			{
+				GameObject* gameObject = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent, true);
+
 				//TODO: change this to not use recursivity
-				CreateGameObjectsFromNode(scene, node->mChildren[i], gameObjectParent);
+				CreateGameObjectsFromNode(scene, node->mChildren[i], gameObject);
 			}
 		}
 	}
