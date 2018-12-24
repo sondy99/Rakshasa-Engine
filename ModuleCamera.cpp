@@ -368,7 +368,7 @@ ComponentCamera* ModuleCamera::CreateComponentCamera(GameObject * gameObjectPare
 	return result;
 }
 
-void ModuleCamera::RemoveCamera(Component * componentToBeRemove)
+void ModuleCamera::RemoveCameraComponent(Component * componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::CAMERA)
 	{

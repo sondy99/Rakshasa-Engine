@@ -53,7 +53,8 @@ bool ModuleRender::Init()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
-	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D); 
+	glEnable(GL_BLEND);
 
 	glClearDepth(1.0f);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
@@ -133,8 +134,7 @@ bool ModuleRender::CleanUp()
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
-	unsigned program, const math::float4x4& model,
-	const math::float4x4& view, const math::float4x4& proj)
+	const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj)
 {
 	Mesh mesh = componentMesh.mesh;
 
@@ -146,6 +146,12 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+	unsigned program = App->shader->program;
+
+	if (componentMaterial != nullptr && componentMaterial->material.texture0 == 0)
+	{
+		program = App->shader->colorProgram;
+	}
 
 	glUseProgram(program);
 
@@ -156,8 +162,18 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 	if (componentMaterial != nullptr)
 	{
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, componentMaterial->material.texture0);
-		glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+
+		if (componentMaterial->material.texture0 != 0)
+		{
+			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.texture0);
+			glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+		}
+		else
+		{
+			glUniform4f(glGetUniformLocation(program, "uColor"), componentMaterial->material.color.x,
+				componentMaterial->material.color.y, componentMaterial->material.color.z,
+				componentMaterial->material.color.w);
+		}
 	}
 
 	glBindVertexArray(mesh.vao);
@@ -272,7 +288,7 @@ ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, C
 	return result;
 }
 
-void ModuleRender::RemoveMesh(Component* componentToBeRemove)
+void ModuleRender::RemoveMeshComponent(Component* componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::MESH)
 	{
@@ -394,7 +410,7 @@ void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::floa
 					componentCameraGameSelected->frustum.Intersects(componentMesh->globalBoundingBox) ||
 					!App->scene->isSceneCullingActive))
 			{
-				RenderMesh(*componentMesh, componentMaterial, App->shader->program,
+				RenderMesh(*componentMesh, componentMaterial,
 					transformation->globalModelMatrix, view, projection);
 			}
 

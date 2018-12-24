@@ -4,6 +4,7 @@
 #include "Application.h"
 
 #include "ModuleRender.h"
+#include "ModuleTextures.h"
 #include "ModuleCamera.h"
 
 #include "ComponentTransformation.h"
@@ -33,20 +34,19 @@ void GameObject::DrawProperties()
 	{
 		if (ImGui::CollapsingHeader("Game object properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			if (ImGui::Button("Delete"))
-			{
-				RemoveGameObject(this);
-			}
-			ImGui::SameLine();
-			ImGui::Button("New Component");
+			ImGui::Button("Game object options");
 
 			if (ImGui::IsItemClicked(0))
 			{
-				ImGui::OpenPopup("NewComponentContextualMenu");
+				ImGui::OpenPopup("GameObjectOptionsContextualMenu");
 			}
 
-			if (ImGui::BeginPopup("NewComponentContextualMenu"))
+			if (ImGui::BeginPopup("GameObjectOptionsContextualMenu"))
 			{
+				if (ImGui::Button("Delete  "))
+				{
+					RemoveGameObject(this);
+				}
 				if (ImGui::Button("Mesh    "))
 				{
 					CreateComponent(ComponentType::MESH);
@@ -190,7 +190,16 @@ void GameObject::CreateComponent(ComponentType componentType)
 	break;
 	case ComponentType::MATERIAL:
 	{
-		components.push_back((new ComponentMaterial(this, ComponentType::MATERIAL)));
+		Component * material = GetComponent(ComponentType::MATERIAL);
+
+		if (material == nullptr)
+		{
+			components.push_back((App->textures->CreateComponentMaterial(this, ComponentType::MATERIAL)));
+		}
+		else
+		{
+			LOG("Is not possible to add more than one material to an specific gameobject");
+		}
 	}
 	break;
 	case ComponentType::CAMERA:
@@ -203,8 +212,9 @@ void GameObject::CreateComponent(ComponentType componentType)
 
 std::list<Component*>::iterator GameObject::RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove)
 {
-	App->renderer->RemoveMesh(*iteratorComponentToBeRemove);
-	App->camera->RemoveCamera(*iteratorComponentToBeRemove);
+	App->renderer->RemoveMeshComponent(*iteratorComponentToBeRemove);
+	App->textures->RemoveMaterialComponent(*iteratorComponentToBeRemove);
+	App->camera->RemoveCameraComponent(*iteratorComponentToBeRemove);
 	RELEASE(*iteratorComponentToBeRemove);
 	std::list<Component*>::iterator iterator = components.erase(iteratorComponentToBeRemove);
 	

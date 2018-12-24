@@ -38,6 +38,8 @@ public:
 	inline const iPoint& GetMouseMotion() const { return mouse_motion; };
 	inline const iPoint& GetMousePosition() const { return mouse; };
 private:
+	void HandleDropedFiles(const char* path);
+private:
 	bool windowEvents[WE_COUNT];
 	KeyState* keyboard = nullptr;
 	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];

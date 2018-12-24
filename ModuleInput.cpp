@@ -100,7 +100,9 @@ update_status ModuleInput::PreUpdate()
 		{
 			// TODO: check extension of file and reupload a texture or a model
 			char* fileDroppedPath = event.drop.file;
-			App->scene->LoadModel(fileDroppedPath);
+
+			HandleDropedFiles(fileDroppedPath);
+
 			SDL_free(fileDroppedPath);
 			break;
 		}
@@ -142,4 +144,22 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::HandleDropedFiles(const char * path)
+{
+	std::string str(path);
+	std::string ext(str.substr(str.length() - 3));
+	if (ext == "fbx" || ext == "FBX")
+	{
+		App->scene->LoadModel(path);
+	}
+	else if (ext == "png" || ext == "jpg" || ext == "dds")
+	{
+		App->scene->LoadTexture(path);
+	}
+	else
+	{
+		LOG("Incorrect file extension: %s", ext.c_str());
+	}
 }

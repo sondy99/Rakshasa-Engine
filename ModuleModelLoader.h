@@ -37,7 +37,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void LoadModelFromFBX(const char * filePath, GameObject* gameObjectParent);
+	void LoadMaterialFromFBX(const char * filePath, GameObject* gameObjectParent);
 	void LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType, const math::float4& color);
 	void DrawProperties();
 public:

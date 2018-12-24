@@ -38,7 +38,7 @@ public:
 
 	void DrawProperties();
 	ComponentCamera* CreateComponentCamera(GameObject* gameObjectParent, ComponentType componentType);
-	void RemoveCamera(Component* componentToBeRemove);
+	void RemoveCameraComponent(Component* componentToBeRemove);
 public:
 	bool toggleCameraProperties = true;
 

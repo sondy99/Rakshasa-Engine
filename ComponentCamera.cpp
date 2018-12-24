@@ -45,7 +45,25 @@ void ComponentCamera::DrawProperties()
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		DrawDeleteComponent();
+		ImGui::Button("Camera options");
+
+		if (ImGui::IsItemClicked(0))
+		{
+			ImGui::OpenPopup("CameraOptionsContextualMenu");
+		}
+
+		if (ImGui::BeginPopup("CameraOptionsContextualMenu"))
+		{
+			ImGui::PushID("DeleteCamera");
+			if (ImGui::Button("Delete"))
+			{
+				isMarkToBeDeleted = true;
+			}
+			ImGui::PopID();
+			ImGui::EndPopup();
+		}
+
+		ImGui::Separator();
 
 		if (ImGui::CollapsingHeader("Camera properties"))
 		{

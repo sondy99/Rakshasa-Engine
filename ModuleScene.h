@@ -16,6 +16,7 @@ public:
 	bool Init() override;
 
 	void LoadModel(const char* modelPath);
+	void LoadTexture(const char* texturePath);
 	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void DrawProperties();
 public:

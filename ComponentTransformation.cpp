@@ -47,18 +47,30 @@ void ComponentTransformation::DrawProperties()
 	{
 		UpdateLocalModelMatrix();
 
-		ImGui::Checkbox("Watch as model identity", &identity);
-		
-		if (ImGui::Button("Transform to model identity"))
+		ImGui::Button("Transformation options");
+
+		if (ImGui::IsItemClicked(0))
 		{
-			localModelMatrix = math::float4x4::identity;
-			position = { 0.0f, 0.0f, 0.0f }; 
-			eulerRotation = { 0.0f, 0.0f, 0.0f };
-			scale = { 1.0f, 1.0f, 1.0f };
-			rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+			ImGui::OpenPopup("TransformationOptionsContextualMenu");
 		}
 
-		ImGui::NewLine();
+		if (ImGui::BeginPopup("TransformationOptionsContextualMenu"))
+		{
+			ImGui::Checkbox("Watch as model identity", &identity);
+
+			if (ImGui::Button("Transform to model identity"))
+			{
+				localModelMatrix = math::float4x4::identity;
+				position = { 0.0f, 0.0f, 0.0f };
+				eulerRotation = { 0.0f, 0.0f, 0.0f };
+				scale = { 1.0f, 1.0f, 1.0f };
+				rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+			}
+			ImGui::EndPopup();
+		}
+
+		ImGui::Separator();
+
 		ImGui::PushItemWidth(75);
 		ImGui::Text("Position:");
 		ImGui::Text("X:");

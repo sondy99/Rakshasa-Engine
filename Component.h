@@ -25,8 +25,6 @@ public:
 	virtual void Disable() {};
 	virtual void DrawProperties() {};
 	virtual Component* Clone() { return new Component(gameObjectParent, componentType); };
-
-	void DrawDeleteComponent();	
 public:
 	ComponentType componentType;
 	GameObject* gameObjectParent = nullptr;

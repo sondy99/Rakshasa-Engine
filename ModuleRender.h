@@ -48,7 +48,7 @@ public:
 	update_status PostUpdate() override;
 	bool CleanUp() override;
 	
-	void RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial, unsigned program,
+	void RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	
 	void DrawProperties();
@@ -57,7 +57,7 @@ public:
 	ComponentMesh* CreateComponentMesh();
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType);
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
-	void RemoveMesh(Component* componentToBeRemove);
+	void RemoveMeshComponent(Component* componentToBeRemove);
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;

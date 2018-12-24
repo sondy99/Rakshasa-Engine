@@ -46,7 +46,7 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-void ModuleModelLoader::LoadModelFromFBX(const char* filePath, GameObject* gameObjectParent)
+void ModuleModelLoader::LoadMaterialFromFBX(const char* filePath, GameObject* gameObjectParent)
 {
 	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -295,7 +295,7 @@ void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
 
 	if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
 	{
-		Material auxMaterialStruct = App->textures->LoadModelFromFBX(file.data);
+		Material auxMaterialStruct = App->textures->LoadMaterialFromFBX(file.data);
 		materialStruct.texture0 = auxMaterialStruct.texture0;
 		materialStruct.width = auxMaterialStruct.width;
 		materialStruct.height = auxMaterialStruct.height;
@@ -354,7 +354,7 @@ void ModuleModelLoader::CreateMaterialComponent(GameObject * gameObjectMesh, con
 	Material materialStruct;
 	materialStruct.color = color;
 
-	gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+	gameObjectMesh->components.push_back(App->textures->CreateComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
 }
 
 void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex)
@@ -363,7 +363,7 @@ void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNo
 	materialStruct.material = scene->mMaterials[materialIndex];
 	GenerateMaterial(materialStruct);
 
-	gameObjectMesh->components.push_back(new ComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
+	gameObjectMesh->components.push_back(App->textures->CreateComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
 }
 
 void ModuleModelLoader::CreateTransformationComponent(GameObject * gameObject)

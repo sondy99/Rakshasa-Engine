@@ -36,11 +36,35 @@ void ComponentMesh::DrawProperties()
 {
 	if (ImGui::CollapsingHeader("Mesh"))
 	{
-		if (ImGui::Button("Add"))
+		ImGui::Button("Mesh options");
+
+		if (ImGui::IsItemClicked(0))
 		{
+			ImGui::OpenPopup("MeshOptionsContextualMenu");
 		}
-		ImGui::SameLine();
-		DrawDeleteComponent();
+
+		if (ImGui::BeginPopup("MeshOptionsContextualMenu"))
+		{
+			ImGui::PushID("AddMesh");
+			if (ImGui::Button("Add from library"))
+			{
+			}
+			ImGui::PopID();
+			ImGui::PushID("DeleteMesh");
+			if (ImGui::Button("Delete mesh"))
+			{
+			}
+			ImGui::PopID();
+			ImGui::PushID("DeleteMeshComponent");
+			if (ImGui::Button("Delete component"))
+			{
+				isMarkToBeDeleted = true;
+			}
+			ImGui::PopID();
+			ImGui::EndPopup();
+		}
+
+		ImGui::Separator();
 
 		ImGui::Text("Triangles count: %d", mesh.verticesNumber / 3);
 		ImGui::Text("Vertices count: %d", mesh.verticesNumber);

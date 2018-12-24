@@ -3,6 +3,7 @@
 #include "Application.h"
 
 #include "ModuleModelLoader.h"
+#include "ModuleTextures.h"
 
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
@@ -32,7 +33,29 @@ void ModuleScene::LoadModel(const char * modelPath)
 {
 	GameObject* gameObject = CreateGameObject("gameObject", root, false);
 
-	App->modelLoader->LoadModelFromFBX(modelPath, gameObject);
+	App->modelLoader->LoadMaterialFromFBX(modelPath, gameObject);
+}
+
+void ModuleScene::LoadTexture(const char * texturePath)
+{
+	if (gameObjectSelected != nullptr)
+	{
+		Component* material = gameObjectSelected->GetComponent(ComponentType::MATERIAL);
+
+		if (material != nullptr)
+		{
+			App->textures->ReplaceMaterial(texturePath, (ComponentMaterial*)material);
+		}
+		else
+		{
+			gameObjectSelected->CreateComponent(ComponentType::MATERIAL);
+			LoadTexture(texturePath);
+		}
+	}
+	else
+	{
+		LOG("Is needed to have one game object selected in the hierarchy.")
+	}
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, bool withTransformation)

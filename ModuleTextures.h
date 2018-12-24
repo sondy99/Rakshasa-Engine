@@ -1,13 +1,19 @@
 #ifndef __ModuleTextures_H__
 #define __ModuleTextures_H__
 
-#include<list>
 #include "Module.h"
 #include "ModuleModelLoader.h"
+
 #include "Globals.h"
 #include "GL/glew.h"
 
 #include "string"
+#include<list>
+
+enum class ComponentType;
+class GameObject;
+class Component;
+class ComponentMaterial;
 
 struct SDL_Texture;
 struct aiMesh;
@@ -44,9 +50,17 @@ public:
 
 	bool Init() override;
 
-	Material LoadModelFromFBX(std::string path);
-	void Unload(unsigned id);
-
+	Material LoadMaterialFromFBX(std::string path);
+	Material LoadMaterial(std::string path);
+	void Unload(unsigned id); 
+	void ReplaceMaterial(const char* path, ComponentMaterial* componentMaterial);
+	ComponentMaterial* CreateComponentMaterial();
+	ComponentMaterial* CreateComponentMaterial(GameObject* gameObjectParent, ComponentType componentType);
+	ComponentMaterial* CreateComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material);
+	void RemoveMaterialComponent(Component* componentToBeRemove);
+	void RemoveMaterial(ComponentMaterial* componentMaterial);
+private:
+	std::list<ComponentMaterial*> materials;
 };
 
 #endif __ModuleTextures_H__
