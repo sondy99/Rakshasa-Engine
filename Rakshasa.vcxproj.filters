@@ -175,6 +175,9 @@
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>GameObjectsAndComponents</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleFileSystem.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -446,6 +449,9 @@
     <ClInclude Include="crossguid\Guid.hpp" />
     <ClInclude Include="ComponentCamera.h">
       <Filter>GameObjectsAndComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFileSystem.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

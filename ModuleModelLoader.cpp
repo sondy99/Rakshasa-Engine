@@ -6,6 +6,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
 #include "ModuleScene.h"
+#include "ModuleFileSystem.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -48,7 +49,9 @@ bool ModuleModelLoader::Init()
 
 void ModuleModelLoader::LoadMaterialFromFBX(const char* filePath, GameObject* gameObjectParent)
 {
-	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
+	char* fileBuffer;
+	unsigned lenghBuffer = App->fileSystem->Load(filePath, &fileBuffer);
+	const aiScene* scene = aiImportFileFromMemory(fileBuffer, lenghBuffer, aiProcessPreset_TargetRealtime_MaxQuality, "");
 
 	if (scene)
 	{

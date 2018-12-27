@@ -3,6 +3,7 @@
 
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
+#include "ModuleFileSystem.h"
 
 #include "Component.h"
 #include "ComponentMaterial.h"
@@ -38,7 +39,11 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 
 	LOG("Loading texture %s", path.c_str());
 
-	if (ilLoadImage(path.c_str()))
+	char* fileBuffer;
+	unsigned lenghBuffer = App->fileSystem->Load(path.c_str(), &fileBuffer);
+
+	//if (ilLoadL(IL_DDS, fileBuffer, lenghBuffer))
+	if (ilLoadL(IL_PNG, fileBuffer, lenghBuffer))
 	{
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);

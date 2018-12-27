@@ -10,6 +10,7 @@
 #include "ModuleEditor.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleScene.h"
+#include "ModuleFileSystem.h"
 
 //#include "ModuleRenderTriangle.h"
 
@@ -17,6 +18,8 @@ using namespace std;
 
 Application::Application()
 {
+	
+	modules.push_back(fileSystem = new ModuleFileSystem());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(editor = new ModuleEditor());

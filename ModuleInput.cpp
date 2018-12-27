@@ -149,13 +149,25 @@ void ModuleInput::HandleDropedFiles(const char * path)
 {
 	std::string str(path);
 	std::string ext(str.substr(str.length() - 3));
+	std::string::size_type i = str.find("Game");
+
+	str.erase(0, i + 4);
+
+	//this in the meantime, until I get the library working
+	i = str.find("\\");
+	str.replace(i, i + 1, "/");
+	i = str.find("\\");
+	str.replace(i, 1, "/");
+	i = str.find("\\");
+	str.replace(i, 1, "/");
+
 	if (ext == "fbx" || ext == "FBX")
 	{
-		App->scene->LoadModel(path);
+		App->scene->LoadModel(str.c_str());
 	}
 	else if (ext == "png" || ext == "jpg" || ext == "dds" || ext == "tif")
 	{
-		App->scene->LoadTexture(path);
+		App->scene->LoadTexture(str.c_str());
 	}
 	else
 	{
