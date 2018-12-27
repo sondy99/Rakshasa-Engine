@@ -147,12 +147,7 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	unsigned program = App->shader->program;
-
-	if (componentMaterial != nullptr && componentMaterial->material.texture0 == 0)
-	{
-		program = App->shader->colorProgram;
-	}
-
+	
 	glUseProgram(program);
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
@@ -161,18 +156,57 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 
 	if (componentMaterial != nullptr)
 	{
+		glUniform4f(glGetUniformLocation(program, "diffuseColor"), componentMaterial->material.diffuseColor.x, componentMaterial->material.diffuseColor.y, componentMaterial->material.diffuseColor.z, 1.0f);
+		glUniform4f(glGetUniformLocation(program, "emissiveColor"), componentMaterial->material.emissiveColor.x, componentMaterial->material.emissiveColor.y, componentMaterial->material.emissiveColor.z, 1.0f);
+		glUniform4f(glGetUniformLocation(program, "specularColor"), componentMaterial->material.specularColor.x, componentMaterial->material.specularColor.y, componentMaterial->material.specularColor.z, 1.0f);
+
+
+		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->lightPosition[0]);
+		glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
+		glUniform1f(glGetUniformLocation(program, "shininess"), componentMaterial->material.shininess);
+		glUniform1f(glGetUniformLocation(program, "k_ambient"), componentMaterial->material.ambientK);
+		glUniform1f(glGetUniformLocation(program, "k_diffuse"), componentMaterial->material.diffuseK);
+		glUniform1f(glGetUniformLocation(program, "k_specular"), componentMaterial->material.specularK);
+
 		glActiveTexture(GL_TEXTURE0);
 
-		if (componentMaterial->material.texture0 != 0)
+		if (componentMaterial->material.diffuseMap != 0)
 		{
-			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.texture0);
-			glUniform1i(glGetUniformLocation(program, "texture0"), 0);
+			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.diffuseMap);
+			glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
+			glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 1);
 		}
 		else
 		{
-			glUniform4f(glGetUniformLocation(program, "uColor"), componentMaterial->material.color.x,
-				componentMaterial->material.color.y, componentMaterial->material.color.z,
-				componentMaterial->material.color.w);
+			glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 0);
+		}
+
+		if (componentMaterial->material.emissiveMap != 0)
+		{
+			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.emissiveMap);
+			glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
+		}
+
+		if (componentMaterial->material.occlusionMap != 0)
+		{
+			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.occlusionMap);
+			glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
+			glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 1);
+		}
+		else
+		{
+			glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 0);
+		}
+
+		if (componentMaterial->material.specularMap != 0)
+		{
+			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.specularMap);
+			glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
+			glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 1);
+		}
+		else
+		{
+			glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 0);
 		}
 	}
 
@@ -465,7 +499,6 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 
-	//RenderComponentFromGameObject(App->scene->root, view, projection, frameBufferToRender.frameBufferType);
 	RenderComponentFromMeshesList(view, projection, frameBufferToRender.frameBufferType);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -24,7 +24,7 @@ bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
 	
-	LoadModel("Assets\\BakerHouse.FBX");
+	LoadModel("Assets/ZomBunny/Zombunny.fbx");
 
 	return true;
 }
@@ -105,6 +105,30 @@ void ModuleScene::DrawProperties()
 		ImGui::EndPopup();
 	}
 	
+	ImGui::Separator();
+
+	ImGui::SliderFloat("Ambient", &ambient, 0.0f, 1.0f);
+	ImGui::Text("Light position:");
+	ImGui::PushItemWidth(70);
+	ImGui::Text("X:");
+	ImGui::SameLine();
+	ImGui::PushID("1");
+	ImGui::DragFloat("", &lightPosition.x, 10.0f, -100000.f, 100000.f);
+	ImGui::SameLine();
+	ImGui::PopID();
+	ImGui::Text("Y:");
+	ImGui::SameLine();
+	ImGui::PushID("2");
+	ImGui::DragFloat("", &lightPosition.y, 10.0f, -100000.f, 100000.f);
+	ImGui::SameLine();
+	ImGui::PopID();
+	ImGui::Text("Z:");
+	ImGui::SameLine();
+	ImGui::PushID("3");
+	ImGui::DragFloat("", &lightPosition.z, 10.0f, -100000.f, 100000.f);
+	ImGui::PopID();
+	ImGui::PopItemWidth();
+
 	ImGui::Separator();
 
 	ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;

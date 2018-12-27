@@ -294,13 +294,13 @@ void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
 	aiTextureMapping mapping;
 	unsigned uvindex = 0;
 
-	if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
-	{
-		Material auxMaterialStruct = App->textures->LoadMaterialFromFBX(file.data);
-		materialStruct.texture0 = auxMaterialStruct.texture0;
-		materialStruct.width = auxMaterialStruct.width;
-		materialStruct.height = auxMaterialStruct.height;
-	}
+	//if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
+	//{
+	//	Material auxMaterialStruct = App->textures->LoadMaterialFromFBX(file.data);
+	//	materialStruct.texture0 = auxMaterialStruct.texture0;
+	//	materialStruct.width = auxMaterialStruct.width;
+	//	materialStruct.height = auxMaterialStruct.height;
+	//}
 }
 
 void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node, GameObject* gameObjectParent)
@@ -355,7 +355,7 @@ void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s * parShapeMe
 void ModuleModelLoader::CreateMaterialComponent(GameObject * gameObjectMesh, const math::float4& color)
 {
 	Material materialStruct;
-	materialStruct.color = color;
+	//materialStruct.color = color;
 
 	gameObjectMesh->components.push_back(App->textures->CreateComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
 }
@@ -363,7 +363,7 @@ void ModuleModelLoader::CreateMaterialComponent(GameObject * gameObjectMesh, con
 void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex)
 {
 	Material materialStruct;
-	materialStruct.material = scene->mMaterials[materialIndex];
+	//materialStruct.material = scene->mMaterials[materialIndex];
 	GenerateMaterial(materialStruct);
 
 	gameObjectMesh->components.push_back(App->textures->CreateComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));

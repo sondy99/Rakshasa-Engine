@@ -35,9 +35,35 @@ struct Mesh
 
 struct Material
 {
+	unsigned occlusionMap = 0u; //ambient
+	float ambientK = 0.5f;
+	int ambientWidth = 0;
+	int ambientHeight = 0;
+
+	unsigned diffuseMap = 0u;
+	math::float4 diffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float diffuseK = 1.0f;
+	int diffuseWidth = 0;
+	int diffuseHeight = 0;
+
+	unsigned specularMap = 0u;
+	math::float4 specularColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float specularK = 0.6f;
+	float shininess = 64.0f;
+	int specularWidth = 0;
+	int specularHeight = 0;
+
+	unsigned emissiveMap = 0u;
+	math::float4 emissiveColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	int emissiveWidth = 0;
+	int emissiveHeight = 0;
+
+
+
+
 	int width = 0;
 	int height = 0;
-	unsigned texture0 = 0;
+	unsigned texture0 = 0u;
 	math::float4 color = math::float4::zero;
 	aiMaterial* material = nullptr;
 };
@@ -50,8 +76,7 @@ public:
 
 	bool Init() override;
 
-	Material LoadMaterialFromFBX(std::string path);
-	Material LoadMaterial(std::string path);
+	void LoadMaterial(std::string path, unsigned& textureID, int& width, int& height);
 	void Unload(unsigned id); 
 	void ReplaceMaterial(const char* path, ComponentMaterial* componentMaterial);
 	ComponentMaterial* CreateComponentMaterial();

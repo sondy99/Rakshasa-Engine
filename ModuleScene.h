@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#include "MathGeoLib.h"
+
 #include "list";
 
 class GameObject;
@@ -24,6 +26,8 @@ public:
 	GameObject* gameObjectSelected = nullptr;
 	bool toggleSceneProperties = true;
 	bool isSceneCullingActive = true;
+	math::float3 lightPosition = math::float3(5000.0f, 5000.0f, 8000.0f);
+	float ambient = 0.1f;
 private:
 	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);

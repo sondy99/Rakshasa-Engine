@@ -28,51 +28,10 @@ bool ModuleTextures::Init()
 	return true;
 }
 
-Material ModuleTextures::LoadMaterialFromFBX(std::string path)
-{
-	Material result;
-		
-
-	for (int i = 0; i < 4; ++i)
-	{
-		result = LoadMaterial(path.c_str());
-		if (result.texture0 == 0u)
-		{
-			LOG("Image load failed - IL reports error: ");
-			LOG(iluErrorString(ilGetError()));
-
-			switch (i)
-			{
-			case 0:
-				path = "Assets\\" + path;
-				break;
-			case 1:
-				path = "Assets\\Images\\" + path;
-				break;
-			case 2:
-				path = "Assets\\Materials\\" + path;
-				break;
-			default:
-				break;
-			}
-		}
-		else
-		{
-			break;
-		}
-	}
-
-	return result;
-}
-
-Material ModuleTextures::LoadMaterial(std::string path)
+void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& width, int& height)
 {
 	unsigned imageID;
-
-	GLuint textureID = 0;
-	int width = 0;
-	int height = 0;
-
+	
 	ilGenImages(1, &imageID);
 
 	ilBindImage(imageID);
@@ -81,7 +40,6 @@ Material ModuleTextures::LoadMaterial(std::string path)
 
 	if (ilLoadImage(path.c_str()))
 	{
-
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
 		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
@@ -115,13 +73,6 @@ Material ModuleTextures::LoadMaterial(std::string path)
 
 	ilDeleteImages(1, &imageID);
 	LOG("Texture creation successful.");
-
-	Material material;
-	material.texture0 = textureID;
-	material.width = width;
-	material.height = height;
-
-	return material;
 }
 
 void ModuleTextures::Unload(unsigned id)
@@ -134,15 +85,57 @@ void ModuleTextures::Unload(unsigned id)
 
 void ModuleTextures::ReplaceMaterial(const char * path, ComponentMaterial * componentMaterial)
 {
-	Material material = LoadMaterial(path);
-
-	if (material.texture0 != 0u)
+	switch(componentMaterial->materialTypeSelected)
 	{
-		Unload(componentMaterial->material.texture0);
+		case MaterialTypeSelected::OCCLUSION_MAP :
+			if (componentMaterial->material.occlusionMap != 0u)
+			{
+				Unload(componentMaterial->material.occlusionMap);
+			}
 
-		componentMaterial->material = material;
+			LoadMaterial(path, componentMaterial->material.occlusionMap, 
+				componentMaterial->material.ambientWidth, 
+				componentMaterial->material.ambientHeight);
+
+			componentMaterial->occlusionPath = path;
+		break;
+		case MaterialTypeSelected::DIFFUSE_MAP:
+			if (componentMaterial->material.diffuseMap != 0u)
+			{
+				Unload(componentMaterial->material.diffuseMap);
+			}
+
+			LoadMaterial(path, componentMaterial->material.diffuseMap,
+				componentMaterial->material.diffuseWidth,
+				componentMaterial->material.diffuseHeight);
+
+			componentMaterial->diffusePath = path;
+			break;
+		case MaterialTypeSelected::SPECULAR_MAP:
+			if (componentMaterial->material.specularMap != 0u)
+			{
+				Unload(componentMaterial->material.specularMap);
+			}
+
+			LoadMaterial(path, componentMaterial->material.specularMap,
+				componentMaterial->material.specularWidth,
+				componentMaterial->material.specularHeight);
+
+			componentMaterial->specularPath = path;
+			break;
+		case MaterialTypeSelected::EMISSIVE_MAP:
+			if (componentMaterial->material.emissiveMap != 0u)
+			{
+				Unload(componentMaterial->material.emissiveMap);
+			}
+
+			LoadMaterial(path, componentMaterial->material.emissiveMap,
+				componentMaterial->material.emissiveWidth,
+				componentMaterial->material.emissiveHeight);
+
+			componentMaterial->emissivePath = path;
+			break;
 	}
-
 }
 
 ComponentMaterial * ModuleTextures::CreateComponentMaterial()
@@ -180,11 +173,15 @@ void ModuleTextures::RemoveMaterialComponent(Component * componentToBeRemove)
 	}
 }
 
-void ModuleTextures::RemoveMaterial(ComponentMaterial * componentMaterial)
+void ModuleTextures::RemoveMaterial(ComponentMaterial* componentMaterial)
 {
 	if (componentMaterial->componentType == ComponentType::MATERIAL)
 	{
 		Unload(componentMaterial->material.texture0);
+		Unload(componentMaterial->material.diffuseMap);
+		Unload(componentMaterial->material.specularMap);
+		Unload(componentMaterial->material.occlusionMap);
+		Unload(componentMaterial->material.emissiveMap);
 
 		Material emptyMaterial;
 

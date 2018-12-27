@@ -98,7 +98,6 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_DROPFILE:
 		{
-			// TODO: check extension of file and reupload a texture or a model
 			char* fileDroppedPath = event.drop.file;
 
 			HandleDropedFiles(fileDroppedPath);
@@ -154,7 +153,7 @@ void ModuleInput::HandleDropedFiles(const char * path)
 	{
 		App->scene->LoadModel(path);
 	}
-	else if (ext == "png" || ext == "jpg" || ext == "dds")
+	else if (ext == "png" || ext == "jpg" || ext == "dds" || ext == "tif")
 	{
 		App->scene->LoadTexture(path);
 	}
