@@ -51,7 +51,6 @@ void main()
 		finalDiffuse = k_diffuse * diff * diffuseColor.rgb * vec3(texture(diffuseMap, uv0));
 	}
 	
-	
     /*Specular */
     vec3 viewPos = transpose(mat3(view))*(-view[3].xyz);
 	vec3 viewDir = normalize(viewPos - position);
@@ -68,5 +67,13 @@ void main()
 		finalSpecular = algo.rgb * k_specular * spec * specularColor.rgb;
 	}
     	
-    color = vec4(finalAmbient + finalDiffuse + finalSpecular, 1.0f);
+    vec3 finalEmission = emissiveColor.rgb;
+	
+    if (useEmissiveMap == 1)   
+    {
+
+        finalEmission = emissiveColor.rgb * texture(emissiveMap, uv0).rgb;
+    }
+	
+    color = vec4(finalAmbient + finalDiffuse + finalSpecular + finalEmission, 1.0f);
 }

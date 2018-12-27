@@ -168,10 +168,10 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 		glUniform1f(glGetUniformLocation(program, "k_diffuse"), componentMaterial->material.diffuseK);
 		glUniform1f(glGetUniformLocation(program, "k_specular"), componentMaterial->material.specularK);
 
-		glActiveTexture(GL_TEXTURE0);
 
 		if (componentMaterial->material.diffuseMap != 0)
 		{
+			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.diffuseMap);
 			glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
 			glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 1);
@@ -183,12 +183,19 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 
 		if (componentMaterial->material.emissiveMap != 0)
 		{
+			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.emissiveMap);
 			glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
+			glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 1);
+		}
+		else
+		{
+			glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 0);
 		}
 
 		if (componentMaterial->material.occlusionMap != 0)
 		{
+			glActiveTexture(GL_TEXTURE2);
 			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.occlusionMap);
 			glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
 			glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 1);
@@ -200,6 +207,7 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 
 		if (componentMaterial->material.specularMap != 0)
 		{
+			glActiveTexture(GL_TEXTURE3);
 			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.specularMap);
 			glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
 			glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 1);
