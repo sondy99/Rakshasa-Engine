@@ -11,6 +11,7 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleScene.h"
 #include "ModuleFileSystem.h"
+#include "ModuleLibrary.h"
 
 //#include "ModuleRenderTriangle.h"
 
@@ -18,19 +19,19 @@ using namespace std;
 
 Application::Application()
 {
-	
 	modules.push_back(fileSystem = new ModuleFileSystem());
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(editor = new ModuleEditor());
 	modules.push_back(input = new ModuleInput());
+	modules.push_back(library = new ModuleLibrary());
 	modules.push_back(camera = new ModuleCamera());
 	modules.push_back(shader = new ModuleShader());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(environment = new ModuleEnvironment());
 	modules.push_back(modelLoader = new ModuleModelLoader());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
-	modules.push_back(scene = new ModuleScene);
+	modules.push_back(scene = new ModuleScene());
 
 	//modules.push_back(renderTrieangle = new ModuleRenderTriangle());
 }

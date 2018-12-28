@@ -177,6 +177,8 @@
     <ClInclude Include="Imgui\imstb_rectpack.h" />
     <ClInclude Include="Imgui\imstb_textedit.h" />
     <ClInclude Include="Imgui\imstb_truetype.h" />
+    <ClInclude Include="ImporterMaterial.h" />
+    <ClInclude Include="ImporterMesh.h" />
     <ClInclude Include="MathGeoLib\include\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\AABB.h" />
     <ClInclude Include="MathGeoLib\include\Geometry\AABB2D.h" />
@@ -241,6 +243,7 @@
     <ClInclude Include="ModuleEnvironment.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleLibrary.h" />
     <ClInclude Include="ModuleModelLoader.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleRenderTriangle.h" />
@@ -267,6 +270,8 @@
     <ClCompile Include="Imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="Imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="ImporterMaterial.cpp" />
+    <ClCompile Include="ImporterMesh.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathGeoLib\include\Algorithm\Random\LCG.cpp" />
@@ -307,6 +312,7 @@
     <ClCompile Include="ModuleEnvironment.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleLibrary.cpp" />
     <ClCompile Include="ModuleModelLoader.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleRenderTriangle.cpp" />
@@ -314,12 +320,6 @@
     <ClCompile Include="ModuleShader.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="colorProgram.fs" />
-    <None Include="colorProgram.vs" />
-    <None Include="default.fs" />
-    <None Include="default.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,10 +1,13 @@
 #include "Globals.h"
 #include "Application.h"
+
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleScene.h"
 #include "ModuleCamera.h"
+#include "ModuleFileSystem.h"
+
 #include "SDL.h"
 
 #define MAX_KEYS 300
@@ -153,14 +156,8 @@ void ModuleInput::HandleDropedFiles(const char * path)
 
 	str.erase(0, i + 4);
 
-	//this in the meantime, until I get the library working
-	i = str.find("\\");
-	str.replace(i, i + 1, "/");
-	i = str.find("\\");
-	str.replace(i, 1, "/");
-	i = str.find("\\");
-	str.replace(i, 1, "/");
-
+	App->fileSystem->ChangePathSlashes(str);
+	
 	if (ext == "fbx" || ext == "FBX")
 	{
 		App->scene->LoadModel(str.c_str());

@@ -22,7 +22,7 @@ bool ModuleFileSystem::Init()
 
 	AddPath(".");
 
-	AddPath("D:/Proyectos/Rakshasa-Engine/Game/");
+	AddPath("../Game/");
 
 	PHYSFS_setWriteDir(".");
 
@@ -123,15 +123,9 @@ bool ModuleFileSystem::Remove(const char * pathAndFileName)
 
 	if (pathAndFileName != nullptr)
 	{
-		if (PHYSFS_delete(pathAndFileName) == 0)
-		{
-			LOG("File deleted: [%s]", pathAndFileName);
-			result = true;
-		}
-		else
-		{
-			LOG("Error while trying to delete [%s]: ", pathAndFileName, PHYSFS_getLastError());
-		}
+		PHYSFS_delete(pathAndFileName);		
+		LOG("File deleted: [%s]", pathAndFileName);
+		result = true;
 	}
 
 	return result;
@@ -201,6 +195,40 @@ bool ModuleFileSystem::Copy(const char * sourcePath, const char * destinationPat
 	return result;
 }
 
+std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectory(const char * directory)
+{
+	std::map<std::string, std::string> result;
+	char **enumeratedFIles = PHYSFS_enumerateFiles(directory);
+	char **iterator;
+
+	std::string dir(directory); 
+	std::vector<std::string> directoryList;
+
+	for (iterator = enumeratedFIles; *iterator != nullptr; iterator++)
+	{
+		if (PHYSFS_isDirectory((dir + *iterator).c_str()))
+		{
+			directoryList.push_back(*iterator);
+		}
+		else
+		{
+			result[(*iterator)] = dir;
+		}
+	}
+
+	PHYSFS_freeList(enumeratedFIles);
+
+	for (std::vector<std::string>::iterator iterator = directoryList.begin(); iterator != directoryList.end(); ++iterator)
+	{
+		(*iterator).insert(0, directory);
+		(*iterator).append("/");
+		std::map<std::string, std::string> partialResult = GetFilesFromDirectory((*iterator).c_str());
+		result.insert(partialResult.begin(), partialResult.end());
+	}
+
+	return result;
+}
+
 void ModuleFileSystem::GetFilesAndDirectoriesFromPath(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList) const
 {
 	char **enumeratedFIles = PHYSFS_enumerateFiles(directory);
@@ -221,4 +249,67 @@ void ModuleFileSystem::GetFilesAndDirectoriesFromPath(const char * directory, st
 	}
 
 	PHYSFS_freeList(enumeratedFIles);
+}
+
+void ModuleFileSystem::ChangePathSlashes(std::string & fullPath) const
+{
+	for (std::string::iterator iterator = fullPath.begin(); iterator != fullPath.end(); ++iterator)
+	{
+		if (*iterator == '\\')
+		{
+			*iterator = '/';
+		}
+		else
+		{
+			*iterator = tolower(*iterator);
+		}
+	}
+}
+
+void ModuleFileSystem::SplitFilePath(const char * fullPath, std::string * path, std::string * file, std::string * extension) const
+{
+	if (fullPath != nullptr)
+	{
+		std::string fullPathString(fullPath);
+		ChangePathSlashes(fullPathString);
+		size_t positionSeparator = fullPathString.find_last_of("\\/");
+		size_t positionDot = fullPathString.find_last_of(".");
+
+		if (path != nullptr)
+		{
+			if (positionSeparator < fullPathString.length())
+			{
+				*path = fullPathString.substr(0, positionSeparator + 1);
+			}
+			else
+			{
+				path->clear();
+			}
+		}
+
+		if (file != nullptr)
+		{
+			if (positionSeparator < fullPathString.length())
+			{
+				*file = fullPathString.substr(positionSeparator + 1, positionDot - positionSeparator - 1);
+			}
+			else
+			{
+				*file = fullPathString;
+			}
+		}
+
+		if (extension != nullptr)
+		{
+			if (positionDot < fullPathString.length())
+			{
+
+				*extension = fullPathString.substr(positionDot + 1);
+			}
+			else
+			{
+				extension->clear();
+			}
+		}
+	}
 }

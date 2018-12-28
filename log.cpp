@@ -7,12 +7,6 @@
 
 void log(const char file[], int line, const char* format, ...)
 {
-	if (App != nullptr && App->editor != nullptr)
-	{
-		App->editor->LogIntoConsole(format);
-		App->editor->LogIntoConsole("\n");
-	}
-
 	static char tmp_string[4096];
 	static char tmp_string2[4096];
 	static va_list  ap;
@@ -23,6 +17,12 @@ void log(const char file[], int line, const char* format, ...)
 	va_end(ap);
 	sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", file, line, tmp_string);
 	OutputDebugString(tmp_string2);
+
+	if (App != nullptr && App->editor != nullptr)
+	{
+		App->editor->LogIntoConsole(tmp_string);
+		App->editor->LogIntoConsole("\n");
+	}
 }
 
 #endif __LOG_H_

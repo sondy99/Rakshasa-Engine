@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+#include "map"
 #include "vector"
 #include "string"
 
@@ -24,7 +25,10 @@ public:
 	bool MakeDirectory(const char* path);
 	bool IsDirectory(const char* pathAndFileName) const;
 	bool Copy(const char * sourcePath, const char * destinationPath);
+	std::map<std::string, std::string> GetFilesFromDirectory(const char* directory);
 	void GetFilesAndDirectoriesFromPath(const char* directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList) const;
+	void ChangePathSlashes(std::string & fullPath) const;
+	void SplitFilePath(const char* fullPath, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
 public:
 	char* basePath = nullptr;
 };

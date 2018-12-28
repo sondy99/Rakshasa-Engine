@@ -178,6 +178,15 @@
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleLibrary.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMaterial.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMesh.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -453,6 +462,15 @@
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleLibrary.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMesh.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMaterial.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -476,28 +494,11 @@
     <Filter Include="Modules">
       <UniqueIdentifier>{208e2f52-8d51-4730-b722-0579af6cac2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{f6bc9d24-a3a5-44fc-9481-e0979977b308}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{5079db37-720c-4cf4-bcaa-57c5e4dc681d}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObjectsAndComponents">
       <UniqueIdentifier>{f150bff2-8485-47c9-b9c5-e8dd72383e2f}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.vs">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="default.fs">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="colorProgram.vs">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="colorProgram.fs">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

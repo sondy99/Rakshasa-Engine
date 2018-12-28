@@ -1,11 +1,15 @@
+#include "ModuleEditor.h"
+
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleEditor.h"
+
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
 #include "ModuleScene.h"
+#include "ModuleLibrary.h"
+
 #include "GameObject.h"
 
 ModuleEditor::ModuleEditor()
@@ -54,6 +58,8 @@ update_status ModuleEditor::Update()
 			ImGui::Checkbox("Render properties", &App->renderer->toggleRenderProperties);
 			ImGui::Checkbox("Camera properties", &App->camera->toggleCameraProperties);
 			ImGui::Checkbox("Model properties", &App->modelLoader->toggleModelProperties);
+			ImGui::Checkbox("Library properties", &App->library->toggleLibraryProperties);
+			
 			ImGui::Checkbox("Console", &toggleConsole);
 			
 			//ImGui::Checkbox("Window", &toggleWindow);
@@ -96,6 +102,7 @@ void ModuleEditor::WindowManager()
 	App->camera->DrawProperties();
 	App->modelLoader->DrawProperties();
 	App->scene->DrawProperties();
+	App->library->DrawProperties();
 
 	if (toggleGameObjectProperties)
 	{

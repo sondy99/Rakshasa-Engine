@@ -188,7 +188,8 @@ void ModuleScene::DrawTreeNode(GameObject * gameObject)
 {
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-	if (gameObject->childrens.empty()) {
+	if (gameObject->childrens.empty()) 
+	{
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 	}
 
