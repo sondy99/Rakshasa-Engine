@@ -255,7 +255,6 @@ void ModuleCamera::DrawProperties()
 	if (toggleCameraProperties)
 	{
 		ImGui::Begin("Camera", &toggleCameraProperties);
-		ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
 		if (ImGui::CollapsingHeader("Camera properties", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::NewLine();
