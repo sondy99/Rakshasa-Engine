@@ -4,6 +4,7 @@
 #include "Module.h"
 
 #include "map"
+#include "vector"
 #include "string"
 
 class ModuleLibrary : public Module
@@ -17,6 +18,7 @@ public:
 	bool CleanUp() override;
 
 	void DrawProperties();
+	void UpdateDirectoryAndFileList();
 public:
 	bool toggleLibraryProperties = true;
 private:
@@ -24,7 +26,8 @@ private:
 	void ClickManagement(const char* name);
 private:
 	std::string itemSelected;
-	std::map<std::string, std::string> currentFiles;
+	std::vector<std::string> fileMeshList;
+	std::vector<std::string> fileTexturesList;
 };
 
 #endif // __ModuleLibrary_h__

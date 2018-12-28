@@ -15,8 +15,8 @@ void LibraryWatcher()
 	std::map<std::string, std::string> files;
 	while (!stopWatcher)
 	{
-		currentFiles = App->fileSystem->GetFilesFromDirectory("/Library/");
-		files = App->fileSystem->GetFilesFromDirectory("/Assets/");
+		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/");
+		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
 		if (files.size() != currentFiles.size())
 		{
 			for (std::map<std::string, std::string>::iterator iterator = files.begin(); iterator != files.end(); ++iterator)
@@ -36,6 +36,8 @@ void LibraryWatcher()
 					}
 				}
 			}
+
+			App->library->UpdateDirectoryAndFileList();
 		}
 	}
 
@@ -54,6 +56,8 @@ bool ModuleLibrary::Init()
 	std::thread watcherThread(LibraryWatcher);
 
 	watcherThread.detach();
+
+	UpdateDirectoryAndFileList();
 
 	return true;
 }
@@ -110,6 +114,14 @@ void ModuleLibrary::DrawProperties()
 	ImGui::End();
 }
 
+void ModuleLibrary::UpdateDirectoryAndFileList()
+{
+	fileMeshList.clear();
+	fileTexturesList.clear();
+	App->fileSystem->GetFilesFromDirectory("/Library/Meshes/", fileMeshList);
+	App->fileSystem->GetFilesFromDirectory("/Library/Textures/", fileTexturesList);
+}
+
 void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
 {
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -130,21 +142,19 @@ void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
 
 	if (resourceOpen)
 	{
-		std::vector<std::string> fileList;
-		std::vector<std::string> directoryList;
-
 		if (name == "Meshes")
 		{
-			App->fileSystem->GetFilesAndDirectoriesFromPath("/Library/Meshes/", fileList, directoryList);
+			for (std::vector<std::string>::iterator iterator = fileMeshList.begin(); iterator != fileMeshList.end(); ++iterator)
+			{
+				DrawTreeNode((*iterator).c_str(), true);
+			}
 		}
 		else if (name == "Textures")
 		{
-			App->fileSystem->GetFilesAndDirectoriesFromPath("/Library/Textures/", fileList, directoryList);
-		}
-
-		for (std::vector<std::string>::iterator iterator = fileList.begin(); iterator != fileList.end(); ++iterator)
-		{
-			DrawTreeNode((*iterator).c_str(), true);
+			for (std::vector<std::string>::iterator iterator = fileTexturesList.begin(); iterator != fileTexturesList.end(); ++iterator)
+			{
+				DrawTreeNode((*iterator).c_str(), true);
+			}
 		}
 
 		ImGui::TreePop();

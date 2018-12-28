@@ -195,7 +195,7 @@ bool ModuleFileSystem::Copy(const char * sourcePath, const char * destinationPat
 	return result;
 }
 
-std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectory(const char * directory)
+std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory)
 {
 	std::map<std::string, std::string> result;
 	char **enumeratedFIles = PHYSFS_enumerateFiles(directory);
@@ -222,14 +222,14 @@ std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectory(const
 	{
 		(*iterator).insert(0, directory);
 		(*iterator).append("/");
-		std::map<std::string, std::string> partialResult = GetFilesFromDirectory((*iterator).c_str());
+		std::map<std::string, std::string> partialResult = GetFilesFromDirectoryRecursive((*iterator).c_str());
 		result.insert(partialResult.begin(), partialResult.end());
 	}
 
 	return result;
 }
 
-void ModuleFileSystem::GetFilesAndDirectoriesFromPath(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList) const
+void ModuleFileSystem::GetFilesFromDirectory(const char * directory, std::vector<std::string>& fileList) const
 {
 	char **enumeratedFIles = PHYSFS_enumerateFiles(directory);
 	char **iterator;
@@ -238,11 +238,7 @@ void ModuleFileSystem::GetFilesAndDirectoriesFromPath(const char * directory, st
 
 	for (iterator = enumeratedFIles; *iterator != nullptr; iterator++)
 	{
-		if (PHYSFS_isDirectory((dir + *iterator).c_str()))
-		{
-			directoryList.push_back(*iterator);
-		}
-		else
+		if (!PHYSFS_isDirectory((dir + *iterator).c_str()))
 		{
 			fileList.push_back(*iterator);
 		}
