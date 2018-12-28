@@ -19,6 +19,8 @@ public:
 
 	void DrawProperties();
 	void UpdateDirectoryAndFileList();
+	inline std::vector<std::string> GetFileMeshList() const { return fileMeshList; }
+	inline std::vector<std::string> GetFileTexturesList() const { return fileTexturesList; }
 public:
 	bool toggleLibraryProperties = true;
 private:

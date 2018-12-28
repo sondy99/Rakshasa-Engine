@@ -37,13 +37,14 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 
 	ilBindImage(imageID);
 
+	path.insert(0, "/Library/Textures/");
+
 	LOG("Loading texture %s", path.c_str());
 
 	char* fileBuffer;
 	unsigned lenghBuffer = App->fileSystem->Load(path.c_str(), &fileBuffer);
 
-	//if (ilLoadL(IL_DDS, fileBuffer, lenghBuffer))
-	if (ilLoadL(IL_PNG, fileBuffer, lenghBuffer))
+	if (ilLoadL(IL_DDS, fileBuffer, lenghBuffer))
 	{
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
@@ -80,17 +81,9 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 	LOG("Texture creation successful.");
 }
 
-void ModuleTextures::Unload(unsigned id)
+void ModuleTextures::LoadMaterial(const char* path, ComponentMaterial* componentMaterial, MaterialTypeSelected materialTypeSelected)
 {
-	if (id != 0u)
-	{
-		glDeleteTextures(1, &id);
-	}
-}
-
-void ModuleTextures::ReplaceMaterial(const char * path, ComponentMaterial * componentMaterial)
-{
-	switch(componentMaterial->materialTypeSelected)
+	switch(materialTypeSelected)
 	{
 		case MaterialTypeSelected::OCCLUSION_MAP :
 			if (componentMaterial->material.occlusionMap != 0u)
@@ -102,7 +95,6 @@ void ModuleTextures::ReplaceMaterial(const char * path, ComponentMaterial * comp
 				componentMaterial->material.ambientWidth, 
 				componentMaterial->material.ambientHeight);
 
-			componentMaterial->occlusionPath = path;
 		break;
 		case MaterialTypeSelected::DIFFUSE_MAP:
 			if (componentMaterial->material.diffuseMap != 0u)
@@ -114,7 +106,6 @@ void ModuleTextures::ReplaceMaterial(const char * path, ComponentMaterial * comp
 				componentMaterial->material.diffuseWidth,
 				componentMaterial->material.diffuseHeight);
 
-			componentMaterial->diffusePath = path;
 			break;
 		case MaterialTypeSelected::SPECULAR_MAP:
 			if (componentMaterial->material.specularMap != 0u)
@@ -126,7 +117,6 @@ void ModuleTextures::ReplaceMaterial(const char * path, ComponentMaterial * comp
 				componentMaterial->material.specularWidth,
 				componentMaterial->material.specularHeight);
 
-			componentMaterial->specularPath = path;
 			break;
 		case MaterialTypeSelected::EMISSIVE_MAP:
 			if (componentMaterial->material.emissiveMap != 0u)
@@ -138,8 +128,15 @@ void ModuleTextures::ReplaceMaterial(const char * path, ComponentMaterial * comp
 				componentMaterial->material.emissiveWidth,
 				componentMaterial->material.emissiveHeight);
 
-			componentMaterial->emissivePath = path;
 			break;
+	}
+}
+
+void ModuleTextures::Unload(unsigned id)
+{
+	if (id != 0u)
+	{
+		glDeleteTextures(1, &id);
 	}
 }
 

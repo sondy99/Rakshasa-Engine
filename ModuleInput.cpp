@@ -162,10 +162,6 @@ void ModuleInput::HandleDropedFiles(const char * path)
 	{
 		App->scene->LoadModel(str.c_str());
 	}
-	else if (ext == "png" || ext == "jpg" || ext == "dds" || ext == "tif")
-	{
-		App->scene->LoadTexture(str.c_str());
-	}
 	else
 	{
 		LOG("Incorrect file extension: %s", ext.c_str());

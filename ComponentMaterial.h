@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "ModuleTextures.h"
 
+#include "vector"
 #include "string"
 
 enum class MaterialTypeSelected
@@ -28,17 +29,8 @@ public:
 public:
 	Material material;
 	bool isSomeMaterialTypeSelected = false;
-	MaterialTypeSelected materialTypeSelected = MaterialTypeSelected::NO_TYPE_SELECTED;
-
-	std::string occlusionPath = "";
-	std::string diffusePath = "";
-	std::string specularPath = "";
-	std::string emissivePath = "";
-
-	bool occlusionCheck = false;
-	bool diffuseCheck = false;
-	bool specularCheck = false;
-	bool emissiveCheck = false;
+private:
+	void DrawComboBoxMaterials(const char* id, MaterialTypeSelected materialTypeSelected, static std::string &labelCurrentFileTextureSelected);
 };
 
 #endif __COMPONENTMATERIAL_H_
