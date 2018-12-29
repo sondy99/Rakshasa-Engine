@@ -5,6 +5,7 @@
 #include "ModuleFileSystem.h"
 
 #include "ImporterMaterial.h"
+#include "ImporterMesh.h"
 
 #include "thread";
 
@@ -17,7 +18,7 @@ void LibraryWatcher()
 	{
 		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/");
 		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
-		if (files.size() != currentFiles.size())
+		if (files.size() > currentFiles.size())
 		{
 			for (std::map<std::string, std::string>::iterator iterator = files.begin(); iterator != files.end(); ++iterator)
 			{
@@ -25,14 +26,18 @@ void LibraryWatcher()
 				{
 					std::string ext((*iterator).first.substr((*iterator).first.length() - 3));
 
+					std::string fullPath = (*iterator).second;
+					fullPath.append((*iterator).first);
 					if (ext == "png" || ext == "tif")
 					{
-						std::string fullPath = (*iterator).second;
-						fullPath.append((*iterator).first);
 						if (ImporterMaterial::Import(fullPath.c_str()))
 						{
 							currentFiles.insert(*iterator);
 						}
+					}
+					if (ext == "fbx" || ext == "FBX")
+					{
+						ImporterMesh::ImportFBX(fullPath.c_str());
 					}
 				}
 			}
@@ -40,7 +45,6 @@ void LibraryWatcher()
 			App->library->UpdateDirectoryAndFileList();
 		}
 	}
-
 }
 
 ModuleLibrary::ModuleLibrary()

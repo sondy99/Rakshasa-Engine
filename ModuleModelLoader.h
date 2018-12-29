@@ -37,6 +37,9 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	void CleanUpMesh(Mesh meshStruct);
+	void GenerateMesh(Mesh& meshStruct);
+
 	void LoadMaterialFromFBX(const char * filePath, GameObject* gameObjectParent);
 	void LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType);
 	void DrawProperties();

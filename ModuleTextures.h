@@ -25,10 +25,15 @@ struct Mesh
 	unsigned vao = 0;
 	unsigned vbo = 0;
 	unsigned ibo = 0;
-	unsigned material = 0;
+
+	float* normals = nullptr;
+	float* colors = nullptr;
+	float* uvs = nullptr;
 	unsigned verticesNumber = 0;
-	std::vector<float3> vertices;
+	float* vertices = nullptr;
 	unsigned indicesNumber = 0;
+	unsigned* indices = nullptr;
+
 	unsigned normalsOffset = 0;
 	unsigned texturesOffset = 0;
 	unsigned vertexSize = 0;

@@ -7,6 +7,10 @@
 #include "ComponentTransformation.h"
 
 #include "ModuleRender.h"
+#include "ModuleLibrary.h"
+#include "ModuleModelLoader.h"
+
+#include "ImporterMesh.h"
 
 #include <assimp/scene.h>
 
@@ -25,7 +29,7 @@ ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType compone
 	: Component(gameObjectParent, componentType), mesh(mesh)
 {
 	localBoundingBox.SetNegativeInfinity();
-	localBoundingBox.Enclose(&mesh.vertices[0], mesh.verticesNumber);
+	localBoundingBox.Enclose((float3*)mesh.vertices, mesh.verticesNumber);
 }
 
 ComponentMesh::~ComponentMesh()
@@ -45,10 +49,6 @@ void ComponentMesh::DrawProperties()
 
 		if (ImGui::BeginPopup("MeshOptionsContextualMenu"))
 		{
-			ImGui::PushID("AddMesh");
-			if (ImGui::Button("Add from library"))
-			{
-			}
 			ImGui::PopID();
 			ImGui::PushID("DeleteMesh");
 			if (ImGui::Button("Delete mesh     "))
@@ -62,6 +62,41 @@ void ComponentMesh::DrawProperties()
 			}
 			ImGui::PopID();
 			ImGui::EndPopup();
+		}
+
+		ImGui::Separator();
+
+		std::vector<std::string> fileMeshList = App->library->GetFileMeshList();
+		static std::string labelCurrentFileMeshSelected = "Select a Mesh";
+		fileMeshList.insert(fileMeshList.begin(), labelCurrentFileMeshSelected);
+
+		if (fileMeshList.size() > 0)
+		{
+			if (ImGui::BeginCombo("##meshCombo", labelCurrentFileMeshSelected.c_str()))
+			{
+				for (std::vector<std::string>::iterator iterator = fileMeshList.begin(); iterator != fileMeshList.end(); ++iterator)
+				{
+					bool isSelected = (labelCurrentFileMeshSelected == (*iterator));
+					if (ImGui::Selectable((*iterator).c_str(), isSelected))
+					{
+						labelCurrentFileMeshSelected = (*iterator);
+
+						App->modelLoader->CleanUpMesh(mesh);
+						ImporterMesh::Load(&mesh, labelCurrentFileMeshSelected.c_str());
+						App->modelLoader->GenerateMesh(mesh);
+
+						if (isSelected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		else
+		{
+			labelCurrentFileMeshSelected = "Select a Mesh";
 		}
 
 		ImGui::Separator();

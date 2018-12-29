@@ -1,26 +1,28 @@
-#ifndef _SCENE_IMPORTER_H
-#define _SCENE_IMPORTER_H
+#ifndef _ImporterMesh_h
+#define _ImporterMesh_h
+
+#include <assimp/scene.h>
+#include <assimp/cimport.h>
+#include <assimp/postprocess.h>
+
+#include "MathGeoLib.h"
 
 #include <string>
 #include <vector>
-#include <map>
-
 
 struct aiScene;
 struct aiNode;
 
-class GameObject;
-class ComponentMesh;
-class ComponentMaterial;
+struct Mesh;
 
 class ImporterMesh
 {
 public:
-	//bool Import(const std::string &file) const;
-	//ComponentMesh* LoadMesh(const char path[1024]) const;
-	//void SaveMesh(const ComponentMesh* mesh, const char path[1024]) const;
-private:
-	//inline void writeToBuffer(std::vector<char> &buffer, unsigned &pointer, const unsigned size, const void* data) const;
+	static void ImportFBX(const char* filePath);
+	static bool Import(const aiMesh* aiMesh, const char* meshName);
+	static bool Load(Mesh* mesh, const char* meshName);
+	static bool Save(const Mesh& mesh, const char* meshName);
+
 };
 
-#endif 
+#endif //_ImporterMesh_h

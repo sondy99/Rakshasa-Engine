@@ -24,7 +24,8 @@ bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
 	
-	LoadModel("Assets/ZomBunny/Zombunny.fbx");
+	//LoadModel("Assets/ZomBunny/Zombunny.fbx");
+	//LoadModel("Assets/BakerHouse/BakerHouse.fbx");
 
 	return true;
 }

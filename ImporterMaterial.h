@@ -1,5 +1,5 @@
-#ifndef _MATERIAL_IMPORTER_H
-#define _MATERIAL_IMPORTER_H
+#ifndef _ImporterMaterial_h
+#define _ImporterMaterial_h
 
 class ImporterMaterial
 {
@@ -7,4 +7,4 @@ public:
 	static bool Import(const char* path);
 };
 
-#endif 
+#endif //_ImporterMaterial_h

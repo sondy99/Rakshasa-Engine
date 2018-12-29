@@ -24,6 +24,8 @@
 
 #include <string>
 
+#include "ImporterMesh.h"
+
 #pragma warning(push)
 #pragma warning(disable : 4996)  
 #pragma warning(disable : 4244)  
@@ -157,20 +159,33 @@ void ModuleModelLoader::CleanUpMeshesAndTextures(const GameObject * gameObject)
 	}
 }
 
-void ModuleModelLoader::GenerateMesh(Mesh& meshStruct, aiMesh* mesh)
+void ModuleModelLoader::CleanUpMesh(Mesh meshStruct)
+{
+	if (meshStruct.vbo != 0)
+	{
+		glDeleteBuffers(1, &meshStruct.vbo);
+	}
+
+	if (meshStruct.ibo != 0)
+	{
+		glDeleteBuffers(1, &meshStruct.ibo);
+	}
+}
+
+void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 {
 	glGenBuffers(1, &meshStruct.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
 
 	unsigned offset = sizeof(math::float3);
 
-	if (mesh->HasNormals())
+	if (meshStruct.normals != nullptr)
 	{
 		meshStruct.normalsOffset = offset;
 		offset += sizeof(math::float3);
 	}
 
-	if (mesh->HasTextureCoords(0))
+	if (meshStruct.uvs != nullptr)
 	{
 		meshStruct.texturesOffset = offset;
 		offset += sizeof(math::float2);
@@ -178,20 +193,17 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct, aiMesh* mesh)
 
 	meshStruct.vertexSize = offset;
 
-	glBufferData(GL_ARRAY_BUFFER, meshStruct.vertexSize * mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh->mNumVertices, mesh->mVertices);
+	glBufferData(GL_ARRAY_BUFFER, meshStruct.vertexSize * meshStruct.verticesNumber, nullptr, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * meshStruct.verticesNumber, meshStruct.vertices);
 
-
-	if (mesh->HasNormals())
+	if (meshStruct.normals != nullptr)
 	{
-		glBufferSubData(GL_ARRAY_BUFFER, meshStruct.normalsOffset * mesh->mNumVertices, sizeof(float) * 3 * mesh->mNumVertices, mesh->mNormals);
+		glBufferSubData(GL_ARRAY_BUFFER, meshStruct.normalsOffset * meshStruct.verticesNumber, sizeof(float) * 3 * meshStruct.verticesNumber, meshStruct.normals);
 	}
 
-	math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, meshStruct.texturesOffset * mesh->mNumVertices, sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
-
-	for (unsigned i = 0; i < mesh->mNumVertices; ++i)
+	if (meshStruct.uvs != nullptr)
 	{
-		texture_coords[i] = math::float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+		glBufferSubData(GL_ARRAY_BUFFER, meshStruct.texturesOffset * meshStruct.verticesNumber, sizeof(float2)*meshStruct.verticesNumber, meshStruct.uvs);
 	}
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -199,36 +211,81 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct, aiMesh* mesh)
 
 	glGenBuffers(1, &meshStruct.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshStruct.ibo);
-
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*mesh->mNumFaces * 3, nullptr, GL_STATIC_DRAW);
-
-	unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
-		sizeof(unsigned)*mesh->mNumFaces * 3, GL_MAP_WRITE_BIT);
-
-	for (unsigned i = 0; i < mesh->mNumFaces; ++i)
-	{
-		assert(mesh->mFaces[i].mNumIndices == 3);
-
-		*(indices++) = mesh->mFaces[i].mIndices[0];
-		*(indices++) = mesh->mFaces[i].mIndices[1];
-		*(indices++) = mesh->mFaces[i].mIndices[2];
-	}
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshStruct.indicesNumber * sizeof(unsigned), meshStruct.indices, GL_STATIC_DRAW);
 
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	meshStruct.material = mesh->mMaterialIndex;
-	meshStruct.verticesNumber = mesh->mNumVertices;
-	meshStruct.indicesNumber = mesh->mNumFaces * 3;
-
-	meshStruct.vertices.resize(meshStruct.verticesNumber);
-	aiVector3D* auxVerticesPointer = mesh->mVertices;
-	for (unsigned i = 0u; i < meshStruct.verticesNumber; ++i)
-	{
-		meshStruct.vertices[i] = *((float3*)auxVerticesPointer++);
-	}
-
+	
 	GenerateVAO(meshStruct);
+}
+
+void ModuleModelLoader::GenerateMesh(Mesh& meshStruct, aiMesh* mesh)
+{
+
+	//GenerateMesh(meshStruct);
+
+	//glGenBuffers(1, &meshStruct.vbo);
+	//glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
+
+	//unsigned offset = sizeof(math::float3);
+
+	//if (mesh->HasNormals())
+	//{
+	//	meshStruct.normalsOffset = offset;
+	//	offset += sizeof(math::float3);
+	//}
+
+	//if (mesh->HasTextureCoords(0))
+	//{
+	//	meshStruct.texturesOffset = offset;
+	//	offset += sizeof(math::float2);
+	//}
+
+	//meshStruct.vertexSize = offset;
+
+	//glBufferData(GL_ARRAY_BUFFER, meshStruct.vertexSize * mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh->mNumVertices, mesh->mVertices);
+
+
+	//if (mesh->HasNormals())
+	//{
+	//	glBufferSubData(GL_ARRAY_BUFFER, meshStruct.normalsOffset * mesh->mNumVertices, sizeof(float) * 3 * mesh->mNumVertices, mesh->mNormals);
+	//}
+
+	//math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, meshStruct.texturesOffset * mesh->mNumVertices, sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
+
+	//for (unsigned i = 0; i < mesh->mNumVertices; ++i)
+	//{
+	//	texture_coords[i] = math::float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+	//}
+
+	//glUnmapBuffer(GL_ARRAY_BUFFER);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//glGenBuffers(1, &meshStruct.ibo);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshStruct.ibo);
+
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*mesh->mNumFaces * 3, nullptr, GL_STATIC_DRAW);
+
+	//unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
+	//	sizeof(unsigned)*mesh->mNumFaces * 3, GL_MAP_WRITE_BIT);
+
+	//for (unsigned i = 0; i < mesh->mNumFaces; ++i)
+	//{
+	//	assert(mesh->mFaces[i].mNumIndices == 3);
+
+	//	*(indices++) = mesh->mFaces[i].mIndices[0];
+	//	*(indices++) = mesh->mFaces[i].mIndices[1];
+	//	*(indices++) = mesh->mFaces[i].mIndices[2];
+	//}
+
+	//glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//meshStruct.verticesNumber = mesh->mNumVertices;
+	//meshStruct.indicesNumber = mesh->mNumFaces * 3;
+
+	//GenerateVAO(meshStruct);
 }
 
 void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh& meshStruct)
@@ -274,18 +331,9 @@ void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh
 	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	meshStruct.material = 0;
 	meshStruct.verticesNumber = parShapeMesh->npoints;
 	meshStruct.indicesNumber = parShapeMesh->ntriangles * 3;
-
-	meshStruct.vertices.resize(meshStruct.verticesNumber);
-	for (unsigned i = 0u; i < meshStruct.verticesNumber; ++i)
-	{
-		meshStruct.vertices[i].x = parShapeMesh->points[i * 3];
-		meshStruct.vertices[i].y = parShapeMesh->points[(i * 3) + 1];
-		meshStruct.vertices[i].z = parShapeMesh->points[(i * 3) + 2];
-	}
-
+	
 	GenerateVAO(meshStruct);
 }
 
@@ -396,7 +444,7 @@ void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameOb
 	gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
 }
 
-void ModuleModelLoader::GenerateVAO(Mesh & mesh)
+void ModuleModelLoader::GenerateVAO(Mesh& mesh)
 {
 	glGenVertexArrays(1, &mesh.vao);
 

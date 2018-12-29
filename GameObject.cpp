@@ -47,6 +47,7 @@ void GameObject::DrawProperties()
 				{
 					RemoveGameObject(this);
 				}
+				ImGui::Separator();
 				if (ImGui::Button("Mesh    "))
 				{
 					CreateComponent(ComponentType::MESH);
