@@ -61,7 +61,6 @@ void ComponentMaterial::DrawProperties()
 		if (ImGui::CollapsingHeader("Diffuse"))
 		{
 			ImGui::ColorEdit3("Diffuse color", (float*)&material.diffuseColor);
-			static std::string labelDiffuseCurrentFileTextureSelected = "Select a Texture";
 			DrawComboBoxMaterials("DiffuseComboTextures", MaterialTypeSelected::DIFFUSE_MAP, labelDiffuseCurrentFileTextureSelected);
 			ImGui::Text("Dimensions: %dx%d", material.diffuseWidth, material.diffuseHeight);
 			ImGui::Image((ImTextureID)material.diffuseMap, ImVec2(200, 200));
@@ -70,7 +69,6 @@ void ComponentMaterial::DrawProperties()
 
 		if (ImGui::CollapsingHeader("Ambient"))
 		{
-			static std::string labelOcclusionCurrentFileTextureSelected = "Select a Texture";
 			DrawComboBoxMaterials("OcclusionComboTextures", MaterialTypeSelected::OCCLUSION_MAP, labelOcclusionCurrentFileTextureSelected);
 			ImGui::Text("Dimensions: %dx%d", material.ambientWidth, material.ambientHeight);
 			ImGui::Image((ImTextureID)material.occlusionMap, ImVec2(200, 200));
@@ -80,7 +78,6 @@ void ComponentMaterial::DrawProperties()
 		if (ImGui::CollapsingHeader("Specular"))
 		{
 			ImGui::ColorEdit3("Specular color", (float*)&material.specularColor);
-			static std::string labelSpecularCurrentFileTextureSelected = "Select a Texture";
 			DrawComboBoxMaterials("SpecularComboTextures", MaterialTypeSelected::SPECULAR_MAP, labelSpecularCurrentFileTextureSelected);
 			ImGui::Text("Dimensions: %dx%d", material.specularWidth, material.specularHeight);
 			ImGui::Image((ImTextureID)material.specularMap, ImVec2(200, 200));
@@ -91,7 +88,6 @@ void ComponentMaterial::DrawProperties()
 		if (ImGui::CollapsingHeader("Emissive"))
 		{
 			ImGui::ColorEdit3("Emissive color", (float*)&material.emissiveColor);
-			static std::string labelEmissiveCurrentFileTextureSelected = "Select a Texture";
 			DrawComboBoxMaterials("EmissiveComboTextures", MaterialTypeSelected::EMISSIVE_MAP, labelEmissiveCurrentFileTextureSelected);
 			ImGui::Text("Dimensions: %dx%d", material.emissiveWidth, material.emissiveHeight);
 			ImGui::Image((ImTextureID)material.emissiveMap, ImVec2(200, 200));

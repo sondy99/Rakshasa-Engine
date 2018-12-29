@@ -31,6 +31,11 @@ public:
 	bool isSomeMaterialTypeSelected = false;
 private:
 	void DrawComboBoxMaterials(const char* id, MaterialTypeSelected materialTypeSelected, static std::string &labelCurrentFileTextureSelected);
+private:
+	std::string labelDiffuseCurrentFileTextureSelected;
+	std::string labelOcclusionCurrentFileTextureSelected;
+	std::string labelSpecularCurrentFileTextureSelected;
+	std::string labelEmissiveCurrentFileTextureSelected;
 };
 
 #endif __COMPONENTMATERIAL_H_

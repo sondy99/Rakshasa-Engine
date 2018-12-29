@@ -28,8 +28,6 @@ ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType compone
 ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
 	: Component(gameObjectParent, componentType), mesh(mesh)
 {
-	localBoundingBox.SetNegativeInfinity();
-	localBoundingBox.Enclose((float3*)mesh.vertices, mesh.verticesNumber);
 }
 
 ComponentMesh::~ComponentMesh()
@@ -67,8 +65,8 @@ void ComponentMesh::DrawProperties()
 		ImGui::Separator();
 
 		std::vector<std::string> fileMeshList = App->library->GetFileMeshList();
-		static std::string labelCurrentFileMeshSelected = "Select a Mesh";
-		fileMeshList.insert(fileMeshList.begin(), labelCurrentFileMeshSelected);
+		labelCurrentFileMeshSelected;
+		fileMeshList.insert(fileMeshList.begin(), "Select mesh");
 
 		if (fileMeshList.size() > 0)
 		{
@@ -84,7 +82,7 @@ void ComponentMesh::DrawProperties()
 						App->modelLoader->CleanUpMesh(mesh);
 						ImporterMesh::Load(&mesh, labelCurrentFileMeshSelected.c_str());
 						App->modelLoader->GenerateMesh(mesh);
-
+						CreateBoundingBox();
 						if (isSelected)
 						{
 							ImGui::SetItemDefaultFocus();
@@ -93,10 +91,6 @@ void ComponentMesh::DrawProperties()
 				}
 				ImGui::EndCombo();
 			}
-		}
-		else
-		{
-			labelCurrentFileMeshSelected = "Select a Mesh";
 		}
 
 		ImGui::Separator();
@@ -118,6 +112,15 @@ Component * ComponentMesh::Clone()
 	result->localBoundingBox = localBoundingBox;
 
 	return result;
+}
+
+void ComponentMesh::CreateBoundingBox()
+{
+	if (mesh.vertices != nullptr)
+	{
+		localBoundingBox.SetNegativeInfinity();
+		localBoundingBox.Enclose((float3*)mesh.vertices, mesh.verticesNumber);
+	}
 }
 
 void ComponentMesh::UpdateGlobalBoundingBox()
