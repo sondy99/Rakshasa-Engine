@@ -99,16 +99,6 @@ update_status ModuleInput::PreUpdate()
 			}
 			break;
 
-		case SDL_DROPFILE:
-		{
-			char* fileDroppedPath = event.drop.file;
-
-			HandleDropedFiles(fileDroppedPath);
-
-			SDL_free(fileDroppedPath);
-			break;
-		}
-
 		case SDL_MOUSEBUTTONDOWN:
 			mouse_buttons[event.button.button - 1] = KEY_DOWN;
 			break;
@@ -146,24 +136,4 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
-}
-
-void ModuleInput::HandleDropedFiles(const char * path)
-{
-	std::string str(path);
-	std::string ext(str.substr(str.length() - 3));
-	std::string::size_type i = str.find("Game");
-
-	str.erase(0, i + 4);
-
-	App->fileSystem->ChangePathSlashes(str);
-	
-	if (ext == "fbx" || ext == "FBX")
-	{
-		App->scene->LoadModel(str.c_str());
-	}
-	else
-	{
-		LOG("Incorrect file extension: %s", ext.c_str());
-	}
 }

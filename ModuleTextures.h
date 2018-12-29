@@ -63,15 +63,6 @@ struct Material
 	math::float4 emissiveColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	int emissiveWidth = 0;
 	int emissiveHeight = 0;
-
-
-
-
-	int width = 0;
-	int height = 0;
-	unsigned texture0 = 0u;
-	math::float4 color = math::float4::zero;
-	aiMaterial* material = nullptr;
 };
 
 class ModuleTextures : public Module

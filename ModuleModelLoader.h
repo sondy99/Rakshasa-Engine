@@ -40,7 +40,6 @@ public:
 	void CleanUpMesh(Mesh meshStruct);
 	void GenerateMesh(Mesh& meshStruct);
 
-	void LoadMaterialFromFBX(const char * filePath, GameObject* gameObjectParent);
 	void LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType);
 	void DrawProperties();
 public:
@@ -49,16 +48,10 @@ public:
 	bool toggleModelProperties = false;
 private:
 	void CleanUpMeshesAndTextures(const GameObject* gameObject);
-	void GenerateMesh(Mesh& meshStruct, aiMesh* mesh);
 	void GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh& meshStruct);
-	void GenerateMaterial(Material& materialStruct);
-	void CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node ,GameObject* gameObjectParent);
-	void CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh);
 	void CreateMeshComponent(const par_shapes_mesh_s* parShapeMesh, GameObject* gameObjectMesh, const math::float4& color);
 	void CreateMaterialComponent(GameObject* gameObjectMesh, const math::float4& color);
-	void CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex);
 	void CreateTransformationComponent(GameObject* gameObject);
-	void CreateTransformationComponent(const aiNode* node, GameObject* gameObject);
 	void GenerateVAO(Mesh& mesh);
 };
 

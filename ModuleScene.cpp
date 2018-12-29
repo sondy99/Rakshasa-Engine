@@ -24,17 +24,7 @@ bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
 	
-	//LoadModel("Assets/ZomBunny/Zombunny.fbx");
-	//LoadModel("Assets/BakerHouse/BakerHouse.fbx");
-
 	return true;
-}
-
-void ModuleScene::LoadModel(const char * modelPath)
-{
-	GameObject* gameObject = CreateGameObject("gameObject", root, false);
-
-	App->modelLoader->LoadMaterialFromFBX(modelPath, gameObject);
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, bool withTransformation)

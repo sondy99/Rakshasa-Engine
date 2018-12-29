@@ -49,29 +49,6 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-void ModuleModelLoader::LoadMaterialFromFBX(const char* filePath, GameObject* gameObjectParent)
-{
-	char* fileBuffer;
-	unsigned lenghBuffer = App->fileSystem->Load(filePath, &fileBuffer);
-	const aiScene* scene = aiImportFileFromMemory(fileBuffer, lenghBuffer, aiProcessPreset_TargetRealtime_MaxQuality, "");
-
-	if (scene)
-	{
-		gameObjectParent->name = std::string(scene->mRootNode->mName.C_Str());
-
-		CreateTransformationComponent(scene->mRootNode, gameObjectParent);
-
-		CreateGameObjectsFromNode(scene, scene->mRootNode, gameObjectParent);
-		
-		aiReleaseImport(scene);
-	}
-	else
-	{
-		LOG(aiGetErrorString());
-	}
-
-}
-
 void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType)
 {
 	par_shapes_mesh_s* parMesh = nullptr;
@@ -134,7 +111,10 @@ void ModuleModelLoader::CleanUpMeshesAndTextures(const GameObject * gameObject)
 				if (component->componentType == ComponentType::MATERIAL)
 				{
 					material = &(dynamic_cast<ComponentMaterial*>(component))->material;
-					App->textures->Unload(material->texture0);
+					App->textures->Unload(material->diffuseMap);
+					App->textures->Unload(material->occlusionMap);
+					App->textures->Unload(material->specularMap);
+					App->textures->Unload(material->emissiveMap);
 				}
 			}
 
@@ -219,75 +199,6 @@ void ModuleModelLoader::GenerateMesh(Mesh& meshStruct)
 	GenerateVAO(meshStruct);
 }
 
-void ModuleModelLoader::GenerateMesh(Mesh& meshStruct, aiMesh* mesh)
-{
-
-	//GenerateMesh(meshStruct);
-
-	//glGenBuffers(1, &meshStruct.vbo);
-	//glBindBuffer(GL_ARRAY_BUFFER, meshStruct.vbo);
-
-	//unsigned offset = sizeof(math::float3);
-
-	//if (mesh->HasNormals())
-	//{
-	//	meshStruct.normalsOffset = offset;
-	//	offset += sizeof(math::float3);
-	//}
-
-	//if (mesh->HasTextureCoords(0))
-	//{
-	//	meshStruct.texturesOffset = offset;
-	//	offset += sizeof(math::float2);
-	//}
-
-	//meshStruct.vertexSize = offset;
-
-	//glBufferData(GL_ARRAY_BUFFER, meshStruct.vertexSize * mesh->mNumVertices, nullptr, GL_STATIC_DRAW);
-	//glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh->mNumVertices, mesh->mVertices);
-
-
-	//if (mesh->HasNormals())
-	//{
-	//	glBufferSubData(GL_ARRAY_BUFFER, meshStruct.normalsOffset * mesh->mNumVertices, sizeof(float) * 3 * mesh->mNumVertices, mesh->mNormals);
-	//}
-
-	//math::float2* texture_coords = (math::float2*)glMapBufferRange(GL_ARRAY_BUFFER, meshStruct.texturesOffset * mesh->mNumVertices, sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
-
-	//for (unsigned i = 0; i < mesh->mNumVertices; ++i)
-	//{
-	//	texture_coords[i] = math::float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-	//}
-
-	//glUnmapBuffer(GL_ARRAY_BUFFER);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glGenBuffers(1, &meshStruct.ibo);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshStruct.ibo);
-
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned)*mesh->mNumFaces * 3, nullptr, GL_STATIC_DRAW);
-
-	//unsigned* indices = (unsigned*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0,
-	//	sizeof(unsigned)*mesh->mNumFaces * 3, GL_MAP_WRITE_BIT);
-
-	//for (unsigned i = 0; i < mesh->mNumFaces; ++i)
-	//{
-	//	assert(mesh->mFaces[i].mNumIndices == 3);
-
-	//	*(indices++) = mesh->mFaces[i].mIndices[0];
-	//	*(indices++) = mesh->mFaces[i].mIndices[1];
-	//	*(indices++) = mesh->mFaces[i].mIndices[2];
-	//}
-
-	//glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	//meshStruct.verticesNumber = mesh->mNumVertices;
-	//meshStruct.indicesNumber = mesh->mNumFaces * 3;
-
-	//GenerateVAO(meshStruct);
-}
-
 void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh& meshStruct)
 {
 	assert(parShapeMesh != NULL);
@@ -337,62 +248,6 @@ void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh
 	GenerateVAO(meshStruct);
 }
 
-void ModuleModelLoader::GenerateMaterial(Material& materialStruct)
-{
-	const aiMaterial* src_material = materialStruct.material;
-
-	aiString file;
-	aiTextureMapping mapping;
-	unsigned uvindex = 0;
-
-	//if (src_material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, &uvindex) == AI_SUCCESS)
-	//{
-	//	Material auxMaterialStruct = App->textures->LoadMaterialFromFBX(file.data);
-	//	materialStruct.texture0 = auxMaterialStruct.texture0;
-	//	materialStruct.width = auxMaterialStruct.width;
-	//	materialStruct.height = auxMaterialStruct.height;
-	//}
-}
-
-void ModuleModelLoader::CreateGameObjectsFromNode(const aiScene* scene, const aiNode* node, GameObject* gameObjectParent)
-{
-	if (node->mNumChildren > 0)
-	{
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
-		{
-
-			if (node->mChildren[i]->mMeshes != nullptr)
-			{
-				GameObject* gameObjectMesh = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent, false);
-				CreateMeshComponent(scene, node->mChildren[i], gameObjectMesh);
-			}
-			else
-			{
-				GameObject* gameObject = App->scene->CreateGameObject(node->mChildren[i]->mName.C_Str(), gameObjectParent, true);
-
-				//TODO: change this to not use recursivity
-				CreateGameObjectsFromNode(scene, node->mChildren[i], gameObject);
-			}
-		}
-	}
-}
-
-void ModuleModelLoader::CreateMeshComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh)
-{
-	CreateTransformationComponent(node, gameObjectMesh);
-
-	Mesh meshStruct;
-	aiMesh* mesh = scene->mMeshes[node->mMeshes[0]];
-	GenerateMesh(meshStruct, mesh);
-
-	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
-
-	if (scene->mMaterials[mesh->mMaterialIndex] != nullptr)
-	{
-		CreateMaterialComponent(scene, node, gameObjectMesh, mesh->mMaterialIndex);
-	}
-}
-
 void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s * parShapeMesh, GameObject * gameObjectMesh, const math::float4& color)
 {
 	Mesh meshStruct;
@@ -406,16 +261,6 @@ void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s * parShapeMe
 void ModuleModelLoader::CreateMaterialComponent(GameObject * gameObjectMesh, const math::float4& color)
 {
 	Material materialStruct;
-	//materialStruct.color = color;
-
-	gameObjectMesh->components.push_back(App->textures->CreateComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
-}
-
-void ModuleModelLoader::CreateMaterialComponent(const aiScene* scene, const aiNode* node, GameObject* gameObjectMesh, unsigned materialIndex)
-{
-	Material materialStruct;
-	//materialStruct.material = scene->mMaterials[materialIndex];
-	GenerateMaterial(materialStruct);
 
 	gameObjectMesh->components.push_back(App->textures->CreateComponentMaterial(gameObjectMesh, ComponentType::MATERIAL, materialStruct));
 }
@@ -425,21 +270,6 @@ void ModuleModelLoader::CreateTransformationComponent(GameObject * gameObject)
 	float3 position = { 0.0f, 0.0f, 0.0f };
 	float3 scale = { 1.0f, 1.0f, 1.0f };
 	Quat quatRotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
-
-	gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
-}
-
-void ModuleModelLoader::CreateTransformationComponent(const aiNode* node, GameObject* gameObject)
-{
-	aiVector3D translation;
-	aiVector3D scaling;
-	aiQuaternion rotation;
-
-	node->mTransformation.Decompose(scaling, rotation, translation);
-
-	float3 position = { translation.x, translation.y, translation.z };
-	float3 scale = { scaling.x, scaling.y, scaling.z };
-	Quat quatRotation = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
 	gameObject->components.push_back(new ComponentTransformation(gameObject, ComponentType::TRANSFORMATION, position, scale, quatRotation));
 }

@@ -179,7 +179,6 @@ void ModuleTextures::RemoveMaterial(ComponentMaterial* componentMaterial)
 {
 	if (componentMaterial->componentType == ComponentType::MATERIAL)
 	{
-		Unload(componentMaterial->material.texture0);
 		Unload(componentMaterial->material.diffuseMap);
 		Unload(componentMaterial->material.specularMap);
 		Unload(componentMaterial->material.occlusionMap);
