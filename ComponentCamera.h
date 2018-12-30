@@ -14,6 +14,9 @@ public:
 	void DrawProperties() override;
 	Component* Clone() override;
 
+	void Save(Config* config) override;
+	void Load(Config* config, rapidjson::Value& value) override;
+
 	math::float4x4 ProjectionMatrix();
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	

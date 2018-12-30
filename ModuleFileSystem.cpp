@@ -32,6 +32,8 @@ bool ModuleFileSystem::Init()
 		PHYSFS_mkdir("/Library/Textures/");
 	if (PHYSFS_exists("/Library/Meshes/") == 0)
 		PHYSFS_mkdir("/Library/Meshes/");
+	if (PHYSFS_exists("/Library/Scene/") == 0)
+		PHYSFS_mkdir("/Library/Scene/");
 	return true;
 }
 
@@ -98,6 +100,7 @@ unsigned int ModuleFileSystem::Save(const char * pathAndFileName, const void * b
 		if (written == size)
 		{
 			result = written;
+			LOG("File %s saved successfully", pathAndFileName);
 		}
 		else
 		{

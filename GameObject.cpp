@@ -12,6 +12,8 @@
 #include "ComponentMaterial.h"
 #include "ComponentCamera.h"
 
+#include "Config.h"
+
 GameObject::GameObject(const char* name, GameObject* parent) : name(name), parent(parent)
 {
 	xg::Guid guid = xg::newGuid();
@@ -172,8 +174,10 @@ Component* GameObject::GetComponent(ComponentType componentType)
 	return result;
 }
 
-void GameObject::CreateComponent(ComponentType componentType)
+Component* GameObject::CreateComponent(ComponentType componentType)
 {
+	Component* result = nullptr;
+
 	switch (componentType)
 	{
 	case ComponentType::MESH:
@@ -181,7 +185,8 @@ void GameObject::CreateComponent(ComponentType componentType)
 		Component * mesh = GetComponent(ComponentType::MESH);
 		if (mesh == nullptr)
 		{
-			components.push_back((App->renderer->CreateComponentMesh(this, ComponentType::MESH)));
+			result = App->renderer->CreateComponentMesh(this, ComponentType::MESH);
+			components.push_back(result);
 		}
 		else
 		{
@@ -195,7 +200,8 @@ void GameObject::CreateComponent(ComponentType componentType)
 
 		if (material == nullptr)
 		{
-			components.push_back((App->textures->CreateComponentMaterial(this, ComponentType::MATERIAL)));
+			result = App->textures->CreateComponentMaterial(this, ComponentType::MATERIAL);
+			components.push_back(result);
 		}
 		else
 		{
@@ -205,9 +211,77 @@ void GameObject::CreateComponent(ComponentType componentType)
 	break;
 	case ComponentType::CAMERA:
 	{
-		components.push_back((App->camera->CreateComponentCamera(this, ComponentType::CAMERA)));
+		result = App->camera->CreateComponentCamera(this, ComponentType::CAMERA);
+		components.push_back(result);
 	}
 	break;
+	case ComponentType::TRANSFORMATION:
+	{
+		Component* transformation = GetComponent(ComponentType::TRANSFORMATION);
+
+		if (transformation == nullptr)
+		{
+			float3 position = { 0.0f,0.0f,0.0f };
+			float3 scale = { 1.0f,1.0f,1.0f };
+			Quat quatRotation = Quat(0.0f, 0.0f, 0.0f, 1.0f);
+
+			result = new ComponentTransformation(this, ComponentType::TRANSFORMATION, position, scale, quatRotation);
+			components.push_back(result);
+		}
+		else
+		{
+			LOG("Is not possible to add more than one transformation to an specific gameobject");
+		}
+	}
+	}
+
+	return result;
+}
+
+bool GameObject::Save(Config* config)
+{
+	config->StartObject();
+
+	config->AddString("uuid", uuid);
+	config->AddString("name", name.c_str());
+
+	if (parent != nullptr)
+	{
+		config->AddString("parent", parent->uuid);
+	}
+
+	config->AddBool("active", active);
+
+	config->StartArray("components");
+
+	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
+	{
+		(*iterator)->Save(config);
+	}
+
+	config->EndArray();
+
+	config->EndObject();
+
+	return true;
+}
+
+void GameObject::Load(Config* config, rapidjson::Value & value)
+{
+	const char* newUuid = config->GetString("uuid", value);
+	sprintf_s(uuid, newUuid);
+
+	active = config->GetBool("active", value);
+
+	rapidjson::Value components = value["components"].GetArray();
+	for (rapidjson::Value::ValueIterator it = components.Begin(); it != components.End(); it++)
+	{
+		Component* component = CreateComponent(config->GetComponentType("componentType", (*it)));
+
+		if (component != nullptr)
+		{
+			component->Load(config, (*it));
+		}
 	}
 }
 

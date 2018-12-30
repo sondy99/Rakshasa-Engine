@@ -4,6 +4,8 @@
 
 #include "MathGeoLib/include/Geometry/AABB.h"
 
+#include "Config.h"
+
 ComponentTransformation::ComponentTransformation()
 {
 }
@@ -181,4 +183,31 @@ Component* ComponentTransformation::Clone()
 	result->globalModelMatrix = globalModelMatrix;
 
 	return result;
+}
+
+void ComponentTransformation::Save(Config * config)
+{
+	config->StartObject();
+
+	config->AddComponentType("componentType", componentType);
+	config->AddString("gameObjectParent", gameObjectParent->uuid);
+	config->AddBool("identity", identity);
+	config->AddFloat3("position", position);
+	config->AddFloat3("eulerRotation", eulerRotation);
+	config->AddFloat3("scale", scale);
+	config->AddQuat("rotation", rotation);
+
+	config->EndObject();
+}
+
+void ComponentTransformation::Load(Config* config, rapidjson::Value& value)
+{
+	identity = config->GetBool("identity", value);
+	position = config->GetFloat3("position", value);
+	eulerRotation = config->GetFloat3("eulerRotation", value);
+	scale = config->GetFloat3("scale", value);
+	rotation = config->GetQuat("rotation", value);
+
+
+	localModelMatrix.Set(float4x4::FromTRS(position, rotation, scale));
 }

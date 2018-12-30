@@ -8,6 +8,8 @@
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
 
+#include "Config.h"
+
 #include <string>
 
 ModuleScene::ModuleScene()
@@ -45,6 +47,28 @@ GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, 
 	return gameObject;
 }
 
+void ModuleScene::CreateGameObject(Config* config, rapidjson::Value & value)
+{
+	if (value.HasMember("parent"))
+	{
+		const char* parentUuid = config->GetString("parent", value);
+		char uuidGameObjectParent[37];
+		sprintf_s(uuidGameObjectParent, parentUuid);
+		GameObject* parent = GetGameObjectByUUID(root, uuidGameObjectParent);
+
+		GameObject* gameObject = new GameObject(config->GetString("name", value), parent);
+
+		gameObject->Load(config, value);
+
+		parent->childrens.push_back(gameObject);
+	}
+	else
+	{
+		root->Load(config, value);
+	}
+
+}
+
 void ModuleScene::DrawProperties() 
 {
 	if (!ImGui::Begin("Game objects hierarchy", &toggleSceneProperties)) 
@@ -62,6 +86,15 @@ void ModuleScene::DrawProperties()
 
 	if (ImGui::BeginPopup("SceneOptionsContextualMenu"))
 	{
+		if (ImGui::Button("Save scene"))
+		{
+			SaveScene();
+		}
+		if (ImGui::Button("Load scene"))
+		{
+			LoadScene();
+		}
+		ImGui::Separator();
 		if (ImGui::Button("Create generic game object"))
 		{
 			std::string genericGameObject = "genericGameObject." + std::to_string(gameObjectCounter++);
@@ -76,25 +109,25 @@ void ModuleScene::DrawProperties()
 	
 	ImGui::Separator();
 
-	ImGui::SliderFloat("Ambient", &ambient, 0.0f, 1.0f);
+	ImGui::SliderFloat("Ambient", &ambientLight, 0.0f, 1.0f);
 	ImGui::Text("Light position:");
 	ImGui::PushItemWidth(70);
 	ImGui::Text("X:");
 	ImGui::SameLine();
 	ImGui::PushID("1");
-	ImGui::DragFloat("", &lightPosition.x, 10.0f, -100000.f, 100000.f);
+	ImGui::DragFloat("", &ambientLightPosition.x, 10.0f, -100000.f, 100000.f);
 	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::Text("Y:");
 	ImGui::SameLine();
 	ImGui::PushID("2");
-	ImGui::DragFloat("", &lightPosition.y, 10.0f, -100000.f, 100000.f);
+	ImGui::DragFloat("", &ambientLightPosition.y, 10.0f, -100000.f, 100000.f);
 	ImGui::SameLine();
 	ImGui::PopID();
 	ImGui::Text("Z:");
 	ImGui::SameLine();
 	ImGui::PushID("3");
-	ImGui::DragFloat("", &lightPosition.z, 10.0f, -100000.f, 100000.f);
+	ImGui::DragFloat("", &ambientLightPosition.z, 10.0f, -100000.f, 100000.f);
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 
@@ -199,22 +232,29 @@ GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidOb
 {
 	GameObject* result = nullptr;
 
-	for (auto &gameObjectChild : gameObject->childrens)
+	if (result == nullptr && (strcmp(gameObject->uuid, uuidObjectName) == 0))
 	{
-		if (gameObjectChild->childrens.size() > 0)
+		result = gameObject;
+	}
+	else
+	{
+		for (auto &gameObjectChild : gameObject->childrens)
 		{
-			//TODO: change this to not use recursivity
-			result = GetGameObjectByUUID(gameObjectChild, uuidObjectName);
-		}
+			if (gameObjectChild->childrens.size() > 0)
+			{
+				//TODO: change this to not use recursivity
+				result = GetGameObjectByUUID(gameObjectChild, uuidObjectName);
+			}
 
-		if (result == nullptr && (strcmp(gameObjectChild->uuid, uuidObjectName) == 0))
-		{
-			result = gameObjectChild;
-			break;
-		}
-		else if (result != nullptr)
-		{
-			break;
+			if (result == nullptr && (strcmp(gameObjectChild->uuid, uuidObjectName) == 0))
+			{
+				result = gameObjectChild;
+				break;
+			}
+			else if (result != nullptr)
+			{
+				break;
+			}
 		}
 	}
 
@@ -377,6 +417,60 @@ void ModuleScene::MoveUpDownGameObject(GameObject * gameObject, bool up)
 		if (*iterator != gameObject->parent->childrens.back())
 		{
 			std::swap(*iterator, *std::next(iterator));
+		}
+	}
+}
+
+void ModuleScene::SaveScene()
+{
+	Config* config = new Config();
+	config->StartObject("Scene");
+
+	config->AddFloat("ambientLight", ambientLight);
+	config->AddFloat3("ambientLightPosition", ambientLightPosition);
+	config->AddBool("isSceneCullingActive", isSceneCullingActive);
+	
+	config->EndObject();
+
+	config->StartArray("gameObjects");
+	SaveGameObject(config, root);
+	config->EndArray();
+
+	config->WriteToDisk();
+}
+
+void ModuleScene::SaveGameObject(Config* config, GameObject* gameObject)
+{
+	gameObject->Save(config);
+
+	if (gameObject->childrens.size() > 0)
+	{
+		//TODO: change this to not use recursivity
+		for (std::list<GameObject*>::iterator iterator = gameObject->childrens.begin(); iterator != gameObject->childrens.end(); ++iterator)
+		{
+			SaveGameObject(config, (*iterator));
+		}
+	}
+}
+
+void ModuleScene::LoadScene()
+{
+	Config* config = new Config();
+
+	rapidjson::Document document = config->LoadFromDisk();
+
+	if (!document.HasParseError())
+	{
+		rapidjson::Value& scene = document["Scene"];
+
+		ambientLight = config->GetFloat("ambientLight", scene);
+		ambientLightPosition = config->GetFloat3("ambientLightPosition", scene);
+		isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
+
+		rapidjson::Value gameObjects = document["gameObjects"].GetArray();
+		for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
+		{
+			CreateGameObject(config, *it);
 		}
 	}
 }

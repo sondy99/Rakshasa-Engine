@@ -1,5 +1,9 @@
 #include "ComponentCamera.h"
 
+#include "GameObject.h"
+
+#include "Config.h"
+
 ComponentCamera::ComponentCamera()
 {
 	InitFrustum(nullptr);
@@ -162,6 +166,34 @@ Component* ComponentCamera::Clone()
 	result->componentType = componentType;
 
 	return result;
+}
+
+void ComponentCamera::Save(Config * config)
+{
+	config->StartObject();
+	
+	config->AddComponentType("componentType", componentType);
+	config->AddString("gameObjectParent", gameObjectParent->uuid);
+	config->AddFloat("frustum.nearPlaneDistance", frustum.nearPlaneDistance);
+	config->AddFloat("frustum.farPlaneDistance", frustum.farPlaneDistance);
+	config->AddFloat3("cameraPosition", cameraPosition);
+	config->AddFloat3("cameraFront", cameraFront);
+	config->AddFloat3("cameraUp", cameraUp);
+	config->AddFloat("pitch", pitch);
+	config->AddFloat("yaw", yaw);
+	
+	config->EndObject();
+}
+
+void ComponentCamera::Load(Config* config, rapidjson::Value& value)
+{
+	frustum.nearPlaneDistance = config->GetFloat("frustum.nearPlaneDistance", value);
+	frustum.farPlaneDistance = config->GetFloat("frustum.farPlaneDistance", value);
+	cameraPosition = config->GetFloat3("cameraPosition", value);
+	cameraFront = config->GetFloat3("cameraFront", value);
+	cameraUp = config->GetFloat3("cameraUp", value);
+	pitch = config->GetFloat("pitch", value);
+	yaw = config->GetFloat("yaw", value);
 }
 
 math::float4x4 ComponentCamera::ProjectionMatrix()

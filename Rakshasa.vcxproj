@@ -76,8 +76,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>Brofiler\include;Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include;physicsFS\include</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>rapidjson-1.1.0\include\rapidjson;Brofiler\include;Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include;physicsFS\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>Brofiler\lib;./glew-2.1.0/lib/Release/Win32;DevIL/lib/x86/Release;assimp/lib/x86;physicsFS\lib</AdditionalLibraryDirectories>
@@ -164,6 +164,7 @@
     <ClInclude Include="ComponentMaterial.h" />
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransformation.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="crossguid\Guid.hpp" />
     <ClInclude Include="debugdraw.h" />
     <ClInclude Include="debug_draw.hpp" />
@@ -253,6 +254,25 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="par_shapes.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\allocators.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\document.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\encodedstream.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\encodings.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\filereadstream.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\filewritestream.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\fwd.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\istreamwrapper.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\memorybuffer.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\memorystream.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\ostreamwrapper.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\pointer.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\prettywriter.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\rapidjson.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\reader.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\schema.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\stream.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\stringbuffer.h" />
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\writer.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +282,7 @@
     <ClCompile Include="ComponentMaterial.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="crossguid\Guid.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />

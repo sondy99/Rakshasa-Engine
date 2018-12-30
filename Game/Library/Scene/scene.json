@@ -1,0 +1,193 @@
+{
+    "Scene": {
+        "ambientLight": 0.10000000149011612,
+        "ambientLightPosition": {
+            "x": 5000.0,
+            "y": 5000.0,
+            "z": 8000.0
+        },
+        "isSceneCullingActive": true
+    },
+    "gameObjects": [
+        {
+            "uuid": "67256617-76cd-411b-8da3-103660dfe96f",
+            "name": "root",
+            "active": true,
+            "components": []
+        },
+        {
+            "uuid": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+            "name": "completo",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+                    "identity": false,
+                    "position": {
+                        "x": 60.0,
+                        "y": 0.0,
+                        "z": 250.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -19.5,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.16934950649738313,
+                        "z": 0.0,
+                        "w": 0.9855560660362244
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "77d6c9ef-b329-42ee-8fdd-4b749d57b0dd",
+            "name": "ojos",
+            "parent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "77d6c9ef-b329-42ee-8fdd-4b749d57b0dd",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "77d6c9ef-b329-42ee-8fdd-4b749d57b0dd",
+                    "labelCurrentFileMeshSelected": "zombunny_1.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "77d6c9ef-b329-42ee-8fdd-4b749d57b0dd",
+                    "labelDiffuseCurrentFileTextureSelected": "",
+                    "diffuseColor": {
+                        "x": 0.9950980544090271,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 1.0,
+                        "y": 0.3333333134651184,
+                        "z": 0.3333333134651184,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "c215ffa1-8577-4be1-a545-83379c076913",
+            "name": "conejoCuerpo",
+            "parent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "c215ffa1-8577-4be1-a545-83379c076913",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "c215ffa1-8577-4be1-a545-83379c076913",
+                    "labelCurrentFileMeshSelected": "zombunny_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "c215ffa1-8577-4be1-a545-83379c076913",
+                    "labelDiffuseCurrentFileTextureSelected": "zombunnydiffuse.dds",
+                    "diffuseColor": {
+                        "x": 0.9607843160629273,
+                        "y": 0.4332948625087738,
+                        "z": 0.4332948625087738,
+                        "w": 1.0
+                    },
+                    "diffuseK": 0.7649999856948853,
+                    "labelOcclusionCurrentFileTextureSelected": "zombunnyocclusion.dds",
+                    "ambientK": 0.746999979019165,
+                    "labelSpecularCurrentFileTextureSelected": "zombunnyspecular.dds",
+                    "specularColor": {
+                        "x": 0.7549019455909729,
+                        "y": 0.7548943758010864,
+                        "z": 0.7548943758010864,
+                        "w": 1.0
+                    },
+                    "specularK": 0.777999997138977,
+                    "shininess": 107.14900207519531,
+                    "labelEmissiveCurrentFileTextureSelected": "zombunnyemissive.dds",
+                    "emissiveColor": {
+                        "x": 1.0,
+                        "y": 0.9999899864196777,
+                        "z": 0.9999899864196777,
+                        "w": 0.0
+                    }
+                }
+            ]
+        }
+    ]
+}

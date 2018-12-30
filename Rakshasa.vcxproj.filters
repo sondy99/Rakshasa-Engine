@@ -171,7 +171,6 @@
     <ClCompile Include="ModuleScene.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="crossguid\Guid.cpp" />
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>GameObjectsAndComponents</Filter>
     </ClCompile>
@@ -185,6 +184,12 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="ImporterMesh.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="crossguid\Guid.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
       <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
@@ -455,7 +460,6 @@
     <ClInclude Include="ModuleScene.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="crossguid\Guid.hpp" />
     <ClInclude Include="ComponentCamera.h">
       <Filter>GameObjectsAndComponents</Filter>
     </ClInclude>
@@ -469,6 +473,69 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="ImporterMaterial.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="crossguid\Guid.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\writer.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\allocators.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\document.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\encodedstream.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\encodings.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\filereadstream.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\filewritestream.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\fwd.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\istreamwrapper.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\memorybuffer.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\memorystream.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\ostreamwrapper.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\pointer.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\prettywriter.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\rapidjson.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\reader.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\schema.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\stream.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson-1.1.0\include\rapidjson\stringbuffer.h">
+      <Filter>Rapidjson</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
       <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
@@ -499,6 +566,9 @@
     </Filter>
     <Filter Include="GameObjectsAndComponents">
       <UniqueIdentifier>{f150bff2-8485-47c9-b9c5-e8dd72383e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rapidjson">
+      <UniqueIdentifier>{f5014a58-0add-4c31-81e2-52373fd848f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

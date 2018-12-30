@@ -9,7 +9,11 @@
 #include <list>
 #include <string>
 
+#include "document.h"
+#include "prettywriter.h"
+
 class Component;
+class Config;
 
 class GameObject
 {
@@ -25,7 +29,10 @@ public:
 	void DuplicateGameObject(GameObject* newGameObjectParent);
 	GameObject* Clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
-	void CreateComponent(ComponentType componentType);
+	Component* CreateComponent(ComponentType componentType);
+
+	bool Save(Config* config);
+	void Load(Config* config, rapidjson::Value& value);
 public:
 	char uuid[37];
 	std::string name = nullptr;

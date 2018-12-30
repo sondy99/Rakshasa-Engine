@@ -16,6 +16,8 @@
 
 #include "MathGeoLib.h"
 
+#include "Config.h"
+
 ComponentMesh::ComponentMesh()
 {
 }
@@ -79,10 +81,7 @@ void ComponentMesh::DrawProperties()
 					{
 						labelCurrentFileMeshSelected = (*iterator);
 
-						App->modelLoader->CleanUpMesh(mesh);
-						ImporterMesh::Load(&mesh, labelCurrentFileMeshSelected.c_str());
-						App->modelLoader->GenerateMesh(mesh);
-						CreateBoundingBox();
+						LoadMesh(labelCurrentFileMeshSelected.c_str());
 						if (isSelected)
 						{
 							ImGui::SetItemDefaultFocus();
@@ -114,6 +113,26 @@ Component * ComponentMesh::Clone()
 	return result;
 }
 
+void ComponentMesh::Save(Config * config)
+{
+	config->StartObject();
+
+	config->AddComponentType("componentType", componentType);
+	config->AddString("gameObjectParent", gameObjectParent->uuid);
+	config->AddString("labelCurrentFileMeshSelected", labelCurrentFileMeshSelected.c_str());
+	config->AddBool("isWireframeActive", isWireframeActive);
+
+	config->EndObject();
+}
+
+void ComponentMesh::Load(Config* config, rapidjson::Value& value)
+{
+	labelCurrentFileMeshSelected = config->GetString("labelCurrentFileMeshSelected", value);
+	isWireframeActive = config->GetBool("isWireframeActive", value);
+
+	LoadMesh(labelCurrentFileMeshSelected.c_str());
+}
+
 void ComponentMesh::CreateBoundingBox()
 {
 	if (mesh.vertices != nullptr)
@@ -132,4 +151,12 @@ void ComponentMesh::UpdateGlobalBoundingBox()
 		globalBoundingBox = localBoundingBox;
 		globalBoundingBox.TransformAsAABB(transformation->globalModelMatrix);
 	}
+}
+
+void ComponentMesh::LoadMesh(const char * name)
+{
+	App->modelLoader->CleanUpMesh(mesh);
+	ImporterMesh::Load(&mesh, name);
+	App->modelLoader->GenerateMesh(mesh);
+	CreateBoundingBox();
 }

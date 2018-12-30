@@ -13,6 +13,10 @@ public:
 
 	void DrawProperties() override;
 	Component* Clone() override;
+
+	void Save(Config* config) override;
+	void Load(Config* config, rapidjson::Value& value) override;
+
 	void UpdateLocalModelMatrix();
 public:
 	bool identity = false;
@@ -26,8 +30,6 @@ public:
 	float4x4 globalModelMatrix = float4x4::identity;
 private:
 	void RotationToEuler();
-private:
-
 };
 
 #endif __COMPONENTTRANSFORM_H__

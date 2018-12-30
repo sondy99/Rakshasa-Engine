@@ -14,6 +14,10 @@ public:
 
 	void DrawProperties() override;
 	Component* Clone() override;
+
+	void Save(Config* config) override;
+	void Load(Config* config, rapidjson::Value& value) override;
+
 	void CreateBoundingBox();
 	void UpdateGlobalBoundingBox();
 public:
@@ -21,6 +25,8 @@ public:
 	AABB localBoundingBox = AABB();
 	AABB globalBoundingBox = AABB();
 	bool isWireframeActive = false;
+private:
+	void LoadMesh(const char* name);
 private:
 	std::string labelCurrentFileMeshSelected;
 };

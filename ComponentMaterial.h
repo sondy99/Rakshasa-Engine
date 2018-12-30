@@ -26,11 +26,14 @@ public:
 
 	void DrawProperties() override;
 	Component* Clone() override;
+
+	void Save(Config* config) override;
+	void Load(Config* config, rapidjson::Value& value) override;
 public:
 	Material material;
-	bool isSomeMaterialTypeSelected = false;
 private:
 	void DrawComboBoxMaterials(const char* id, MaterialTypeSelected materialTypeSelected, static std::string &labelCurrentFileTextureSelected);
+	void LoadMaterial(const char* name);
 private:
 	std::string labelDiffuseCurrentFileTextureSelected;
 	std::string labelOcclusionCurrentFileTextureSelected;

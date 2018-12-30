@@ -3,7 +3,11 @@
 
 #include "Globals.h"
 
+#include "document.h"
+#include "prettywriter.h"
+
 class GameObject;
+class Config;
 
 enum class ComponentType
 {
@@ -25,6 +29,9 @@ public:
 	virtual void Disable() {};
 	virtual void DrawProperties() {};
 	virtual Component* Clone() { return new Component(gameObjectParent, componentType); };
+
+	virtual void Save(Config* config) {};
+	virtual void Load(Config* config, rapidjson::Value& value) {};
 public:
 	ComponentType componentType;
 	GameObject* gameObjectParent = nullptr;

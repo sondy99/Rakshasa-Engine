@@ -161,8 +161,8 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 		glUniform4f(glGetUniformLocation(program, "specularColor"), componentMaterial->material.specularColor.x, componentMaterial->material.specularColor.y, componentMaterial->material.specularColor.z, 1.0f);
 
 
-		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->lightPosition[0]);
-		glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambient);
+		glUniform3fv(glGetUniformLocation(program, "light_pos"), 1, &App->scene->ambientLightPosition[0]);
+		glUniform1f(glGetUniformLocation(program, "ambient"), App->scene->ambientLight);
 		glUniform1f(glGetUniformLocation(program, "shininess"), componentMaterial->material.shininess);
 		glUniform1f(glGetUniformLocation(program, "k_ambient"), componentMaterial->material.ambientK);
 		glUniform1f(glGetUniformLocation(program, "k_diffuse"), componentMaterial->material.diffuseK);

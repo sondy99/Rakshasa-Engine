@@ -5,6 +5,10 @@
 #include "ModuleTextures.h"
 #include "ModuleLibrary.h"
 
+#include "GameObject.h"
+
+#include "Config.h"
+
 ComponentMaterial::ComponentMaterial()
 {
 }
@@ -124,6 +128,10 @@ void ComponentMaterial::DrawComboBoxMaterials(const char * id, MaterialTypeSelec
 	}
 }
 
+void ComponentMaterial::LoadMaterial(const char * name)
+{
+}
+
 Component * ComponentMaterial::Clone()
 {
 	ComponentMaterial* result = App->textures->CreateComponentMaterial();
@@ -133,5 +141,52 @@ Component * ComponentMaterial::Clone()
 	result->material = material;
 
 	return result;
+}
+
+void ComponentMaterial::Save(Config * config)
+{
+	config->StartObject();
+
+	config->AddComponentType("componentType", componentType);
+	config->AddString("gameObjectParent", gameObjectParent->uuid);
+
+	config->AddString("labelDiffuseCurrentFileTextureSelected", labelDiffuseCurrentFileTextureSelected.c_str());
+	config->AddFloat4("diffuseColor", material.diffuseColor);
+	config->AddFloat("diffuseK", material.diffuseK);
+
+	config->AddString("labelOcclusionCurrentFileTextureSelected", labelOcclusionCurrentFileTextureSelected.c_str());
+	config->AddFloat("ambientK", material.ambientK);
+
+	config->AddString("labelSpecularCurrentFileTextureSelected", labelSpecularCurrentFileTextureSelected.c_str());
+	config->AddFloat4("specularColor", material.specularColor);
+	config->AddFloat("specularK", material.specularK);
+	config->AddFloat("shininess", material.shininess);
+
+	config->AddString("labelEmissiveCurrentFileTextureSelected", labelEmissiveCurrentFileTextureSelected.c_str());
+	config->AddFloat4("emissiveColor", material.emissiveColor);
+	
+	config->EndObject();
+}
+
+void ComponentMaterial::Load(Config* config, rapidjson::Value& value)
+{
+	labelDiffuseCurrentFileTextureSelected = config->GetString("labelDiffuseCurrentFileTextureSelected", value);
+	material.diffuseColor = config->GetFloat4("diffuseColor", value);
+	material.diffuseK = config->GetFloat("diffuseK", value);
+	App->textures->LoadMaterial(labelDiffuseCurrentFileTextureSelected.c_str(), this, MaterialTypeSelected::DIFFUSE_MAP);
+
+	labelOcclusionCurrentFileTextureSelected = config->GetString("labelOcclusionCurrentFileTextureSelected", value);
+	material.ambientK = config->GetFloat("ambientK", value);
+	App->textures->LoadMaterial(labelOcclusionCurrentFileTextureSelected.c_str(), this, MaterialTypeSelected::OCCLUSION_MAP);
+
+	labelSpecularCurrentFileTextureSelected = config->GetString("labelSpecularCurrentFileTextureSelected", value);
+	material.specularColor = config->GetFloat4("specularColor", value);
+	material.specularK = config->GetFloat("specularK", value);
+	material.shininess = config->GetFloat("shininess", value);
+	App->textures->LoadMaterial(labelSpecularCurrentFileTextureSelected.c_str(), this, MaterialTypeSelected::SPECULAR_MAP);
+
+	labelEmissiveCurrentFileTextureSelected = config->GetString("labelEmissiveCurrentFileTextureSelected", value);
+	material.emissiveColor = config->GetFloat4("emissiveColor", value);
+	App->textures->LoadMaterial(labelEmissiveCurrentFileTextureSelected.c_str(), this, MaterialTypeSelected::EMISSIVE_MAP);
 }
 
