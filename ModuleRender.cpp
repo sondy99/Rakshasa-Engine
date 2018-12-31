@@ -344,6 +344,11 @@ void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCam
 	
 	if (componentCameras.size() > 0)
 	{
+		if (componentCameraGameSelected != nullptr)
+		{
+			labelCurrentCameraGameObjecteName = componentCameraGameSelected->gameObjectParent->name.c_str();
+		}
+
 		if (ImGui::BeginCombo("##combo", labelCurrentCameraGameObjecteName))
 		{
 			for (std::list<ComponentCamera*>::iterator iterator = componentCameras.begin(); iterator != componentCameras.end(); ++iterator)

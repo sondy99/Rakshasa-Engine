@@ -16,6 +16,7 @@ public:
 	Config();
 	~Config();
 
+	void AddName(const char* name);
 	void AddComponentType(const char* name, ComponentType componentType);
 	void AddInt(const char* name, int value);
 	void AddUnsigned(const char* name, unsigned value);

@@ -63,6 +63,7 @@ public:
 	float deltaTime = 0.0f;
 
 	bool toggleRenderProperties = true;
+	ComponentCamera* componentCameraGameSelected = nullptr;
 private:
 	void FpsCount();
 	void ManageFpsAndMsList();
@@ -74,7 +75,6 @@ private:
 private:
 	FrameBufferStruct frameBufferScene;
 	FrameBufferStruct frameBufferGame;
-	ComponentCamera* componentCameraGameSelected = nullptr;
 	bool sceneEnabled = true;
 
 	float lastTickTime = 0.0f;

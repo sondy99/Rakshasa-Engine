@@ -1,12 +1,57 @@
 {
-    "Scene": {
-        "ambientLight": 0.10000000149011612,
+    "scene": {
+        "ambientLight": 0.07699999958276749,
         "ambientLightPosition": {
-            "x": -1600.0,
-            "y": 5000.0,
-            "z": 1910.0
+            "x": -9460.0,
+            "y": 8830.0,
+            "z": 8380.0
         },
-        "isSceneCullingActive": true
+        "isSceneCullingActive": false
+    },
+    "sceneCamera": {
+        "componentType": "CAMERA",
+        "frustum.nearPlaneDistance": 10.0,
+        "frustum.farPlaneDistance": 35000.0,
+        "cameraPosition": {
+            "x": -4071.884033203125,
+            "y": 3280.42431640625,
+            "z": 2923.963134765625
+        },
+        "cameraFront": {
+            "x": 0.5814078450202942,
+            "y": -0.5328763723373413,
+            "z": -0.6148233413696289
+        },
+        "cameraUp": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        },
+        "pitch": -32.20000457763672,
+        "yaw": -46.60008239746094
+    },
+    "selectedCamera": {
+        "componentType": "CAMERA",
+        "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
+        "frustum.nearPlaneDistance": 10.0,
+        "frustum.farPlaneDistance": 10000.0,
+        "cameraPosition": {
+            "x": -397.96356201171877,
+            "y": 119.80665588378906,
+            "z": 293.1339416503906
+        },
+        "cameraFront": {
+            "x": 0.8367438912391663,
+            "y": -0.006981233600527048,
+            "z": -0.5475499629974365
+        },
+        "cameraUp": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        },
+        "pitch": -0.3999984860420227,
+        "yaw": -33.20000457763672
     },
     "gameObjects": [
         {
@@ -16,23 +61,23 @@
             "components": []
         },
         {
-            "uuid": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
-            "name": "completo",
+            "uuid": "1611e70c-7261-4816-b410-a202e268bcbc",
+            "name": "Camera",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
-                    "gameObjectParent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+                    "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
                     "identity": false,
                     "position": {
-                        "x": 60.0,
+                        "x": 0.0,
                         "y": 0.0,
-                        "z": 250.0
+                        "z": 0.0
                     },
                     "eulerRotation": {
                         "x": 0.0,
-                        "y": -19.5,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "scale": {
@@ -42,16 +87,130 @@
                     },
                     "rotation": {
                         "x": 0.0,
-                        "y": -0.16934950649738313,
+                        "y": 0.0,
                         "z": 0.0,
-                        "w": 0.9855560660362244
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "CAMERA",
+                    "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
+                    "frustum.nearPlaneDistance": 10.0,
+                    "frustum.farPlaneDistance": 10000.0,
+                    "cameraPosition": {
+                        "x": -397.96356201171877,
+                        "y": 119.80665588378906,
+                        "z": 293.1339416503906
+                    },
+                    "cameraFront": {
+                        "x": 0.8367438912391663,
+                        "y": -0.006981233600527048,
+                        "z": -0.5475499629974365
+                    },
+                    "cameraUp": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "pitch": -0.3999984860420227,
+                    "yaw": -33.20000457763672
+                }
+            ]
+        },
+        {
+            "uuid": "c094e062-d054-497c-86e2-0e004e90951a",
+            "name": "Camera2",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "c094e062-d054-497c-86e2-0e004e90951a",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "CAMERA",
+                    "gameObjectParent": "c094e062-d054-497c-86e2-0e004e90951a",
+                    "frustum.nearPlaneDistance": 10.0,
+                    "frustum.farPlaneDistance": 10000.0,
+                    "cameraPosition": {
+                        "x": -2701.701904296875,
+                        "y": 152.171875,
+                        "z": -301.53887939453127
+                    },
+                    "cameraFront": {
+                        "x": 0.7669739723205566,
+                        "y": 0.12186937779188156,
+                        "z": -0.629999041557312
+                    },
+                    "cameraUp": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "pitch": 7.000002384185791,
+                    "yaw": -39.39997863769531
+                }
+            ]
+        },
+        {
+            "uuid": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+            "name": "zombunny",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
+                    "identity": false,
+                    "position": {
+                        "x": -1820.0,
+                        "y": 15.0,
+                        "z": -740.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -53.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.4461978077888489,
+                        "z": 0.0,
+                        "w": 0.894934356212616
                     }
                 }
             ]
         },
         {
             "uuid": "77d6c9ef-b329-42ee-8fdd-4b749d57b0dd",
-            "name": "ojos",
+            "name": "eyes",
             "parent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
             "active": true,
             "components": [
@@ -121,7 +280,7 @@
         },
         {
             "uuid": "c215ffa1-8577-4be1-a545-83379c076913",
-            "name": "conejoCuerpo",
+            "name": "body",
             "parent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
             "active": true,
             "components": [
@@ -162,9 +321,9 @@
                     "gameObjectParent": "c215ffa1-8577-4be1-a545-83379c076913",
                     "labelDiffuseCurrentFileTextureSelected": "zombunnydiffuse.dds",
                     "diffuseColor": {
-                        "x": 0.9607843160629273,
-                        "y": 0.4332948625087738,
-                        "z": 0.4332948625087738,
+                        "x": 1.0,
+                        "y": 0.9999899864196777,
+                        "z": 0.9999899864196777,
                         "w": 1.0
                     },
                     "diffuseK": 0.7649999856948853,
@@ -201,7 +360,7 @@
                     "identity": false,
                     "position": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 15.0,
                         "z": 0.0
                     },
                     "eulerRotation": {
@@ -294,14 +453,538 @@
             ]
         },
         {
-            "uuid": "1611e70c-7261-4816-b410-a202e268bcbc",
-            "name": "camera",
+            "uuid": "be90f4b0-fe50-4d57-b299-cae275ed5947",
+            "name": "stars",
+            "parent": "43f8d29f-5a45-4394-b6e7-ec796c708b0d",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "be90f4b0-fe50-4d57-b299-cae275ed5947",
+                    "identity": false,
+                    "position": {
+                        "x": 1800.0,
+                        "y": 0.0,
+                        "z": -3960.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "be90f4b0-fe50-4d57-b299-cae275ed5947",
+                    "labelCurrentFileMeshSelected": "wall_1.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "be90f4b0-fe50-4d57-b299-cae275ed5947",
+                    "labelDiffuseCurrentFileTextureSelected": "",
+                    "diffuseColor": {
+                        "x": 0.8636784553527832,
+                        "y": 0.9803921580314636,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.910713791847229,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "077da204-ece0-4531-a823-401bf34b23ed",
+            "name": "drawer",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
-                    "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
+                    "gameObjectParent": "077da204-ece0-4531-a823-401bf34b23ed",
+                    "identity": false,
+                    "position": {
+                        "x": 1410.0,
+                        "y": 15.0,
+                        "z": -2560.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 90.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.7071068286895752,
+                        "z": 0.0,
+                        "w": 0.7071068286895752
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "077da204-ece0-4531-a823-401bf34b23ed",
+                    "labelCurrentFileMeshSelected": "drawers_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "077da204-ece0-4531-a823-401bf34b23ed",
+                    "labelDiffuseCurrentFileTextureSelected": "drawersdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "drawersocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "drawersspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "4e5a89cc-1a95-4bd6-8417-33f7d3328a59",
+            "name": "firetruck",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "4e5a89cc-1a95-4bd6-8417-33f7d3328a59",
+                    "identity": false,
+                    "position": {
+                        "x": 1920.0,
+                        "y": 15.0,
+                        "z": -4190.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "4e5a89cc-1a95-4bd6-8417-33f7d3328a59",
+                    "labelCurrentFileMeshSelected": "firetruck_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "4e5a89cc-1a95-4bd6-8417-33f7d3328a59",
+                    "labelDiffuseCurrentFileTextureSelected": "firetruckdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "firetruckocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "firetruckspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "c40b6a51-a0bf-4954-a721-357298c6563e",
+            "name": "dollhouse",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "c40b6a51-a0bf-4954-a721-357298c6563e",
+                    "identity": false,
+                    "position": {
+                        "x": -1600.0,
+                        "y": 15.0,
+                        "z": -3700.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "c40b6a51-a0bf-4954-a721-357298c6563e",
+                    "labelCurrentFileMeshSelected": "dollhouse_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "c40b6a51-a0bf-4954-a721-357298c6563e",
+                    "labelDiffuseCurrentFileTextureSelected": "dollhousediffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "dollhouseocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "dollhousespecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "2ccf90e7-0143-43cf-ae04-ba5f7d8eeb81",
+            "name": "clock",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "2ccf90e7-0143-43cf-ae04-ba5f7d8eeb81",
+                    "identity": false,
+                    "position": {
+                        "x": 2630.0,
+                        "y": 15.0,
+                        "z": -4560.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "2ccf90e7-0143-43cf-ae04-ba5f7d8eeb81",
+                    "labelCurrentFileMeshSelected": "clock_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "2ccf90e7-0143-43cf-ae04-ba5f7d8eeb81",
+                    "labelDiffuseCurrentFileTextureSelected": "clockdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "clockocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "clockspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "2b481019-bb53-4d75-9bb5-fb823e8ae625",
+            "name": "hearse",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "2b481019-bb53-4d75-9bb5-fb823e8ae625",
+                    "identity": false,
+                    "position": {
+                        "x": -690.0,
+                        "y": 15.0,
+                        "z": -3480.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "2b481019-bb53-4d75-9bb5-fb823e8ae625",
+                    "labelCurrentFileMeshSelected": "hearse_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "2b481019-bb53-4d75-9bb5-fb823e8ae625",
+                    "labelDiffuseCurrentFileTextureSelected": "hearsediffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "hearseocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "hearsespecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "bad96c00-5656-4fde-bd6e-b69d28760a39",
+            "name": "robot",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "bad96c00-5656-4fde-bd6e-b69d28760a39",
+                    "identity": false,
+                    "position": {
+                        "x": 620.0,
+                        "y": 15.0,
+                        "z": -1470.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "bad96c00-5656-4fde-bd6e-b69d28760a39",
+                    "labelCurrentFileMeshSelected": "robot_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "bad96c00-5656-4fde-bd6e-b69d28760a39",
+                    "labelDiffuseCurrentFileTextureSelected": "robotdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "robotocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "robotspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "cd3adfbc-7ee1-4dd5-b743-8824b8f2d6da",
+            "name": "player",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "cd3adfbc-7ee1-4dd5-b743-8824b8f2d6da",
+                    "identity": false,
+                    "position": {
+                        "x": -1800.0,
+                        "y": 15.0,
+                        "z": -890.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -39.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.3338068723678589,
+                        "z": 0.0,
+                        "w": 0.9426414966583252
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "4dc85e5e-fe97-4ff4-911b-aa7440bb989f",
+            "name": "body",
+            "parent": "cd3adfbc-7ee1-4dd5-b743-8824b8f2d6da",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "4dc85e5e-fe97-4ff4-911b-aa7440bb989f",
                     "identity": false,
                     "position": {
                         "x": 0.0,
@@ -326,27 +1009,284 @@
                     }
                 },
                 {
-                    "componentType": "CAMERA",
-                    "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
-                    "frustum.nearPlaneDistance": 10.0,
-                    "frustum.farPlaneDistance": 10000.0,
-                    "cameraPosition": {
-                        "x": -1676.182373046875,
-                        "y": 222.7037811279297,
-                        "z": 2563.185546875
-                    },
-                    "cameraFront": {
-                        "x": 0.4994813799858093,
-                        "y": 0.11840393394231796,
-                        "z": -0.8581951260566711
-                    },
-                    "cameraUp": {
-                        "x": 0.0,
+                    "componentType": "MESH",
+                    "gameObjectParent": "4dc85e5e-fe97-4ff4-911b-aa7440bb989f",
+                    "labelCurrentFileMeshSelected": "player_1.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "4dc85e5e-fe97-4ff4-911b-aa7440bb989f",
+                    "labelDiffuseCurrentFileTextureSelected": "playerdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
                         "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "playerocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "playerspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "d29fa891-6011-44e0-9e88-a4bd284ee147",
+            "name": "gun",
+            "parent": "cd3adfbc-7ee1-4dd5-b743-8824b8f2d6da",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "d29fa891-6011-44e0-9e88-a4bd284ee147",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
                         "z": 0.0
                     },
-                    "pitch": 6.7999982833862309,
-                    "yaw": -59.80000686645508
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "d29fa891-6011-44e0-9e88-a4bd284ee147",
+                    "labelCurrentFileMeshSelected": "player_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "d29fa891-6011-44e0-9e88-a4bd284ee147",
+                    "labelDiffuseCurrentFileTextureSelected": "gundiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "gunocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "gunspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "c9bd8f19-480c-492a-a4d7-2e84bcd7e724",
+            "name": "floor",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "c9bd8f19-480c-492a-a4d7-2e84bcd7e724",
+                    "identity": false,
+                    "position": {
+                        "x": -2820.0,
+                        "y": 15.0,
+                        "z": 960.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "aa1637c6-a73d-4e56-bfb3-a75cd5312b96",
+            "name": "floor",
+            "parent": "c9bd8f19-480c-492a-a4d7-2e84bcd7e724",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "aa1637c6-a73d-4e56-bfb3-a75cd5312b96",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 15.0,
+                        "z": 0.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "aa1637c6-a73d-4e56-bfb3-a75cd5312b96",
+                    "labelCurrentFileMeshSelected": "floor_2.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "aa1637c6-a73d-4e56-bfb3-a75cd5312b96",
+                    "labelDiffuseCurrentFileTextureSelected": "planksdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 0.7911205291748047,
+                        "y": 0.6660899519920349,
+                        "z": 0.970588207244873,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "planksocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "planksspecular.dds",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "ad48e284-9679-4516-8caf-e280920397d1",
+            "name": "spinningtop",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "ad48e284-9679-4516-8caf-e280920397d1",
+                    "identity": false,
+                    "position": {
+                        "x": -860.0,
+                        "y": 25.0,
+                        "z": -3330.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "ad48e284-9679-4516-8caf-e280920397d1",
+                    "labelCurrentFileMeshSelected": "spinningtop_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "ad48e284-9679-4516-8caf-e280920397d1",
+                    "labelDiffuseCurrentFileTextureSelected": "spinningtopdiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "spinningtopocclusion.dds",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
                 }
             ]
         }

@@ -195,6 +195,11 @@ math::Quat Config::GetQuat(const char * name, rapidjson::Value& value)
 	return result;
 }
 
+void Config::AddName(const char* name)
+{
+	writer->String(name);
+}
+
 void Config::StartObject(const char* name)
 {
 	writer->String(name);

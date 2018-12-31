@@ -4,6 +4,8 @@
 
 #include "ModuleModelLoader.h"
 #include "ModuleTextures.h"
+#include "ModuleCamera.h"
+#include "ModuleRender.h"
 
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
@@ -86,13 +88,25 @@ void ModuleScene::DrawProperties()
 
 	if (ImGui::BeginPopup("SceneOptionsContextualMenu"))
 	{
-		if (ImGui::Button("Save scene"))
+		if (ImGui::Button("Save scene "))
 		{
 			SaveScene();
 		}
-		if (ImGui::Button("Load scene"))
+		if (ImGui::Button("Load scene "))
 		{
-			LoadScene();
+			if (root->childrens.size() > 0)
+			{
+				ClearScene();
+				markToLoadScene = true;
+			}
+			else
+			{
+				LoadScene();
+			}
+		}
+		if (ImGui::Button("Clear scene"))
+		{
+			ClearScene();
 		}
 		ImGui::Separator();
 		if (ImGui::Button("Create generic game object"))
@@ -215,7 +229,6 @@ void ModuleScene::DrawTreeNode(GameObject * gameObject)
 		ImGui::TreePop();
 	}
 }
-
 
 void ModuleScene::SetGameObjectSelected(GameObject * gameObject)
 {
@@ -350,7 +363,7 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 			}
 			if (ImGui::MenuItem("Delete"))
 			{
-				gameObjectToBeDeleted = gameObject;
+				gameObjectsToBeDeleted.push_back(gameObject);
 			}
 			ImGui::EndPopup();
 		}
@@ -360,11 +373,22 @@ void ModuleScene::ClickManagement(GameObject* gameObject)
 void ModuleScene::ManageDuplicationAndDeletionGameObject()
 {
 
-	if (gameObjectToBeDeleted != nullptr)
+	if (gameObjectsToBeDeleted.size() > 0)
 	{
-		gameObjectToBeDeleted->RemoveGameObject(gameObjectToBeDeleted);
-		gameObjectToBeDeleted = nullptr;
-		gameObjectSelected = nullptr;
+		for (std::list<GameObject*>::iterator iterator = gameObjectsToBeDeleted.begin(); iterator != gameObjectsToBeDeleted.end(); ++iterator)
+		{
+			(*iterator)->RemoveGameObject(*iterator);
+			RELEASE(*iterator);
+			gameObjectSelected = nullptr;
+		}
+
+		gameObjectsToBeDeleted.clear();
+
+		if (markToLoadScene)
+		{
+			LoadScene();
+			markToLoadScene = false;
+		}
 	}
 
 	if (gameObjectToBeDuplicated != nullptr)
@@ -424,13 +448,22 @@ void ModuleScene::MoveUpDownGameObject(GameObject * gameObject, bool up)
 void ModuleScene::SaveScene()
 {
 	Config* config = new Config();
-	config->StartObject("Scene");
+	config->StartObject("scene");
 
 	config->AddFloat("ambientLight", ambientLight);
 	config->AddFloat3("ambientLightPosition", ambientLightPosition);
 	config->AddBool("isSceneCullingActive", isSceneCullingActive);
 	
 	config->EndObject();
+
+	config->AddName("sceneCamera");
+	App->camera->sceneCamera->Save(config);
+
+	if (App->camera->selectedCamera != nullptr)
+	{
+		config->AddName("selectedCamera");
+		App->camera->selectedCamera->Save(config);
+	}
 
 	config->StartArray("gameObjects");
 	SaveGameObject(config, root);
@@ -461,16 +494,36 @@ void ModuleScene::LoadScene()
 
 	if (!document.HasParseError())
 	{
-		rapidjson::Value& scene = document["Scene"];
+		rapidjson::Value& scene = document["scene"];
 
 		ambientLight = config->GetFloat("ambientLight", scene);
 		ambientLightPosition = config->GetFloat3("ambientLightPosition", scene);
 		isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
 
+		App->camera->sceneCamera->Load(config, document["sceneCamera"]);
+		
 		rapidjson::Value gameObjects = document["gameObjects"].GetArray();
 		for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
 		{
 			CreateGameObject(config, *it);
 		}
+
+		if (document.HasMember("selectedCamera"))
+		{
+			rapidjson::Value& selectedCamera = document["selectedCamera"];
+			const char* parentUuid = config->GetString("gameObjectParent", selectedCamera);
+			char uuidGameObjectParent[37];
+			sprintf_s(uuidGameObjectParent, parentUuid);
+			GameObject* gameObjecteCameraSelected = GetGameObjectByUUID(root, uuidGameObjectParent);
+
+			Component* camera = gameObjecteCameraSelected->GetComponent(ComponentType::CAMERA);
+
+			App->renderer->componentCameraGameSelected = (ComponentCamera*)camera;
+		}
 	}
+}
+
+void ModuleScene::ClearScene()
+{
+	gameObjectsToBeDeleted = root->childrens;
 }

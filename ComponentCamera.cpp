@@ -173,7 +173,12 @@ void ComponentCamera::Save(Config * config)
 	config->StartObject();
 	
 	config->AddComponentType("componentType", componentType);
-	config->AddString("gameObjectParent", gameObjectParent->uuid);
+
+	if (gameObjectParent != nullptr)
+	{
+		config->AddString("gameObjectParent", gameObjectParent->uuid);
+	}
+
 	config->AddFloat("frustum.nearPlaneDistance", frustum.nearPlaneDistance);
 	config->AddFloat("frustum.farPlaneDistance", frustum.farPlaneDistance);
 	config->AddFloat3("cameraPosition", cameraPosition);

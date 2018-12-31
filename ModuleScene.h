@@ -24,6 +24,7 @@ public:
 	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void CreateGameObject(Config* config, rapidjson::Value & value);
 	void DrawProperties();
+	void ClearScene();
 public:
 	GameObject* root = nullptr;
 	GameObject* gameObjectSelected = nullptr;
@@ -46,9 +47,10 @@ private:
 	void SaveGameObject(Config* config, GameObject* gameObject);
 	void LoadScene();
 private:
-	GameObject* gameObjectToBeDeleted = nullptr;
+	std::list<GameObject*> gameObjectsToBeDeleted;
 	GameObject* gameObjectToBeDuplicated = nullptr;
 	int gameObjectCounter = 1;
+	bool markToLoadScene = false;
 };
 
 #endif __MODULESCENE_H_
