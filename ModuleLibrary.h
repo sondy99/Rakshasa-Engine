@@ -18,8 +18,9 @@ public:
 	bool CleanUp() override;
 
 	void DrawProperties();
-	void UpdateDirectoryAndFileList();
-	inline std::vector<std::string> GetFileMeshList() const { return fileMeshList; }
+	void UpdateMeshesList();
+	void UpdateTexturesList();
+	inline std::vector<std::string> GetFileMeshList() const { return fileMeshesList; }
 	inline std::vector<std::string> GetFileTexturesList() const { return fileTexturesList; }
 public:
 	bool toggleLibraryProperties = true;
@@ -27,8 +28,10 @@ private:
 	void DrawTreeNode(const char* name, bool isLeaf);
 	void ClickManagement(const char* name);
 private:
+	bool resourceMarkToBeDeleted = false;
+	bool removeChamo = false;
 	std::string itemSelected;
-	std::vector<std::string> fileMeshList;
+	std::vector<std::string> fileMeshesList;
 	std::vector<std::string> fileTexturesList;
 };
 

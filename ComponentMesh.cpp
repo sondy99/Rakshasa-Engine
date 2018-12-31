@@ -66,15 +66,15 @@ void ComponentMesh::DrawProperties()
 
 		ImGui::Separator();
 
-		std::vector<std::string> fileMeshList = App->library->GetFileMeshList();
+		std::vector<std::string> fileMeshesList = App->library->GetFileMeshList();
 		labelCurrentFileMeshSelected;
-		fileMeshList.insert(fileMeshList.begin(), "Select mesh");
+		fileMeshesList.insert(fileMeshesList.begin(), "Select mesh");
 
-		if (fileMeshList.size() > 0)
+		if (fileMeshesList.size() > 0)
 		{
 			if (ImGui::BeginCombo("##meshCombo", labelCurrentFileMeshSelected.c_str()))
 			{
-				for (std::vector<std::string>::iterator iterator = fileMeshList.begin(); iterator != fileMeshList.end(); ++iterator)
+				for (std::vector<std::string>::iterator iterator = fileMeshesList.begin(); iterator != fileMeshesList.end(); ++iterator)
 				{
 					bool isSelected = (labelCurrentFileMeshSelected == (*iterator));
 					if (ImGui::Selectable((*iterator).c_str(), isSelected))

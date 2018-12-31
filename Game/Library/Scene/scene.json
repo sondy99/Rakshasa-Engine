@@ -2,9 +2,9 @@
     "Scene": {
         "ambientLight": 0.10000000149011612,
         "ambientLightPosition": {
-            "x": 5000.0,
+            "x": -1600.0,
             "y": 5000.0,
-            "z": 8000.0
+            "z": 1910.0
         },
         "isSceneCullingActive": true
     },
@@ -186,6 +186,167 @@
                         "z": 0.9999899864196777,
                         "w": 0.0
                     }
+                }
+            ]
+        },
+        {
+            "uuid": "43f8d29f-5a45-4394-b6e7-ec796c708b0d",
+            "name": "wall",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "43f8d29f-5a45-4394-b6e7-ec796c708b0d",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "9ae388cf-5971-4e75-aad1-2d08f661e8b6",
+            "name": "wall",
+            "parent": "43f8d29f-5a45-4394-b6e7-ec796c708b0d",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "9ae388cf-5971-4e75-aad1-2d08f661e8b6",
+                    "identity": false,
+                    "position": {
+                        "x": 1810.0,
+                        "y": 0.0,
+                        "z": -3960.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": -180.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0,
+                        "w": -4.371138828673793e-8
+                    }
+                },
+                {
+                    "componentType": "MESH",
+                    "gameObjectParent": "9ae388cf-5971-4e75-aad1-2d08f661e8b6",
+                    "labelCurrentFileMeshSelected": "wall_0.chamo",
+                    "isWireframeActive": false
+                },
+                {
+                    "componentType": "MATERIAL",
+                    "gameObjectParent": "9ae388cf-5971-4e75-aad1-2d08f661e8b6",
+                    "labelDiffuseCurrentFileTextureSelected": "walldiffuse.dds",
+                    "diffuseColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "diffuseK": 1.0,
+                    "labelOcclusionCurrentFileTextureSelected": "",
+                    "ambientK": 0.5,
+                    "labelSpecularCurrentFileTextureSelected": "",
+                    "specularColor": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0,
+                        "w": 1.0
+                    },
+                    "specularK": 0.6000000238418579,
+                    "shininess": 64.0,
+                    "labelEmissiveCurrentFileTextureSelected": "",
+                    "emissiveColor": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "1611e70c-7261-4816-b410-a202e268bcbc",
+            "name": "camera",
+            "parent": "67256617-76cd-411b-8da3-103660dfe96f",
+            "active": true,
+            "components": [
+                {
+                    "componentType": "TRANSFORMATION",
+                    "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
+                    "identity": false,
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "eulerRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    }
+                },
+                {
+                    "componentType": "CAMERA",
+                    "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
+                    "frustum.nearPlaneDistance": 10.0,
+                    "frustum.farPlaneDistance": 10000.0,
+                    "cameraPosition": {
+                        "x": -1676.182373046875,
+                        "y": 222.7037811279297,
+                        "z": 2563.185546875
+                    },
+                    "cameraFront": {
+                        "x": 0.4994813799858093,
+                        "y": 0.11840393394231796,
+                        "z": -0.8581951260566711
+                    },
+                    "cameraUp": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    },
+                    "pitch": 6.7999982833862309,
+                    "yaw": -59.80000686645508
                 }
             ]
         }

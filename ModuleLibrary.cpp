@@ -12,39 +12,47 @@
 bool stopWatcher = false;
 void LibraryWatcher()
 {
-	std::map<std::string, std::string> currentFiles;
-	std::map<std::string, std::string> files;
+	std::map<std::string, std::string> oldFilesAssets;
+	std::map<std::string, std::string> currentFilesAssets;
+	std::map<std::string, std::string> currentFilesLibrary;
 	while (!stopWatcher)
 	{
-		currentFiles = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/");
-		files = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/");
-		if (files.size() > currentFiles.size())
+		currentFilesAssets = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/", true);
+		if (oldFilesAssets.size() == 0 || oldFilesAssets.size() < currentFilesAssets.size())
 		{
-			for (std::map<std::string, std::string>::iterator iterator = files.begin(); iterator != files.end(); ++iterator)
+			currentFilesLibrary = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/", false);
+			for (std::map<std::string, std::string>::iterator iterator = currentFilesAssets.begin(); iterator != currentFilesAssets.end(); ++iterator)
 			{
-				if (currentFiles.find((*iterator).first) == currentFiles.end())
+				std::string fileName = (*iterator).first;
+				App->fileSystem->ChangePathSlashes(fileName);
+				if (currentFilesLibrary.find(fileName.substr(0, fileName.length() - 4)) == currentFilesLibrary.end())
 				{
-					std::string ext((*iterator).first.substr((*iterator).first.length() - 3));
+					std::string ext(fileName.substr(fileName.length() - 3));
 
 					std::string fullPath = (*iterator).second;
-					fullPath.append((*iterator).first);
+					fullPath.append(fileName);
 					if (ext == "png" || ext == "tif")
 					{
-						if (ImporterMaterial::Import(fullPath.c_str()))
-						{
-							currentFiles.insert(*iterator);
-						}
+						ImporterMaterial::Import(fullPath.c_str());
 					}
 					if (ext == "fbx" || ext == "FBX")
 					{
 						ImporterMesh::ImportFBX(fullPath.c_str());
+						
 					}
 				}
 			}
-
-			App->library->UpdateDirectoryAndFileList();
+			oldFilesAssets = currentFilesAssets;
+			App->library->UpdateMeshesList();
+			App->library->UpdateTexturesList();
 		}
+		else if (oldFilesAssets.size() > currentFilesAssets.size())
+		{
+			oldFilesAssets = currentFilesAssets;
+		} 
 	}
+
+	Sleep(1000);
 }
 
 ModuleLibrary::ModuleLibrary()
@@ -61,13 +69,27 @@ bool ModuleLibrary::Init()
 
 	watcherThread.detach();
 
-	UpdateDirectoryAndFileList();
+	UpdateMeshesList();
+	UpdateTexturesList();
 
 	return true;
 }
 
 update_status ModuleLibrary::Update()
-{	
+{
+	if (resourceMarkToBeDeleted)
+	{
+		resourceMarkToBeDeleted = false;
+		if (removeChamo)
+		{
+			UpdateMeshesList();
+		}
+		else
+		{
+			UpdateTexturesList();
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -118,11 +140,15 @@ void ModuleLibrary::DrawProperties()
 	ImGui::End();
 }
 
-void ModuleLibrary::UpdateDirectoryAndFileList()
+void ModuleLibrary::UpdateMeshesList()
 {
-	fileMeshList.clear();
+	fileMeshesList.clear();
+	App->fileSystem->GetFilesFromDirectory("/Library/Meshes/", fileMeshesList);
+}
+
+void ModuleLibrary::UpdateTexturesList()
+{
 	fileTexturesList.clear();
-	App->fileSystem->GetFilesFromDirectory("/Library/Meshes/", fileMeshList);
 	App->fileSystem->GetFilesFromDirectory("/Library/Textures/", fileTexturesList);
 }
 
@@ -143,12 +169,12 @@ void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
 	bool resourceOpen = ImGui::TreeNodeEx(name, nodeFlags, name);
 
 	ClickManagement(name);
-
+	
 	if (resourceOpen)
 	{
 		if (name == "Meshes")
 		{
-			for (std::vector<std::string>::iterator iterator = fileMeshList.begin(); iterator != fileMeshList.end(); ++iterator)
+			for (std::vector<std::string>::iterator iterator = fileMeshesList.begin(); iterator != fileMeshesList.end(); ++iterator)
 			{
 				DrawTreeNode((*iterator).c_str(), true);
 			}
@@ -191,10 +217,14 @@ void ModuleLibrary::ClickManagement(const char * name)
 				if (ext == "chamo")
 				{
 					nameToRemove.insert(0, "/Library/Meshes/");
+					removeChamo = true;
+					resourceMarkToBeDeleted = true;
 				}
 				else if (ext == "dds")
 				{
 					nameToRemove.insert(0, "/Library/Textures/");
+					removeChamo = false;
+					resourceMarkToBeDeleted = true;
 				}
 
 				App->fileSystem->Remove(nameToRemove.c_str());

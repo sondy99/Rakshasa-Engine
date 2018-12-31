@@ -198,24 +198,41 @@ bool ModuleFileSystem::Copy(const char * sourcePath, const char * destinationPat
 	return result;
 }
 
-std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory)
+std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory, const bool withExtension)
 {
 	std::map<std::string, std::string> result;
 	char **enumeratedFIles = PHYSFS_enumerateFiles(directory);
 	char **iterator;
 
-	std::string dir(directory); 
+	std::string directoryString(directory); 
 	std::vector<std::string> directoryList;
 
 	for (iterator = enumeratedFIles; *iterator != nullptr; iterator++)
 	{
-		if (PHYSFS_isDirectory((dir + *iterator).c_str()))
+		if (PHYSFS_isDirectory((directoryString + *iterator).c_str()))
 		{
 			directoryList.push_back(*iterator);
 		}
 		else
 		{
-			result[(*iterator)] = dir;
+			if (withExtension)
+			{
+				result[(*iterator)] = directoryString;
+			}
+			else
+			{
+				std::string fileName((*iterator));
+				size_t positionDot = fileName.find_last_of(".");
+				size_t positionUnderscore = fileName.find_last_of("_");
+				fileName = fileName.substr(0, positionDot);
+
+				if (positionUnderscore != 0)
+				{
+					fileName = fileName.substr(0, positionUnderscore);
+				}
+
+				result[fileName] = directoryString;
+			}
 		}
 	}
 
@@ -225,7 +242,7 @@ std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecurs
 	{
 		(*iterator).insert(0, directory);
 		(*iterator).append("/");
-		std::map<std::string, std::string> partialResult = GetFilesFromDirectoryRecursive((*iterator).c_str());
+		std::map<std::string, std::string> partialResult = GetFilesFromDirectoryRecursive((*iterator).c_str(), withExtension);
 		result.insert(partialResult.begin(), partialResult.end());
 	}
 
@@ -250,7 +267,7 @@ void ModuleFileSystem::GetFilesFromDirectory(const char * directory, std::vector
 	PHYSFS_freeList(enumeratedFIles);
 }
 
-void ModuleFileSystem::ChangePathSlashes(std::string & fullPath) const
+void ModuleFileSystem::ChangePathSlashes(std::string& fullPath) const
 {
 	for (std::string::iterator iterator = fullPath.begin(); iterator != fullPath.end(); ++iterator)
 	{
