@@ -18,7 +18,8 @@ void LibraryWatcher()
 	while (!stopWatcher)
 	{
 		currentFilesAssets = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/", true);
-		if (oldFilesAssets.size() == 0 || oldFilesAssets.size() < currentFilesAssets.size())
+		if ((oldFilesAssets.size() == 0 && oldFilesAssets.size() != currentFilesAssets.size()) 
+			|| oldFilesAssets.size() < currentFilesAssets.size())
 		{
 			currentFilesLibrary = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/", false);
 			for (std::map<std::string, std::string>::iterator iterator = currentFilesAssets.begin(); iterator != currentFilesAssets.end(); ++iterator)
