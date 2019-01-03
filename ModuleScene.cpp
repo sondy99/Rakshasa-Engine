@@ -7,6 +7,7 @@
 #include "ModuleCamera.h"
 #include "ModuleRender.h"
 #include "ModuleLibrary.h"
+#include "ModuleFileSystem.h"
 
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
@@ -30,8 +31,8 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
-
-	fileSceneList = App->library->GetFileSceneList();
+	
+	markToUpdateSceneFiles = true;
 
 	return true;
 }
@@ -513,12 +514,22 @@ void ModuleScene::SaveScene()
 	SaveGameObject(config, root);
 	config->EndArray();
 
-	std::string fullPathSceneFileName = sceneFileName;
-	fullPathSceneFileName.insert(0, "/Library/Scene/");
-	config->WriteToDisk(fullPathSceneFileName.c_str());
+	std::string fullPathSceneFileName;
+	std::string ext;
+	App->fileSystem->SplitFilePath(sceneFileName, nullptr, &fullPathSceneFileName, &ext);
 
-	App->library->UpdateSceneList();
-	markToUpdateSceneFiles = true;
+	if (strcmp(ext.c_str(), "json") == 0)
+	{
+		fullPathSceneFileName.insert(0, "/Library/Scene/");
+		config->WriteToDisk(fullPathSceneFileName.c_str());
+		App->library->UpdateSceneList();
+		markToUpdateSceneFiles = true;
+	}
+	else
+	{
+		LOG("The file name must have .json as extension.");
+	}
+
 }
 
 void ModuleScene::SaveGameObject(Config* config, GameObject* gameObject)
@@ -581,3 +592,4 @@ void ModuleScene::ClearScene()
 {
 	gameObjectsToBeDeleted = root->childrens;
 }
+

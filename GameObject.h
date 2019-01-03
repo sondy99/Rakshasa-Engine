@@ -39,6 +39,7 @@ public:
 	GameObject* parent = nullptr;
 	bool isSelected = false;
 	bool active = true;
+	bool gameObjectStatic = true;
 
 	std::list<Component*> components;
 	std::list<GameObject*> childrens;

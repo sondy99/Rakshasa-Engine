@@ -35,6 +35,7 @@ public:
 	math::float3 ambientLightPosition = math::float3(5000.0f, 5000.0f, 8000.0f);
 	static char sceneFileName[];
 	static const char* labelCurrentSceneFileName;
+	bool markToUpdateSceneFiles = false;
 private:
 	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);
@@ -55,7 +56,6 @@ private:
 	GameObject* gameObjectToBeDuplicated = nullptr;
 	int gameObjectCounter = 1;
 	bool markToLoadScene = false;
-	bool markToUpdateSceneFiles = false;
 };
 
 #endif __MODULESCENE_H_

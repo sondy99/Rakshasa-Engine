@@ -3,6 +3,7 @@
 #include "Application.h"
 
 #include "ModuleFileSystem.h"
+#include "ModuleScene.h"
 
 #include "ImporterMaterial.h"
 #include "ImporterMesh.h"
@@ -79,9 +80,6 @@ bool ModuleLibrary::Init()
 
 update_status ModuleLibrary::Update()
 {
-	if (resourceMarkToBeDeleted)
-	{
-		resourceMarkToBeDeleted = false;
 		if (removeChamo)
 		{
 			UpdateMeshesList();
@@ -96,8 +94,8 @@ update_status ModuleLibrary::Update()
 		{
 			UpdateSceneList();
 			removeScene = false;
+			App->scene->markToUpdateSceneFiles = true;
 		}
-	}
 
 	return UPDATE_CONTINUE;
 }
@@ -241,22 +239,30 @@ void ModuleLibrary::ClickManagement(const char * name)
 				{
 					nameToRemove.insert(0, "/Library/Meshes/");
 					removeChamo = true;
-					resourceMarkToBeDeleted = true;
 				}
 				else if (ext == "dds")
 				{
 					nameToRemove.insert(0, "/Library/Textures/");
 					removeTexture = true;
-					resourceMarkToBeDeleted = true;
 				}
 				else if (ext == "json")
 				{
-					nameToRemove.insert(0, "/Library/Scene/");
-					removeScene = true;
-					resourceMarkToBeDeleted = true;
+
+					if (strcmp(nameToRemove.c_str(), ModuleScene::sceneFileName) != 0)
+					{
+						nameToRemove.insert(0, "/Library/Scene/");
+						removeScene = true;
+					}
+					else
+					{
+						LOG("Is not possible remove a scene file that is currently load.")
+					}
 				}
 
-				App->fileSystem->Remove(nameToRemove.c_str());
+				if (removeChamo || removeTexture || removeScene)
+				{
+					App->fileSystem->Remove(nameToRemove.c_str());
+				}
 			}
 			ImGui::EndPopup();
 		}

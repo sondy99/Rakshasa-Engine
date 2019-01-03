@@ -76,6 +76,7 @@ void GameObject::DrawProperties()
 			if (componentMesh != nullptr)
 			{
 				ImGui::Checkbox("Active", &active);
+				ImGui::Checkbox("Static", &gameObjectStatic);
 			}
 		}
 
