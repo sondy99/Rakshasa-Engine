@@ -72,6 +72,7 @@ bool ModuleLibrary::Init()
 
 	UpdateMeshesList();
 	UpdateTexturesList();
+	UpdateSceneList();
 
 	return true;
 }
@@ -84,10 +85,17 @@ update_status ModuleLibrary::Update()
 		if (removeChamo)
 		{
 			UpdateMeshesList();
+			removeChamo = false;
 		}
-		else
+		else if (removeTexture)
 		{
 			UpdateTexturesList();
+			removeTexture = false;
+		}
+		else if (removeScene) 
+		{
+			UpdateSceneList();
+			removeScene = false;
 		}
 	}
 
@@ -134,6 +142,7 @@ void ModuleLibrary::DrawProperties()
 	{
 		DrawTreeNode("Meshes", false);
 		DrawTreeNode("Textures", false);
+		DrawTreeNode("Scene", false);
 
 		ImGui::TreePop();
 	}
@@ -151,6 +160,12 @@ void ModuleLibrary::UpdateTexturesList()
 {
 	fileTexturesList.clear();
 	App->fileSystem->GetFilesFromDirectory("/Library/Textures/", fileTexturesList);
+}
+
+void ModuleLibrary::UpdateSceneList()
+{
+	fileSceneList.clear();
+	App->fileSystem->GetFilesFromDirectory("/Library/Scene/", fileSceneList);
 }
 
 void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
@@ -183,6 +198,13 @@ void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
 		else if (name == "Textures")
 		{
 			for (std::vector<std::string>::iterator iterator = fileTexturesList.begin(); iterator != fileTexturesList.end(); ++iterator)
+			{
+				DrawTreeNode((*iterator).c_str(), true);
+			}
+		}
+		else if (name == "Scene")
+		{
+			for (std::vector<std::string>::iterator iterator = fileSceneList.begin(); iterator != fileSceneList.end(); ++iterator)
 			{
 				DrawTreeNode((*iterator).c_str(), true);
 			}
@@ -224,7 +246,13 @@ void ModuleLibrary::ClickManagement(const char * name)
 				else if (ext == "dds")
 				{
 					nameToRemove.insert(0, "/Library/Textures/");
-					removeChamo = false;
+					removeTexture = true;
+					resourceMarkToBeDeleted = true;
+				}
+				else if (ext == "json")
+				{
+					nameToRemove.insert(0, "/Library/Scene/");
+					removeScene = true;
 					resourceMarkToBeDeleted = true;
 				}
 

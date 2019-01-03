@@ -20,6 +20,7 @@ public:
 	~ModuleScene();
 
 	bool Init() override;
+	update_status Update() override;
 
 	GameObject* CreateGameObject(const char* name, GameObject* parent, bool withTransformation);
 	void CreateGameObject(Config* config, rapidjson::Value & value);
@@ -32,6 +33,8 @@ public:
 	bool isSceneCullingActive = true;
 	float ambientLight = 0.1f;
 	math::float3 ambientLightPosition = math::float3(5000.0f, 5000.0f, 8000.0f);
+	static char sceneFileName[];
+	static const char* labelCurrentSceneFileName;
 private:
 	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);
@@ -48,9 +51,11 @@ private:
 	void LoadScene();
 private:
 	std::list<GameObject*> gameObjectsToBeDeleted;
+	std::vector<std::string> fileSceneList;
 	GameObject* gameObjectToBeDuplicated = nullptr;
 	int gameObjectCounter = 1;
 	bool markToLoadScene = false;
+	bool markToUpdateSceneFiles = false;
 };
 
 #endif __MODULESCENE_H_

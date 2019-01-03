@@ -6,6 +6,7 @@
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
 #include "ModuleRender.h"
+#include "ModuleLibrary.h"
 
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
@@ -14,6 +15,8 @@
 
 #include <string>
 
+char ModuleScene::sceneFileName[40] = {};
+const char* ModuleScene::labelCurrentSceneFileName = "";
 ModuleScene::ModuleScene()
 {
 }
@@ -27,8 +30,31 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init()
 {
 	root = new GameObject("root", nullptr);
-	
+
+	fileSceneList = App->library->GetFileSceneList();
+
 	return true;
+}
+
+update_status ModuleScene::Update()
+{
+
+	ManageDuplicationAndDeletionGameObject();
+
+	if (markToLoadScene)
+	{
+		LoadScene();
+		markToLoadScene = false;
+	}
+
+	if (markToUpdateSceneFiles)
+	{
+		fileSceneList = App->library->GetFileSceneList();
+		labelCurrentSceneFileName = sceneFileName;
+		markToUpdateSceneFiles = false;
+	}
+
+	return UPDATE_CONTINUE;
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent, bool withTransformation)
@@ -71,16 +97,16 @@ void ModuleScene::CreateGameObject(Config* config, rapidjson::Value & value)
 
 }
 
-void ModuleScene::DrawProperties() 
+void ModuleScene::DrawProperties()
 {
-	if (!ImGui::Begin("Game objects hierarchy", &toggleSceneProperties)) 
+	if (!ImGui::Begin("Game objects hierarchy", &toggleSceneProperties))
 	{
 		ImGui::End();
 		return;
 	}
 
 	ImGui::Button("Scene options");
-	
+
 	if (ImGui::IsItemClicked(0))
 	{
 		ImGui::OpenPopup("SceneOptionsContextualMenu");
@@ -88,10 +114,35 @@ void ModuleScene::DrawProperties()
 
 	if (ImGui::BeginPopup("SceneOptionsContextualMenu"))
 	{
+		ImGui::Text("File name:");
+		ImGui::SameLine();
+		ImGui::InputText("##", sceneFileName, sizeof(sceneFileName));
+		ImGui::SameLine();
 		if (ImGui::Button("Save scene "))
 		{
 			SaveScene();
 		}
+		
+		ImGui::Text("File name:");
+		ImGui::SameLine();
+		if (ImGui::BeginCombo("##comboScene", labelCurrentSceneFileName))
+		{
+			for (std::vector<std::string>::iterator iterator = fileSceneList.begin(); iterator != fileSceneList.end(); ++iterator)
+			{
+				bool isSelected = (labelCurrentSceneFileName == (*iterator).c_str());
+				if (ImGui::Selectable((*iterator).c_str(), isSelected))
+				{
+					labelCurrentSceneFileName = (*iterator).c_str();
+					strcpy_s(sceneFileName, sizeof(sceneFileName), (*iterator).c_str());;
+					if (isSelected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::SameLine();
 		if (ImGui::Button("Load scene "))
 		{
 			if (root->childrens.size() > 0)
@@ -120,7 +171,7 @@ void ModuleScene::DrawProperties()
 
 		ImGui::EndPopup();
 	}
-	
+
 	ImGui::Separator();
 
 	ImGui::SliderFloat("Ambient", &ambientLight, 0.0f, 1.0f);
@@ -158,9 +209,7 @@ void ModuleScene::DrawProperties()
 	if (rootOpen && !root->childrens.empty())
 	{
 		DragAndDropManagement(root);
-
-		ManageDuplicationAndDeletionGameObject();
-
+		
 		for (std::list<GameObject*>::iterator iterator = root->childrens.begin(); iterator != root->childrens.end(); ++iterator)
 		{
 			DrawTreeNode(*iterator);
@@ -204,7 +253,7 @@ void ModuleScene::DrawTreeNode(GameObject * gameObject)
 {
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-	if (gameObject->childrens.empty()) 
+	if (gameObject->childrens.empty())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 	}
@@ -215,10 +264,10 @@ void ModuleScene::DrawTreeNode(GameObject * gameObject)
 	}
 
 	bool gameObjectOpen = ImGui::TreeNodeEx(gameObject->uuid, nodeFlags, gameObject->name.c_str());
-	
+
 	DragAndDropManagement(gameObject);
 	ClickManagement(gameObject);
-	
+
 	if (gameObjectOpen)
 	{
 		for (std::list<GameObject*>::iterator iterator = gameObject->childrens.begin(); iterator != gameObject->childrens.end(); ++iterator)
@@ -295,14 +344,14 @@ void ModuleScene::DragAndDropManagement(GameObject* gameObjectParent)
 			{
 				bool isOneGameObjectIsParentOfOther = CheckIfOneGameObjectIsParentOfOther(*gameObjectToMove, *gameObjectParent);
 
-				if (!isOneGameObjectIsParentOfOther) 
+				if (!isOneGameObjectIsParentOfOther)
 				{
 					gameObjectToMove->parent->childrens.remove(gameObjectToMove);
 
 					gameObjectToMove->parent = gameObjectParent;
 					gameObjectParent->childrens.push_back(gameObjectToMove);
 				}
-				else 
+				else
 				{
 					LOG("Is not possible to drop a gameObject 'parent' into one of its sons");
 				}
@@ -384,11 +433,6 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 
 		gameObjectsToBeDeleted.clear();
 
-		if (markToLoadScene)
-		{
-			LoadScene();
-			markToLoadScene = false;
-		}
 	}
 
 	if (gameObjectToBeDuplicated != nullptr)
@@ -435,7 +479,7 @@ void ModuleScene::MoveUpDownGameObject(GameObject * gameObject, bool up)
 		{
 			std::swap(*iterator, *std::prev(iterator));
 		}
-	} 
+	}
 	else
 	{
 		if (*iterator != gameObject->parent->childrens.back())
@@ -453,7 +497,7 @@ void ModuleScene::SaveScene()
 	config->AddFloat("ambientLight", ambientLight);
 	config->AddFloat3("ambientLightPosition", ambientLightPosition);
 	config->AddBool("isSceneCullingActive", isSceneCullingActive);
-	
+
 	config->EndObject();
 
 	config->AddName("sceneCamera");
@@ -469,7 +513,12 @@ void ModuleScene::SaveScene()
 	SaveGameObject(config, root);
 	config->EndArray();
 
-	config->WriteToDisk();
+	std::string fullPathSceneFileName = sceneFileName;
+	fullPathSceneFileName.insert(0, "/Library/Scene/");
+	config->WriteToDisk(fullPathSceneFileName.c_str());
+
+	App->library->UpdateSceneList();
+	markToUpdateSceneFiles = true;
 }
 
 void ModuleScene::SaveGameObject(Config* config, GameObject* gameObject)
@@ -490,7 +539,9 @@ void ModuleScene::LoadScene()
 {
 	Config* config = new Config();
 
-	rapidjson::Document document = config->LoadFromDisk();
+	std::string fullPathSceneFileName = sceneFileName;
+	fullPathSceneFileName.insert(0, "/Library/Scene/");
+	rapidjson::Document document = config->LoadFromDisk(fullPathSceneFileName.c_str());
 
 	if (!document.HasParseError())
 	{
@@ -501,7 +552,7 @@ void ModuleScene::LoadScene()
 		isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
 
 		App->camera->sceneCamera->Load(config, document["sceneCamera"]);
-		
+
 		rapidjson::Value gameObjects = document["gameObjects"].GetArray();
 		for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
 		{
@@ -511,14 +562,17 @@ void ModuleScene::LoadScene()
 		if (document.HasMember("selectedCamera"))
 		{
 			rapidjson::Value& selectedCamera = document["selectedCamera"];
-			const char* parentUuid = config->GetString("gameObjectParent", selectedCamera);
-			char uuidGameObjectParent[37];
-			sprintf_s(uuidGameObjectParent, parentUuid);
-			GameObject* gameObjecteCameraSelected = GetGameObjectByUUID(root, uuidGameObjectParent);
+			if (selectedCamera.HasMember("gameObjectParent"))
+			{
+				const char* parentUuid = config->GetString("gameObjectParent", selectedCamera);
+				char uuidGameObjectParent[37];
+				sprintf_s(uuidGameObjectParent, parentUuid);
+				GameObject* gameObjecteCameraSelected = GetGameObjectByUUID(root, uuidGameObjectParent);
 
-			Component* camera = gameObjecteCameraSelected->GetComponent(ComponentType::CAMERA);
+				Component* camera = gameObjecteCameraSelected->GetComponent(ComponentType::CAMERA);
 
-			App->renderer->componentCameraGameSelected = (ComponentCamera*)camera;
+				App->renderer->componentCameraGameSelected = (ComponentCamera*)camera;
+			}
 		}
 	}
 }

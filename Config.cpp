@@ -227,18 +227,18 @@ void Config::EndArray()
 	writer->EndArray();
 }
 
-void Config::WriteToDisk()
+void Config::WriteToDisk(const char* file)
 {
 	writer->EndObject();
-	App->fileSystem->Save("/Library/Scene/scene.json", stringBuffer->GetString(), strlen(stringBuffer->GetString()), false);
+	App->fileSystem->Save(file, stringBuffer->GetString(), strlen(stringBuffer->GetString()), false);
 }
 
-rapidjson::Document Config::LoadFromDisk()
+rapidjson::Document Config::LoadFromDisk(const char* file)
 {
 	rapidjson::Document result = nullptr;
 	
 	char* fileBuffer;
-	unsigned lenghBuffer = App->fileSystem->Load("/Library/Scene/scene.json", &fileBuffer);
+	unsigned lenghBuffer = App->fileSystem->Load(file, &fileBuffer);
 
 	if (fileBuffer)
 	{
