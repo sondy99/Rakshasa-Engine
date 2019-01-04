@@ -24,6 +24,19 @@ GameObject::GameObject(const char* name, GameObject* parent) : name(name), paren
 
 GameObject::~GameObject()
 {
+	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
+	{
+		RELEASE(*iterator);
+		iterator = components.erase(iterator);
+	}
+
+	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
+	{
+		RELEASE(*iterator);
+		iterator = childrens.erase(iterator);
+	}
+
+	parent = nullptr;
 }
 
 void GameObject::Update()

@@ -29,6 +29,18 @@ bool ModuleTextures::Init()
 	return true;
 }
 
+bool ModuleTextures::CleanUp()
+{
+
+	for (std::list<ComponentMaterial*>::iterator iterator = materials.begin(); iterator != materials.end();)
+	{
+		RELEASE(*iterator);
+		iterator = materials.erase(iterator);
+	}
+
+	return true;
+}
+
 void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& width, int& height)
 {
 	unsigned imageID;

@@ -72,6 +72,7 @@ public:
 	~ModuleTextures();
 
 	bool Init() override;
+	bool CleanUp() override;
 
 	void LoadMaterial(std::string path, unsigned& textureID, int& width, int& height);
 	void LoadMaterial(const char* path, ComponentMaterial* componentMaterial, MaterialTypeSelected materialTypeSelected);

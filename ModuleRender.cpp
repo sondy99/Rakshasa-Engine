@@ -130,6 +130,14 @@ bool ModuleRender::CleanUp()
 	glDeleteFramebuffers(1, &frameBufferGame.frameBufferObject);
 	glDeleteRenderbuffers(1, &frameBufferGame.renderBufferObject);
 
+	for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end();)
+	{
+		RELEASE(*iterator);
+		iterator = meshes.erase(iterator);
+	}
+
+	RELEASE(componentCameraGameSelected);
+
 	return true;
 }
 

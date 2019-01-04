@@ -37,6 +37,15 @@ bool ModuleScene::Init()
 	return true;
 }
 
+bool ModuleScene::CleanUp()
+{
+	RELEASE(root);
+	RELEASE(gameObjectSelected);
+	RELEASE(gameObjectToBeDuplicated);
+
+	return true;
+}
+
 update_status ModuleScene::Update()
 {
 
@@ -439,7 +448,7 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 	if (gameObjectToBeDuplicated != nullptr)
 	{
 		gameObjectToBeDuplicated->DuplicateGameObject(nullptr);
-		gameObjectToBeDuplicated = nullptr;
+		RELEASE(gameObjectToBeDuplicated);
 	}
 }
 

@@ -71,6 +71,15 @@ update_status ModuleCamera::PreUpdate()
 // Called before quitting
 bool ModuleCamera::CleanUp()
 {
+	for (std::list<ComponentCamera*>::iterator iterator = cameras.begin(); iterator != cameras.end();)
+	{
+		RELEASE(*iterator);
+		iterator = cameras.erase(iterator);
+	}
+
+	RELEASE(sceneCamera);
+	RELEASE(selectedCamera);
+
 	return true;
 }
 
