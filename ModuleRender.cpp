@@ -53,7 +53,7 @@ bool ModuleRender::Init()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
-	glEnable(GL_TEXTURE_2D); 
+	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 
 	glClearDepth(1.0f);
@@ -190,7 +190,7 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	unsigned program = App->shader->program;
-	
+
 	glUseProgram(program);
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
@@ -398,7 +398,7 @@ void ModuleRender::LoadQuadTreeForAllMesh()
 void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras)
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
-	
+
 	if (componentCameras.size() > 0)
 	{
 		if (componentCameraGameSelected != nullptr)
@@ -511,30 +511,47 @@ void ModuleRender::InitFrameBuffer(int width, int height, FrameBufferStruct &fra
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType)
+void ModuleRender::RenderComponentFromMeshesList(ComponentMesh* componentMesh, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType)
 {
-	for (auto &componentMesh : meshes)
+	componentMesh->UpdateGlobalBoundingBox();
+
+	if (componentMesh->gameObjectParent->active)
 	{
-		componentMesh->UpdateGlobalBoundingBox();
+		ComponentTransformation* transformation = (ComponentTransformation*)componentMesh->gameObjectParent->GetComponent(ComponentType::TRANSFORMATION);
+		ComponentMaterial* componentMaterial = (ComponentMaterial*)componentMesh->gameObjectParent->GetComponent(ComponentType::MATERIAL);
 
-		if (componentMesh->gameObjectParent->active)
+		RenderMesh(*componentMesh, componentMaterial,
+			transformation->globalModelMatrix, view, projection);
+
+		if (componentMesh != nullptr && frameBufferType == FrameBufferType::SCENE && componentMesh->gameObjectParent->isSelected)
 		{
-			ComponentTransformation* transformation = (ComponentTransformation*)componentMesh->gameObjectParent->GetComponent(ComponentType::TRANSFORMATION);
-			ComponentMaterial* componentMaterial = (ComponentMaterial*)componentMesh->gameObjectParent->GetComponent(ComponentType::MATERIAL);
+			App->environment->DrawBoundingBox(*componentMesh);
+		}
+	}
+}
 
-			if ((componentMesh != nullptr) &&
-				(componentCameraGameSelected == nullptr ||
-					componentCameraGameSelected->frustum.Intersects(componentMesh->globalBoundingBox) ||
-					!App->scene->isSceneCullingActive))
-			{
-				RenderMesh(*componentMesh, componentMaterial,
-					transformation->globalModelMatrix, view, projection);
-			}
+void ModuleRender::RenderComponentUsingQuadTree(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType)
+{
+	if (componentCameraGameSelected != nullptr && App->scene->isSceneCullingActive)
+	{
+		gameObjectsCollideQuadtree.clear();
+		App->scene->quadTree.CollectIntersections(gameObjectsCollideQuadtree, componentCameraGameSelected->frustum);
 
-			if (componentMesh != nullptr && frameBufferType == FrameBufferType::SCENE && componentMesh->gameObjectParent->isSelected)
+		for (std::vector<GameObject*>::iterator iterator = gameObjectsCollideQuadtree.begin(); iterator != gameObjectsCollideQuadtree.end(); ++iterator)
+		{
+			if ((*iterator)->active)
 			{
-				App->environment->DrawBoundingBox(*componentMesh);
+				ComponentMesh* componentMesh = (ComponentMesh*)(*iterator)->GetComponent(ComponentType::MESH);
+
+				RenderComponentFromMeshesList(componentMesh, view, projection, frameBufferType);
 			}
+		}
+	}
+	else
+	{
+		for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end(); ++iterator)
+		{
+			RenderComponentFromMeshesList(*iterator, view, projection, frameBufferType);
 		}
 	}
 }
@@ -566,7 +583,7 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
-	
+
 	if (frameBufferToRender.frameBufferType == FrameBufferType::SCENE)
 	{
 		if (App->scene->drawQuadTree)
@@ -589,12 +606,12 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	
+
 	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, camera->screenWidth, camera->screenHeight, view, projection);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 
-	RenderComponentFromMeshesList(view, projection, frameBufferToRender.frameBufferType);
+	RenderComponentUsingQuadTree(view, projection, frameBufferToRender.frameBufferType);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

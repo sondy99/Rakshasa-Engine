@@ -72,7 +72,8 @@ private:
 	void FpsCount();
 	void ManageFpsAndMsList();
 	void InitFrameBuffer(int width, int height, FrameBufferStruct &frameBufferToInit);
-	void RenderComponentFromMeshesList(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
+	void RenderComponentFromMeshesList(ComponentMesh* componentMesh, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
+	void RenderComponentUsingQuadTree(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
 	void ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras); 
@@ -94,6 +95,7 @@ private:
 	std::vector<float> fpsList;
 	std::vector<float> msList;
 	std::list<ComponentMesh*> meshes;
+	std::vector<GameObject*> gameObjectsCollideQuadtree;
 };
 
 #endif __MODULERENDER_H__
