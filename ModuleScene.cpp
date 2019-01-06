@@ -143,7 +143,7 @@ void ModuleScene::DrawProperties()
 				if (ImGui::Selectable((*iterator).c_str(), isSelected))
 				{
 					labelCurrentSceneFileName = (*iterator).c_str();
-					strcpy_s(sceneFileName, sizeof(sceneFileName), (*iterator).c_str());;
+					strcpy_s(sceneFileName, sizeof(sceneFileName), (*iterator).c_str());
 					if (isSelected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -557,41 +557,44 @@ void ModuleScene::SaveGameObject(Config* config, GameObject* gameObject)
 
 void ModuleScene::LoadScene()
 {
-	Config* config = new Config();
-
-	std::string fullPathSceneFileName = sceneFileName;
-	fullPathSceneFileName.insert(0, "/Library/Scene/");
-	rapidjson::Document document = config->LoadFromDisk(fullPathSceneFileName.c_str());
-
-	if (!document.HasParseError())
+	if (strcmp(sceneFileName, "/n") > 0)
 	{
-		rapidjson::Value& scene = document["scene"];
+		Config* config = new Config();
 
-		ambientLight = config->GetFloat("ambientLight", scene);
-		ambientLightPosition = config->GetFloat3("ambientLightPosition", scene);
-		isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
+		std::string fullPathSceneFileName = sceneFileName;
+		fullPathSceneFileName.insert(0, "/Library/Scene/");
+		rapidjson::Document document = config->LoadFromDisk(fullPathSceneFileName.c_str());
 
-		App->camera->sceneCamera->Load(config, document["sceneCamera"]);
-
-		rapidjson::Value gameObjects = document["gameObjects"].GetArray();
-		for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
+		if (!document.HasParseError())
 		{
-			CreateGameObject(config, *it);
-		}
+			rapidjson::Value& scene = document["scene"];
 
-		if (document.HasMember("selectedCamera"))
-		{
-			rapidjson::Value& selectedCamera = document["selectedCamera"];
-			if (selectedCamera.HasMember("gameObjectParent"))
+			ambientLight = config->GetFloat("ambientLight", scene);
+			ambientLightPosition = config->GetFloat3("ambientLightPosition", scene);
+			isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
+
+			App->camera->sceneCamera->Load(config, document["sceneCamera"]);
+
+			rapidjson::Value gameObjects = document["gameObjects"].GetArray();
+			for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
 			{
-				const char* parentUuid = config->GetString("gameObjectParent", selectedCamera);
-				char uuidGameObjectParent[37];
-				sprintf_s(uuidGameObjectParent, parentUuid);
-				GameObject* gameObjecteCameraSelected = GetGameObjectByUUID(root, uuidGameObjectParent);
+				CreateGameObject(config, *it);
+			}
 
-				Component* camera = gameObjecteCameraSelected->GetComponent(ComponentType::CAMERA);
+			if (document.HasMember("selectedCamera"))
+			{
+				rapidjson::Value& selectedCamera = document["selectedCamera"];
+				if (selectedCamera.HasMember("gameObjectParent"))
+				{
+					const char* parentUuid = config->GetString("gameObjectParent", selectedCamera);
+					char uuidGameObjectParent[37];
+					sprintf_s(uuidGameObjectParent, parentUuid);
+					GameObject* gameObjecteCameraSelected = GetGameObjectByUUID(root, uuidGameObjectParent);
 
-				App->renderer->componentCameraGameSelected = (ComponentCamera*)camera;
+					Component* camera = gameObjecteCameraSelected->GetComponent(ComponentType::CAMERA);
+
+					App->renderer->componentCameraGameSelected = (ComponentCamera*)camera;
+				}
 			}
 		}
 	}

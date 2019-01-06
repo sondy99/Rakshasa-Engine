@@ -130,15 +130,50 @@ bool ModuleRender::CleanUp()
 	glDeleteFramebuffers(1, &frameBufferGame.frameBufferObject);
 	glDeleteRenderbuffers(1, &frameBufferGame.renderBufferObject);
 
-	for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end();)
-	{
-		RELEASE(*iterator);
-		iterator = meshes.erase(iterator);
-	}
+	CleanUpFromList(nullptr);
 
-	RELEASE(componentCameraGameSelected);
+	componentCameraGameSelected = nullptr;
 
 	return true;
+}
+
+void ModuleRender::CleanUpFromList(ComponentMesh * componentMesh)
+{
+	for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end();)
+	{
+		if (componentMesh == nullptr)
+		{
+			iterator = CleanUpIterator(iterator);
+		}
+		else
+		{
+			if (componentMesh == *iterator)
+			{
+				iterator = CleanUpIterator(iterator);
+			}
+			else
+			{
+				++iterator;
+			}
+		}
+	}
+}
+
+std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(std::list<ComponentMesh*>::iterator iterator)
+{
+	if ((*iterator)->mesh.vbo != 0)
+	{
+		glDeleteBuffers(1, &(*iterator)->mesh.vbo);
+	}
+
+	if ((*iterator)->mesh.ibo != 0)
+	{
+		glDeleteBuffers(1, &(*iterator)->mesh.ibo);
+	}
+
+	RELEASE(*iterator);
+
+	return meshes.erase(iterator);
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,

@@ -34,6 +34,35 @@ ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType compone
 
 ComponentMesh::~ComponentMesh()
 {
+	if (mesh.indices != nullptr)
+	{
+		delete[]mesh.indices;
+		mesh.indices = nullptr;
+	}
+
+	if (mesh.vertices != nullptr)
+	{
+		delete[]mesh.vertices;
+		mesh.vertices = nullptr;
+	}
+
+	if (mesh.uvs != nullptr)
+	{
+		delete[]mesh.uvs;
+		mesh.uvs = nullptr;
+	}
+
+	if (mesh.normals != nullptr)
+	{
+		delete[]mesh.normals;
+		mesh.normals = nullptr;
+	}
+
+	if (mesh.colors != nullptr)
+	{
+		delete[]mesh.colors;
+		mesh.colors = nullptr;
+	}
 }
 
 void ComponentMesh::DrawProperties()

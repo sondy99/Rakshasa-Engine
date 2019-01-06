@@ -31,14 +31,42 @@ bool ModuleTextures::Init()
 
 bool ModuleTextures::CleanUp()
 {
-
-	for (std::list<ComponentMaterial*>::iterator iterator = materials.begin(); iterator != materials.end();)
-	{
-		RELEASE(*iterator);
-		iterator = materials.erase(iterator);
-	}
+	CleanUpFromList(nullptr);
 
 	return true;
+}
+
+std::list<ComponentMaterial*>::iterator ModuleTextures::CleanUpIterator(std::list<ComponentMaterial*>::iterator iterator)
+{
+	Unload((*iterator)->material.diffuseMap);
+	Unload((*iterator)->material.occlusionMap);
+	Unload((*iterator)->material.specularMap);
+	Unload((*iterator)->material.emissiveMap);
+
+	RELEASE(*iterator);
+	return materials.erase(iterator); 
+}
+
+void ModuleTextures::CleanUpFromList(ComponentMaterial * componentMaterial)
+{
+	for (std::list<ComponentMaterial*>::iterator iterator = materials.begin(); iterator != materials.end();)
+	{
+		if (componentMaterial == nullptr)
+		{
+			iterator = CleanUpIterator(iterator);
+		}
+		else
+		{
+			if (componentMaterial == *iterator)
+			{
+				iterator = CleanUpIterator(iterator);
+			}
+			else
+			{
+				++iterator;
+			}
+		}
+	}
 }
 
 void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& width, int& height)

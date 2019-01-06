@@ -33,6 +33,8 @@ public:
 	bool Init() override;
 	update_status PreUpdate() override;
 	bool CleanUp() override;
+	void CleanUpFromList(ComponentCamera* componentCamera);
+	std::list<ComponentCamera*>::iterator CleanUpIterator(std::list<ComponentCamera*>::iterator iterator);
 
 	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 

@@ -71,16 +71,40 @@ update_status ModuleCamera::PreUpdate()
 // Called before quitting
 bool ModuleCamera::CleanUp()
 {
-	for (std::list<ComponentCamera*>::iterator iterator = cameras.begin(); iterator != cameras.end();)
-	{
-		RELEASE(*iterator);
-		iterator = cameras.erase(iterator);
-	}
-
 	RELEASE(sceneCamera);
-	RELEASE(selectedCamera);
+	selectedCamera = nullptr;
+
+	CleanUpFromList(nullptr);
 
 	return true;
+}
+
+void ModuleCamera::CleanUpFromList(ComponentCamera * componentCamera)
+{
+	for (std::list<ComponentCamera*>::iterator iterator = cameras.begin(); iterator != cameras.end();)
+	{
+		if (componentCamera == nullptr)
+		{
+			iterator = CleanUpIterator(iterator);
+		}
+		else
+		{
+			if (componentCamera == *iterator)
+			{
+				iterator = CleanUpIterator(iterator);
+			}
+			else
+			{
+				++iterator;
+			}
+		}
+	}
+}
+
+std::list<ComponentCamera*>::iterator ModuleCamera::CleanUpIterator(std::list<ComponentCamera*>::iterator iterator)
+{
+	RELEASE(*iterator);
+	return cameras.erase(iterator);
 }
 
 void ModuleCamera::SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight)

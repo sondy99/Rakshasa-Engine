@@ -73,6 +73,8 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
+	void CleanUpFromList(ComponentMaterial* componentMaterial);
+	std::list<ComponentMaterial*>::iterator CleanUpIterator(std::list<ComponentMaterial*>::iterator iterator);
 
 	void LoadMaterial(std::string path, unsigned& textureID, int& width, int& height);
 	void LoadMaterial(const char* path, ComponentMaterial* componentMaterial, MaterialTypeSelected materialTypeSelected);

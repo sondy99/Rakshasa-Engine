@@ -47,7 +47,9 @@ public:
 	update_status Update() override;
 	update_status PostUpdate() override;
 	bool CleanUp() override;
-	
+	void CleanUpFromList(ComponentMesh* componentMesh);
+	std::list<ComponentMesh*>::iterator CleanUpIterator(std::list<ComponentMesh*>::iterator iterator);
+
 	void RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	

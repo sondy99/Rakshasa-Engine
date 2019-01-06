@@ -47,7 +47,6 @@ public:
 
 	bool toggleModelProperties = false;
 private:
-	void CleanUpMeshesAndTextures(const GameObject* gameObject);
 	void GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh& meshStruct);
 	void CreateMeshComponent(const par_shapes_mesh_s* parShapeMesh, GameObject* gameObjectMesh, const math::float4& color);
 	void CreateMaterialComponent(GameObject* gameObjectMesh, const math::float4& color);

@@ -26,7 +26,19 @@ GameObject::~GameObject()
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 	{
-		RELEASE(*iterator);
+		if ((*iterator)->componentType == ComponentType::MATERIAL)
+		{
+			App->textures->CleanUpFromList((ComponentMaterial*)*iterator);
+		}
+		if ((*iterator)->componentType == ComponentType::MESH)
+		{
+			App->renderer->CleanUpFromList((ComponentMesh*)*iterator);
+		}
+		if ((*iterator)->componentType == ComponentType::CAMERA)
+		{
+			App->camera->CleanUpFromList((ComponentCamera*)*iterator);
+		}
+
 		iterator = components.erase(iterator);
 	}
 

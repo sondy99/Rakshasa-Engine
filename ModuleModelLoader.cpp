@@ -87,56 +87,7 @@ void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType 
 
 bool ModuleModelLoader::CleanUp()
 {
-	CleanUpMeshesAndTextures(App->scene->root);
-
 	return true;
-}
-
-void ModuleModelLoader::CleanUpMeshesAndTextures(const GameObject * gameObject)
-{
-	for (auto &gameObjectChild : gameObject->childrens)
-	{
-		if (gameObjectChild->childrens.size() > 0)
-		{
-			//TODO: change this to not use recursivity
-			CleanUpMeshesAndTextures(gameObjectChild);
-		}
-
-		if (gameObjectChild->components.size() > 0)
-		{
-			Material* material = nullptr;
-
-			for (auto &component : gameObjectChild->components)
-			{
-				if (component->componentType == ComponentType::MATERIAL)
-				{
-					material = &(dynamic_cast<ComponentMaterial*>(component))->material;
-					App->textures->Unload(material->diffuseMap);
-					App->textures->Unload(material->occlusionMap);
-					App->textures->Unload(material->specularMap);
-					App->textures->Unload(material->emissiveMap);
-				}
-			}
-
-			for (auto &component : gameObjectChild->components)
-			{
-				if (component->componentType == ComponentType::MESH)
-				{
-					Mesh& mesh = (dynamic_cast<ComponentMesh*>(component)->mesh);
-
-					if (mesh.vbo != 0)
-					{
-						glDeleteBuffers(1, &mesh.vbo);
-					}
-
-					if (mesh.ibo != 0)
-					{
-						glDeleteBuffers(1, &mesh.ibo);
-					}
-				}
-			}
-		}
-	}
 }
 
 void ModuleModelLoader::CleanUpMesh(Mesh meshStruct)
