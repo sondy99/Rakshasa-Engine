@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#include "MathGeoLib.h"
+
 class ComponentCamera;
 class ComponentMesh;
 
@@ -17,6 +19,7 @@ public:
 	void DrawReferenceGround();
 	void DrawReferenceAxis();
 	void DrawBoundingBox(const ComponentMesh& componentMesh);
+	void DrawBoundingBox(math::float3 minPoint, math::float3 maxPoint);
 	void DrawFrustum(const ComponentCamera& camera);
 };
 

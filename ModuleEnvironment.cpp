@@ -44,6 +44,11 @@ void ModuleEnvironment::DrawBoundingBox(const ComponentMesh& componentMesh)
 	dd::aabb(componentMesh.globalBoundingBox.minPoint, componentMesh.globalBoundingBox.maxPoint, dd::colors::Yellow);
 }
 
+void ModuleEnvironment::DrawBoundingBox(math::float3 minPoint, math::float3 maxPoint)
+{
+	dd::aabb(minPoint, maxPoint, dd::colors::Blue);
+}
+
 void ModuleEnvironment::DrawFrustum(const ComponentCamera& camera)
 {
 	dd::frustum((camera.frustum.ProjectionMatrix() * camera.frustum.ViewMatrix()).Inverted(), dd::colors::Cyan);

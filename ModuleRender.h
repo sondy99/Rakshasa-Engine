@@ -9,6 +9,7 @@
 #include "ModuleModelLoader.h"
 
 class GameObject;
+class QuadtreeNode;
 
 enum class ComponentType;
 class Component;
@@ -60,6 +61,7 @@ public:
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType);
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
 	void RemoveMeshComponent(Component* componentToBeRemove);
+	void LoadQuadTreeForAllMesh();
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;
@@ -73,7 +75,8 @@ private:
 	void RenderComponentFromMeshesList(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
-	void ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras);
+	void ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras); 
+	void DrawQuadTreeNode(QuadtreeNode* quadtreeNode);
 private:
 	FrameBufferStruct frameBufferScene;
 	FrameBufferStruct frameBufferGame;

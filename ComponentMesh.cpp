@@ -9,6 +9,7 @@
 #include "ModuleRender.h"
 #include "ModuleLibrary.h"
 #include "ModuleModelLoader.h"
+#include "ModuleScene.h"
 
 #include "ImporterMesh.h"
 
@@ -36,32 +37,27 @@ ComponentMesh::~ComponentMesh()
 {
 	if (mesh.indices != nullptr)
 	{
-		delete[]mesh.indices;
-		mesh.indices = nullptr;
+		RELEASE_ARRAY(mesh.indices);
 	}
 
 	if (mesh.vertices != nullptr)
 	{
-		delete[]mesh.vertices;
-		mesh.vertices = nullptr;
+		RELEASE_ARRAY(mesh.vertices);
 	}
 
 	if (mesh.uvs != nullptr)
 	{
-		delete[]mesh.uvs;
-		mesh.uvs = nullptr;
+		RELEASE_ARRAY(mesh.uvs);
 	}
 
 	if (mesh.normals != nullptr)
 	{
-		delete[]mesh.normals;
-		mesh.normals = nullptr;
+		RELEASE_ARRAY(mesh.normals);
 	}
 
 	if (mesh.colors != nullptr)
 	{
-		delete[]mesh.colors;
-		mesh.colors = nullptr;
+		RELEASE_ARRAY(mesh.colors);
 	}
 }
 
@@ -111,6 +107,7 @@ void ComponentMesh::DrawProperties()
 						labelCurrentFileMeshSelected = (*iterator);
 
 						LoadMesh(labelCurrentFileMeshSelected.c_str());
+
 						if (isSelected)
 						{
 							ImGui::SetItemDefaultFocus();

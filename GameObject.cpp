@@ -6,6 +6,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
+#include "ModuleScene.h"
 
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
@@ -96,12 +97,36 @@ void GameObject::DrawProperties()
 			ImGui::InputText("##", &name[0], 40);
 			ImGui::Text("Model selected has %d childs.", childrens.size());
 			
-			Component* componentMesh = GetComponent(ComponentType::MESH);
+			bool haveComponentRecursive = HaveComponentRecursive(ComponentType::MESH);
 
-			if (componentMesh != nullptr)
+			if (haveComponentRecursive)
 			{
 				ImGui::Checkbox("Active", &active);
+
+				bool previousGameObjectStatic = gameObjectStatic;
 				ImGui::Checkbox("Static", &gameObjectStatic);
+
+				if (previousGameObjectStatic != gameObjectStatic)
+				{
+					if (!gameObjectStatic)
+					{
+						App->scene->quadTree.RemoveGameObject(this);
+					}
+					else
+					{
+						std::list<Component*> componentList; 
+						GetComponentRecursive(componentList, ComponentType::MESH);
+
+						if (componentList.size() > 0)
+						{
+							for (std::list<Component*>::iterator iterator = componentList.begin(); iterator != componentList.end(); ++iterator)
+							{
+								((ComponentMesh*)(*iterator))->UpdateGlobalBoundingBox();
+								App->scene->quadTree.InsertGameObject(((ComponentMesh*)(*iterator))->gameObjectParent, true);
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -180,6 +205,7 @@ GameObject* GameObject::Clone()
 	GameObject* result = new GameObject(name.c_str(), parent);
 
 	result->active = active;
+	result->gameObjectStatic = gameObjectStatic;
 
 	return result;
 }
@@ -194,6 +220,50 @@ Component* GameObject::GetComponent(ComponentType componentType)
 		{
 			result = component;
 			break;
+		}
+	}
+
+	return result;
+}
+
+void GameObject::GetComponentRecursive(std::list<Component*>& componentList, ComponentType componentType)
+{
+	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
+	{
+		//TODO: change this to not use recursivity
+		(*iterator)->GetComponentRecursive(componentList, componentType);
+	}
+
+	Component* component = GetComponent(componentType);
+
+	if (component != nullptr)
+	{
+		componentList.push_back(component);
+	}
+}
+
+bool GameObject::HaveComponentRecursive(ComponentType componentType)
+{
+	bool result = false;
+
+	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end(); iterator++)
+	{
+		//TODO: change this to not use recursivity
+		result = (*iterator)->HaveComponentRecursive(componentType);
+
+		if (result)
+		{
+			break;
+		}
+	}
+
+	if (!result)
+	{
+		Component* component = GetComponent(componentType);
+
+		if (component != nullptr)
+		{
+			result = true;
 		}
 	}
 
@@ -277,7 +347,8 @@ bool GameObject::Save(Config* config)
 	}
 
 	config->AddBool("active", active);
-
+	config->AddBool("gameObjectStatic", gameObjectStatic);
+	
 	config->StartArray("components");
 
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end(); iterator++)
@@ -298,7 +369,8 @@ void GameObject::Load(Config* config, rapidjson::Value & value)
 	sprintf_s(uuid, newUuid);
 
 	active = config->GetBool("active", value);
-
+	gameObjectStatic = config->GetBool("gameObjectStatic", value);
+	
 	rapidjson::Value components = value["components"].GetArray();
 	for (rapidjson::Value::ValueIterator it = components.Begin(); it != components.End(); it++)
 	{

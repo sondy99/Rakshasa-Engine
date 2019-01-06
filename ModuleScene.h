@@ -5,8 +5,9 @@
 
 #include "MathGeoLib.h"
 
-#include "list";
+#include "QuadTree.h"
 
+#include "list";
 #include "document.h"
 #include "prettywriter.h"
 
@@ -37,6 +38,10 @@ public:
 	static char sceneFileName[];
 	static const char* labelCurrentSceneFileName;
 	bool markToUpdateSceneFiles = false;
+
+	Quadtree quadTree;
+	bool drawQuadTree = false;
+	bool drawReferenceGround = true;
 private:
 	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);

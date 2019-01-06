@@ -29,6 +29,8 @@ public:
 	void DuplicateGameObject(GameObject* newGameObjectParent);
 	GameObject* Clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
+	void GetComponentRecursive(std::list<Component*>& componentList, ComponentType componentType);
+	bool GameObject::HaveComponentRecursive(ComponentType componentType);
 	Component* CreateComponent(ComponentType componentType);
 
 	bool Save(Config* config);
@@ -39,7 +41,7 @@ public:
 	GameObject* parent = nullptr;
 	bool isSelected = false;
 	bool active = true;
-	bool gameObjectStatic = true;
+	bool gameObjectStatic = false;
 
 	std::list<Component*> components;
 	std::list<GameObject*> childrens;

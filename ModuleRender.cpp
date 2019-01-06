@@ -381,6 +381,20 @@ void ModuleRender::RemoveMeshComponent(Component* componentToBeRemove)
 	}
 }
 
+void ModuleRender::LoadQuadTreeForAllMesh()
+{
+	CalculateGameObjectGlobalMatrix(App->scene->root);
+
+	for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end(); ++iterator)
+	{
+		if ((*iterator)->gameObjectParent->gameObjectStatic)
+		{
+			(*iterator)->UpdateGlobalBoundingBox();
+			App->scene->quadTree.InsertGameObject((*iterator)->gameObjectParent, true);
+		}
+	}
+}
+
 void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras)
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
@@ -413,6 +427,19 @@ void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCam
 	else
 	{
 		labelCurrentCameraGameObjecteName = "Select a camera";
+	}
+}
+
+void ModuleRender::DrawQuadTreeNode(QuadtreeNode * quadtreeNode)
+{
+	App->environment->DrawBoundingBox(quadtreeNode->aabb.minPoint, quadtreeNode->aabb.maxPoint);
+
+	if (quadtreeNode->childs[0] != nullptr)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			DrawQuadTreeNode(quadtreeNode->childs[i]);
+		}
 	}
 }
 
@@ -504,7 +531,7 @@ void ModuleRender::RenderComponentFromMeshesList(math::float4x4 view, math::floa
 					transformation->globalModelMatrix, view, projection);
 			}
 
-			if (componentMesh != nullptr && componentMesh->gameObjectParent->isSelected)
+			if (componentMesh != nullptr && frameBufferType == FrameBufferType::SCENE && componentMesh->gameObjectParent->isSelected)
 			{
 				App->environment->DrawBoundingBox(*componentMesh);
 			}
@@ -539,13 +566,25 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
-
-	App->environment->DrawReferenceGround();
-	App->environment->DrawReferenceAxis();
-
-	if (frameBufferToRender.frameBufferType == FrameBufferType::SCENE && componentCameraGameSelected != nullptr)
+	
+	if (frameBufferToRender.frameBufferType == FrameBufferType::SCENE)
 	{
-		App->environment->DrawFrustum(*componentCameraGameSelected);
+		if (App->scene->drawQuadTree)
+		{
+			DrawQuadTreeNode(App->scene->quadTree.root);
+		}
+
+		if (App->scene->drawReferenceGround)
+		{
+			App->environment->DrawReferenceGround();
+		}
+
+		if (componentCameraGameSelected != nullptr)
+		{
+			App->environment->DrawFrustum(*componentCameraGameSelected);
+		}
+
+		App->environment->DrawReferenceAxis();
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

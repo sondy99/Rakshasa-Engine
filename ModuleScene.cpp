@@ -34,6 +34,8 @@ bool ModuleScene::Init()
 	
 	markToUpdateSceneFiles = true;
 
+	quadTree.InitQuadTree(math::AABB(math::float3(-5000.0f, 0.0f, -5000.0f), math::float3(5000.0f, 5000.0f, 5000.0f)), true);
+
 	return true;
 }
 
@@ -178,6 +180,9 @@ void ModuleScene::DrawProperties()
 		DrawGeometryGameObjectButtons(root);
 
 		ImGui::Checkbox("Scene culling active", &isSceneCullingActive);
+		ImGui::Checkbox("Draw reference ground", &drawReferenceGround);
+		ImGui::Checkbox("Draw quadtree", &drawQuadTree);
+		
 
 		ImGui::EndPopup();
 	}
@@ -441,6 +446,11 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 			gameObjectSelected = nullptr;
 		}
 
+		if (gameObjectsToBeDeleted.size() == 1 && ((GameObject*)*gameObjectsToBeDeleted.begin())->parent == nullptr)
+		{
+			quadTree.InitQuadTree(math::AABB(math::float3(-5000.0f, 0.0f, -5000.0f), math::float3(5000.0f, 5000.0f, 5000.0f)), true);
+		}
+
 		gameObjectsToBeDeleted.clear();
 
 	}
@@ -575,8 +585,8 @@ void ModuleScene::LoadScene()
 
 			App->camera->sceneCamera->Load(config, document["sceneCamera"]);
 
-			rapidjson::Value gameObjects = document["gameObjects"].GetArray();
-			for (rapidjson::Value::ValueIterator it = gameObjects.Begin(); it != gameObjects.End(); it++)
+			rapidjson::Value gameObjectList = document["gameObjects"].GetArray();
+			for (rapidjson::Value::ValueIterator it = gameObjectList.Begin(); it != gameObjectList.End(); it++)
 			{
 				CreateGameObject(config, *it);
 			}
@@ -596,6 +606,8 @@ void ModuleScene::LoadScene()
 					App->renderer->componentCameraGameSelected = (ComponentCamera*)camera;
 				}
 			}
+
+			App->renderer->LoadQuadTreeForAllMesh();
 		}
 	}
 }

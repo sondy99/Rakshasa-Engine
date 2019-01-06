@@ -192,6 +192,7 @@
     <ClCompile Include="Config.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Quadtree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -538,6 +539,7 @@
     <ClInclude Include="Config.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Quadtree.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">

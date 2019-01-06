@@ -254,6 +254,7 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="par_shapes.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="rapidjson-1.1.0\include\rapidjson\allocators.h" />
     <ClInclude Include="rapidjson-1.1.0\include\rapidjson\document.h" />
     <ClInclude Include="rapidjson-1.1.0\include\rapidjson\encodedstream.h" />
@@ -341,6 +342,7 @@
     <ClCompile Include="ModuleShader.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

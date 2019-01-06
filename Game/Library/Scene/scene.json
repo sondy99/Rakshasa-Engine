@@ -14,50 +14,50 @@
         "frustum.farPlaneDistance": 35000.0,
         "cameraPosition": {
             "x": -4071.884033203125,
-            "y": 3280.42431640625,
+            "y": 8504.9248046875,
             "z": 2923.963134765625
         },
         "cameraFront": {
-            "x": 0.5814078450202942,
-            "y": -0.5328763723373413,
-            "z": -0.6148233413696289
+            "x": 0.40617337822914126,
+            "y": -0.8171449303627014,
+            "z": -0.40902000665664675
         },
         "cameraUp": {
             "x": 0.0,
             "y": 1.0,
             "z": 0.0
         },
-        "pitch": -32.20000457763672,
-        "yaw": -46.60008239746094
+        "pitch": -54.80000305175781,
+        "yaw": -45.2000732421875
     },
     "selectedCamera": {
         "componentType": "CAMERA",
-        "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
         "frustum.nearPlaneDistance": 10.0,
-        "frustum.farPlaneDistance": 10000.0,
+        "frustum.farPlaneDistance": 35000.0,
         "cameraPosition": {
-            "x": -397.96356201171877,
-            "y": 119.80665588378906,
-            "z": 293.1339416503906
+            "x": -4071.884033203125,
+            "y": 8504.9248046875,
+            "z": 2923.963134765625
         },
         "cameraFront": {
-            "x": 0.8367438912391663,
-            "y": -0.006981233600527048,
-            "z": -0.5475499629974365
+            "x": 0.40617337822914126,
+            "y": -0.8171449303627014,
+            "z": -0.40902000665664675
         },
         "cameraUp": {
             "x": 0.0,
             "y": 1.0,
             "z": 0.0
         },
-        "pitch": -0.3999984860420227,
-        "yaw": -33.20000457763672
+        "pitch": -54.80000305175781,
+        "yaw": -45.2000732421875
     },
     "gameObjects": [
         {
             "uuid": "67256617-76cd-411b-8da3-103660dfe96f",
             "name": "root",
             "active": true,
+            "gameObjectStatic": true,
             "components": []
         },
         {
@@ -65,6 +65,7 @@
             "name": "Camera",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -122,6 +123,7 @@
             "name": "Camera2",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -179,6 +181,7 @@
             "name": "zombunny",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": false,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -213,6 +216,7 @@
             "name": "eyes",
             "parent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
             "active": true,
+            "gameObjectStatic": false,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -283,6 +287,7 @@
             "name": "body",
             "parent": "b02a391b-5254-4fbd-88ba-08fee15f65ec",
             "active": true,
+            "gameObjectStatic": false,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -353,6 +358,7 @@
             "name": "wall",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -387,6 +393,7 @@
             "name": "wall",
             "parent": "43f8d29f-5a45-4394-b6e7-ec796c708b0d",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -457,6 +464,7 @@
             "name": "stars",
             "parent": "43f8d29f-5a45-4394-b6e7-ec796c708b0d",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -527,6 +535,7 @@
             "name": "drawer",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -597,6 +606,7 @@
             "name": "firetruck",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -667,6 +677,7 @@
             "name": "dollhouse",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -737,6 +748,7 @@
             "name": "clock",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -807,6 +819,7 @@
             "name": "hearse",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -877,6 +890,7 @@
             "name": "robot",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -947,6 +961,7 @@
             "name": "player",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": false,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -981,6 +996,7 @@
             "name": "body",
             "parent": "cd3adfbc-7ee1-4dd5-b743-8824b8f2d6da",
             "active": true,
+            "gameObjectStatic": false,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -1051,6 +1067,7 @@
             "name": "gun",
             "parent": "cd3adfbc-7ee1-4dd5-b743-8824b8f2d6da",
             "active": true,
+            "gameObjectStatic": false,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -1121,6 +1138,7 @@
             "name": "floor",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -1155,6 +1173,7 @@
             "name": "floor",
             "parent": "c9bd8f19-480c-492a-a4d7-2e84bcd7e724",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
@@ -1225,6 +1244,7 @@
             "name": "spinningtop",
             "parent": "67256617-76cd-411b-8da3-103660dfe96f",
             "active": true,
+            "gameObjectStatic": true,
             "components": [
                 {
                     "componentType": "TRANSFORMATION",
