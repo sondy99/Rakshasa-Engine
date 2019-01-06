@@ -182,7 +182,7 @@ void ModuleScene::DrawProperties()
 		ImGui::Checkbox("Scene culling active", &isSceneCullingActive);
 		ImGui::Checkbox("Draw reference ground", &drawReferenceGround);
 		ImGui::Checkbox("Draw quadtree", &drawQuadTree);
-		
+		ImGui::Checkbox("VSync", &App->renderer->enableVSync);
 
 		ImGui::EndPopup();
 	}
@@ -513,6 +513,7 @@ void ModuleScene::SaveScene()
 	config->AddFloat3("ambientLightPosition", ambientLightPosition);
 	config->AddBool("isSceneCullingActive", isSceneCullingActive);
 	config->AddBool("drawQuadTree", drawQuadTree);
+	config->AddBool("enableVSync", App->renderer->enableVSync);
 	
 	config->EndObject();
 
@@ -579,6 +580,7 @@ void ModuleScene::LoadScene()
 			ambientLightPosition = config->GetFloat3("ambientLightPosition", scene);
 			isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
 			drawQuadTree = config->GetBool("drawQuadTree", scene);
+			App->renderer->enableVSync = config->GetBool("enableVSync", scene);
 			
 			App->camera->sceneCamera->Load(config, document["sceneCamera"]);
 

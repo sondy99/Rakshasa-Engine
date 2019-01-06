@@ -74,7 +74,8 @@ public:
 	ComponentCamera* componentCameraGameSelected = nullptr;
 	float sceneViewportX = 0.0f;
 	float sceneViewportY = 0.0f;
-	std::list<ComponentMesh*> meshes;
+	std::list<ComponentMesh*> meshes; 
+	bool enableVSync = true;
 private:
 	void FpsCount();
 	void ManageFpsAndMsList();

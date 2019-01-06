@@ -7,7 +7,8 @@
             "z": 8380.0
         },
         "isSceneCullingActive": false,
-        "drawQuadTree": true
+        "drawQuadTree": true,
+        "enableVSync": true
     },
     "sceneCamera": {
         "componentType": "CAMERA",
@@ -33,26 +34,25 @@
     },
     "selectedCamera": {
         "componentType": "CAMERA",
-        "gameObjectParent": "1611e70c-7261-4816-b410-a202e268bcbc",
         "frustum.nearPlaneDistance": 10.0,
-        "frustum.farPlaneDistance": 10000.0,
+        "frustum.farPlaneDistance": 35000.0,
         "cameraPosition": {
-            "x": -3186.121337890625,
-            "y": 348.0008239746094,
-            "z": 724.0531005859375
+            "x": -4071.884033203125,
+            "y": 8504.9248046875,
+            "z": 2923.963134765625
         },
         "cameraFront": {
-            "x": 0.7311355471611023,
-            "y": 0.02443249709904194,
-            "z": -0.6817946434020996
+            "x": 0.40617337822914126,
+            "y": -0.8171449303627014,
+            "z": -0.40902000665664675
         },
         "cameraUp": {
             "x": 0.0,
             "y": 1.0,
             "z": 0.0
         },
-        "pitch": 1.4000182151794434,
-        "yaw": -42.99998474121094
+        "pitch": -54.80000305175781,
+        "yaw": -45.2000732421875
     },
     "gameObjects": [
         {

@@ -79,6 +79,15 @@ update_status ModuleRender::PreUpdate()
 {
 	BROFILER_CATEGORY("RenderPreUpdate()", Profiler::Color::AliceBlue);
 
+	if (App->renderer->enableVSync)
+	{
+		SDL_GL_SetSwapInterval(1);
+	}
+	else
+	{
+		SDL_GL_SetSwapInterval(0);
+	}
+
 	ManageFpsAndMsList();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -191,6 +200,7 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, ComponentMater
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+
 	unsigned program = App->shader->program;
 
 	glUseProgram(program);
