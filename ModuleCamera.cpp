@@ -1,14 +1,20 @@
+#include "ModuleCamera.h"
+
 #include "Globals.h"
 #include "Application.h"
+
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
-#include "ModuleCamera.h"
 #include "ModuleRender.h"
+#include "ModuleScene.h"
+#include "ModuleTextures.h"
 
 #include "GameObject.h"
 
 #include "Component.h"
 #include "ComponentCamera.h"
+#include "ComponentMesh.h"
+#include "ComponentTransformation.h"
 
 ModuleCamera::ModuleCamera()
 {
@@ -63,6 +69,11 @@ update_status ModuleCamera::PreUpdate()
 			selectedCamera->cameraSpeed = selectedCamera->cameraSpeed / 3;
 			selectedCamera->rotationSpeed = selectedCamera->rotationSpeed / 3;
 		}
+	}
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && viewPortIsFocused)
+	{
+		PickGameObject();
 	}
 
 	return UPDATE_CONTINUE;
@@ -401,5 +412,68 @@ void ModuleCamera::RemoveCameraComponent(Component * componentToBeRemove)
 	if (componentToBeRemove->componentType == ComponentType::CAMERA)
 	{
 		cameras.remove((ComponentCamera*)componentToBeRemove);
+	}
+}
+
+void ModuleCamera::PickGameObject()
+{
+	iPoint mousePosition = App->input->GetMousePosition();
+
+	float normalizedX = -(1.0f - (float(mousePosition.x - App->renderer->sceneViewportX) * 2.0f) / sceneCamera->screenWidth);
+	float normalizedY = 1.0f - (float(mousePosition.y - App->renderer->sceneViewportY) * 2.0f) / sceneCamera->screenHeight;
+
+	math::LineSegment pickingLine = sceneCamera->frustum.UnProjectLineSegment(normalizedX, normalizedY);
+
+	objectsPossiblePick.clear();
+	App->scene->quadTree.CollectIntersections(objectsPossiblePick, pickingLine);
+
+	for (std::list<ComponentMesh*>::iterator iterator = App->renderer->meshes.begin(); iterator != App->renderer->meshes.end(); ++iterator)
+	{
+		if (!(*iterator)->gameObjectParent->gameObjectStatic && (*iterator)->mesh.verticesNumber > 0 && pickingLine.Intersects((*iterator)->globalBoundingBox))
+		{
+			objectsPossiblePick.push_back((*iterator)->gameObjectParent);
+		}
+	}
+
+	float minDistance = -100.0f;
+	GameObject* gameObjectHit = nullptr;
+	if (objectsPossiblePick.size() > 0)
+	{
+		for (std::vector<GameObject*>::iterator iterator = objectsPossiblePick.begin(); iterator != objectsPossiblePick.end(); ++iterator)
+		{
+			ComponentMesh* componentMesh = (ComponentMesh*)(*iterator)->GetComponent(ComponentType::MESH);
+			ComponentTransformation* componentTransformation = (ComponentTransformation*)(*iterator)->GetComponent(ComponentType::TRANSFORMATION);
+
+			if (componentMesh != nullptr && componentTransformation != nullptr)
+			{
+				Mesh mesh = componentMesh->mesh;
+				math::LineSegment localTransformPikingLine(pickingLine);
+				localTransformPikingLine.Transform(componentTransformation->globalModelMatrix.Inverted());
+
+				math::Triangle triangle;
+				for (unsigned i = 0; i < mesh.indicesNumber; i += 3)
+				{
+					triangle.a = { mesh.vertices[mesh.indices[i] * 3], mesh.vertices[mesh.indices[i] * 3 + 1], mesh.vertices[mesh.indices[i] * 3 + 2] };
+					triangle.b = { mesh.vertices[mesh.indices[i + 1] * 3], mesh.vertices[mesh.indices[i + 1] * 3 + 1], mesh.vertices[mesh.indices[i + 1] * 3 + 2] };
+					triangle.c = { mesh.vertices[mesh.indices[i + 2] * 3], mesh.vertices[mesh.indices[i + 2] * 3 + 1], mesh.vertices[mesh.indices[i + 2] * 3 + 2] };
+
+					float triangleDistance;
+					float3 hitPoint;
+					if (localTransformPikingLine.Intersects(triangle, &triangleDistance, &hitPoint))
+					{
+						if (minDistance == -100.0f || triangleDistance < minDistance)
+						{
+							minDistance = triangleDistance;
+							gameObjectHit = *iterator;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (gameObjectHit != nullptr)
+	{
+		App->scene->SetGameObjectSelected(gameObjectHit);
 	}
 }

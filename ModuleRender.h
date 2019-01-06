@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 #include <vector>
+#include <list>
 
 #include "ModuleModelLoader.h"
 
@@ -68,6 +69,9 @@ public:
 
 	bool toggleRenderProperties = true;
 	ComponentCamera* componentCameraGameSelected = nullptr;
+	float sceneViewportX = 0.0f;
+	float sceneViewportY = 0.0f;
+	std::list<ComponentMesh*> meshes;
 private:
 	void FpsCount();
 	void ManageFpsAndMsList();
@@ -94,7 +98,6 @@ private:
 
 	std::vector<float> fpsList;
 	std::vector<float> msList;
-	std::list<ComponentMesh*> meshes;
 	std::vector<GameObject*> gameObjectsCollideQuadtree;
 };
 

@@ -108,9 +108,9 @@ void ModuleEditor::WindowManager()
 	if (toggleGameObjectProperties)
 	{
 		ImGui::Begin("Game object", &toggleGameObjectProperties);
-		if (App->scene->gameObjectSelected != nullptr)
+		if (App->scene->GetGameObjectSelected() != nullptr)
 		{
-			App->scene->gameObjectSelected->DrawProperties();
+			App->scene->GetGameObjectSelected()->DrawProperties();
 		}
 		ImGui::End();
 	}

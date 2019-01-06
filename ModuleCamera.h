@@ -2,7 +2,12 @@
 #define __MODULECAMERA_H_
 
 #include "Module.h"
+
 #include "Globals.h"
+
+#include <vector>
+#include <list>
+
 #include "Point.h"
 #include "MathGeoLib.h"
 
@@ -40,7 +45,8 @@ public:
 
 	void DrawProperties();
 	ComponentCamera* CreateComponentCamera(GameObject* gameObjectParent, ComponentType componentType);
-	void RemoveCameraComponent(Component* componentToBeRemove);
+	void RemoveCameraComponent(Component* componentToBeRemove); 
+	void PickGameObject();
 public:
 	bool toggleCameraProperties = true;
 
@@ -60,6 +66,7 @@ private:
 private:
 	math::float3 sceneCenter = math::float3(0.0f, 0.0f, 0.0f);
 	bool clickOnViewPort = false;
+	std::vector<GameObject*> objectsPossiblePick;
 };
 
 #endif __MODULECAMERA_H_

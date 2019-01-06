@@ -28,9 +28,10 @@ public:
 	void CreateGameObject(Config* config, rapidjson::Value & value);
 	void DrawProperties();
 	void ClearScene();
+	void SetGameObjectSelected(GameObject* gameObject);
+	inline GameObject* GetGameObjectSelected() const { return gameObjectSelected; }
 public:
 	GameObject* root = nullptr;
-	GameObject* gameObjectSelected = nullptr;
 	bool toggleSceneProperties = true;
 	bool isSceneCullingActive = true;
 	float ambientLight = 0.1f;
@@ -45,7 +46,6 @@ public:
 private:
 	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);
-	void SetGameObjectSelected(GameObject* gameObject);
 	GameObject* GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37]);
 	void DragAndDropManagement(GameObject* gameObjectParent);
 	void ClickManagement(GameObject* gameObject);
@@ -57,6 +57,7 @@ private:
 	void SaveGameObject(Config* config, GameObject* gameObject);
 	void LoadScene();
 private:
+	GameObject* gameObjectSelected = nullptr;
 	std::list<GameObject*> gameObjectsToBeDeleted;
 	std::vector<std::string> fileSceneList;
 	GameObject* gameObjectToBeDuplicated = nullptr;

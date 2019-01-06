@@ -305,6 +305,8 @@ void ModuleRender::DrawCameraSceneWindow()
 	if (ImGui::IsWindowFocused())
 	{
 		App->camera->selectedCamera = App->camera->sceneCamera;
+		sceneViewportX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
+		sceneViewportY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
 		App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
 	}
 
