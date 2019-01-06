@@ -51,37 +51,16 @@ bool ModuleModelLoader::Init()
 
 void ModuleModelLoader::LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType)
 {
-	par_shapes_mesh_s* parMesh = nullptr;
-
-	switch (geometryType)
-	{
-	case GeometryType::SPHERE:
-		parMesh = par_shapes_create_parametric_sphere(30, 30);
-		break;
-	case GeometryType::TORUS:
-		parMesh = par_shapes_create_torus(30, 30, 0.5f);
-		break;
-	case GeometryType::CYLINDER:
-		parMesh = par_shapes_create_cylinder(30, 30);
-		break;
-	case GeometryType::PLANE:
-		parMesh = par_shapes_create_plane(30, 30);
-		break;
-	case GeometryType::CUBE:
-		parMesh = par_shapes_create_cube();
-		break;
-	}
-
+	par_shapes_mesh_s* parMesh = CreateParShapesByGeometryType(geometryType);
+	
 	if (parMesh != nullptr && parMesh)
 	{
-		par_shapes_scale(parMesh, 100.0f, 100.0f, 100.0f);
-
 		CreateTransformationComponent(gameObjectParent);
 
 		math::float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
-		CreateMeshComponent(parMesh, gameObjectParent, color);
+		CreateMeshComponent(parMesh, gameObjectParent, color, geometryType);
 
-		par_shapes_free_mesh(parMesh);
+		FreeParShapes(parMesh);
 	}
 }
 
@@ -199,12 +178,15 @@ void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh
 	GenerateVAO(meshStruct);
 }
 
-void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s * parShapeMesh, GameObject * gameObjectMesh, const math::float4& color)
+void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s* parShapeMesh, GameObject * gameObjectMesh, const math::float4& color, GeometryType geometryType)
 {
 	Mesh meshStruct;
 	GenerateMesh(parShapeMesh, meshStruct);
 
-	gameObjectMesh->components.push_back(App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct));
+	ComponentMesh* componentMesh = App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct);
+	componentMesh->geometryType = geometryType;
+
+	gameObjectMesh->components.push_back(componentMesh);
 
 	CreateMaterialComponent(gameObjectMesh, color);
 }
@@ -264,5 +246,41 @@ void ModuleModelLoader::DrawProperties()
 		ImGui::Begin("Model", &toggleModelProperties);
 		ImGui::End();
 	}
+}
+
+par_shapes_mesh_s* ModuleModelLoader::CreateParShapesByGeometryType(GeometryType geometryType)
+{
+	par_shapes_mesh_s* parMesh = nullptr;
+
+	switch (geometryType)
+	{
+	case GeometryType::SPHERE:
+		parMesh = par_shapes_create_parametric_sphere(30, 30);
+		break;
+	case GeometryType::TORUS:
+		parMesh = par_shapes_create_torus(30, 30, 0.5f);
+		break;
+	case GeometryType::CYLINDER:
+		parMesh = par_shapes_create_cylinder(30, 30);
+		break;
+	case GeometryType::PLANE:
+		parMesh = par_shapes_create_plane(30, 30);
+		break;
+	case GeometryType::CUBE:
+		parMesh = par_shapes_create_cube();
+		break;
+	}
+
+	if (parMesh != nullptr && parMesh)
+	{
+		par_shapes_scale(parMesh, 100.0f, 100.0f, 100.0f);
+	}
+
+	return parMesh;
+}
+
+void ModuleModelLoader::FreeParShapes(par_shapes_mesh_s* parMesh)
+{
+	par_shapes_free_mesh(parMesh);
 }
 

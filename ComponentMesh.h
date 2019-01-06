@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "ModuleTextures.h"
 
+enum class GeometryType;
+
 class ComponentMesh : public Component
 {
 public:
@@ -25,6 +27,7 @@ public:
 	AABB localBoundingBox = AABB();
 	AABB globalBoundingBox = AABB();
 	bool isWireframeActive = false;
+	GeometryType geometryType;
 private:
 	void LoadMesh(const char* name);
 private:

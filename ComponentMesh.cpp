@@ -145,7 +145,16 @@ void ComponentMesh::Save(Config * config)
 
 	config->AddComponentType("componentType", componentType);
 	config->AddString("gameObjectParent", gameObjectParent->uuid);
-	config->AddString("labelCurrentFileMeshSelected", labelCurrentFileMeshSelected.c_str());
+
+	if (!labelCurrentFileMeshSelected.empty())
+	{
+		config->AddString("labelCurrentFileMeshSelected", labelCurrentFileMeshSelected.c_str());
+	}
+	else
+	{
+		config->AddGeometryType("geometryType", geometryType);
+	}
+
 	config->AddBool("isWireframeActive", isWireframeActive);
 
 	config->EndObject();
@@ -153,10 +162,21 @@ void ComponentMesh::Save(Config * config)
 
 void ComponentMesh::Load(Config* config, rapidjson::Value& value)
 {
-	labelCurrentFileMeshSelected = config->GetString("labelCurrentFileMeshSelected", value);
 	isWireframeActive = config->GetBool("isWireframeActive", value);
 
-	LoadMesh(labelCurrentFileMeshSelected.c_str());
+	if (value.HasMember("labelCurrentFileMeshSelected"))
+	{
+		labelCurrentFileMeshSelected = config->GetString("labelCurrentFileMeshSelected", value);
+		LoadMesh(labelCurrentFileMeshSelected.c_str());
+	}
+	else
+	{
+		geometryType = config->GetGeometryType("geometryType", value);
+
+		par_shapes_mesh_s* parMesh = App->modelLoader->CreateParShapesByGeometryType(geometryType);
+		App->modelLoader->GenerateMesh(parMesh, mesh);
+		App->modelLoader->FreeParShapes(parMesh);
+	}
 }
 
 void ComponentMesh::CreateBoundingBox()
@@ -179,7 +199,7 @@ void ComponentMesh::UpdateGlobalBoundingBox()
 	}
 }
 
-void ComponentMesh::LoadMesh(const char * name)
+void ComponentMesh::LoadMesh(const char* name)
 {
 	App->modelLoader->CleanUpMesh(mesh);
 	ImporterMesh::Load(&mesh, name);

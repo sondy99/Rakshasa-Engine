@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "ModuleModelLoader.h"
 
 #include "Component.h"
 
@@ -38,6 +39,30 @@ void Config::AddComponentType(const char * name, ComponentType componentType)
 		break;
 	}
 
+}
+
+void Config::AddGeometryType(const char * name, GeometryType geometryType)
+{
+	writer->String(name);
+
+	switch (geometryType)
+	{
+	case GeometryType::CUBE:
+		writer->String("CUBE");
+		break;
+	case GeometryType::CYLINDER:
+		writer->String("CYLINDER");
+		break;
+	case GeometryType::PLANE:
+		writer->String("PLANE");
+		break;
+	case GeometryType::SPHERE:
+		writer->String("SPHERE");
+		break;
+	case GeometryType::TORUS:
+		writer->String("TORUS");
+		break;
+	}
 }
 
 void Config::AddInt(const char * name, int value)
@@ -129,6 +154,32 @@ ComponentType Config::GetComponentType(const char * name, rapidjson::Value & val
 	if (strcmp(stringComponentType, "CAMERA") == 0)
 	{
 		return ComponentType::CAMERA;
+	}
+}
+
+GeometryType Config::GetGeometryType(const char * name, rapidjson::Value & value)
+{
+	const char* stringComponentType = value[name].GetString();
+
+	if (strcmp(stringComponentType, "CUBE") == 0)
+	{
+		return GeometryType::CUBE;
+	}
+	if (strcmp(stringComponentType, "CYLINDER") == 0)
+	{
+		return GeometryType::CYLINDER;
+	}
+	if (strcmp(stringComponentType, "PLANE") == 0)
+	{
+		return GeometryType::PLANE;
+	}
+	if (strcmp(stringComponentType, "SPHERE") == 0)
+	{
+		return GeometryType::SPHERE;
+	}
+	if (strcmp(stringComponentType, "TORUS") == 0)
+	{
+		return GeometryType::TORUS;
 	}
 }
 

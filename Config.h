@@ -9,6 +9,7 @@
 #include "MathGeoLib.h"
 
 enum class ComponentType;
+enum class GeometryType;
 
 class Config
 {
@@ -18,6 +19,7 @@ public:
 
 	void AddName(const char* name);
 	void AddComponentType(const char* name, ComponentType componentType);
+	void AddGeometryType(const char* name, GeometryType geometryType);
 	void AddInt(const char* name, int value);
 	void AddUnsigned(const char* name, unsigned value);
 	void AddFloat(const char* name, float value);
@@ -28,6 +30,7 @@ public:
 	void AddQuat(const char* name, math::Quat value);
 
 	ComponentType GetComponentType(const char* name, rapidjson::Value& value);
+	GeometryType GetGeometryType(const char* name, rapidjson::Value& value);
 	int GetInt(const char* name, rapidjson::Value& value);
 	unsigned GetUnsigned(const char* name, rapidjson::Value& value);
 	float GetFloat(const char* name, rapidjson::Value& value);
