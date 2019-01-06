@@ -70,6 +70,8 @@ bool ModuleRender::Init()
 	frameBufferGame.frameBufferType = FrameBufferType::GAME;
 	InitFrameBuffer(App->window->width, App->window->height, frameBufferGame);
 
+	GenerateFallback();
+
 	return true;
 }
 
@@ -176,7 +178,7 @@ std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(std::list<Comp
 	return meshes.erase(iterator);
 }
 
-void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
+void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, ComponentMaterial* componentMaterial,
 	const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj)
 {
 	Mesh mesh = componentMesh.mesh;
@@ -211,54 +213,26 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const Componen
 		glUniform1f(glGetUniformLocation(program, "k_diffuse"), componentMaterial->material.diffuseK);
 		glUniform1f(glGetUniformLocation(program, "k_specular"), componentMaterial->material.specularK);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, componentMaterial->material.diffuseMap != 0 ?
+			componentMaterial->material.diffuseMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
 
-		if (componentMaterial->material.diffuseMap != 0)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.diffuseMap);
-			glUniform1i(glGetUniformLocation(program, "diffuseMap"), 0);
-			glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 1);
-		}
-		else
-		{
-			glUniform1i(glGetUniformLocation(program, "useDiffuseMap"), 0);
-		}
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, componentMaterial->material.emissiveMap != 0 ?
+			componentMaterial->material.emissiveMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
 
-		if (componentMaterial->material.emissiveMap != 0)
-		{
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.emissiveMap);
-			glUniform1i(glGetUniformLocation(program, "emissiveMap"), 1);
-			glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 1);
-		}
-		else
-		{
-			glUniform1i(glGetUniformLocation(program, "useEmissiveMap"), 0);
-		}
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, componentMaterial->material.occlusionMap != 0 ?
+			componentMaterial->material.occlusionMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
 
-		if (componentMaterial->material.occlusionMap != 0)
-		{
-			glActiveTexture(GL_TEXTURE2);
-			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.occlusionMap);
-			glUniform1i(glGetUniformLocation(program, "occlusionMap"), 2);
-			glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 1);
-		}
-		else
-		{
-			glUniform1i(glGetUniformLocation(program, "useOcclusionMap"), 0);
-		}
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, componentMaterial->material.specularMap != 0 ?
+			componentMaterial->material.specularMap : fallback);
+		glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
 
-		if (componentMaterial->material.specularMap != 0)
-		{
-			glActiveTexture(GL_TEXTURE3);
-			glBindTexture(GL_TEXTURE_2D, componentMaterial->material.specularMap);
-			glUniform1i(glGetUniformLocation(program, "specularMap"), 3);
-			glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 1);
-		}
-		else
-		{
-			glUniform1i(glGetUniformLocation(program, "useSpecularMap"), 0);
-		}
 	}
 
 	glBindVertexArray(mesh.vao);
@@ -443,6 +417,20 @@ void ModuleRender::DrawQuadTreeNode(QuadtreeNode * quadtreeNode)
 			DrawQuadTreeNode(quadtreeNode->childs[i]);
 		}
 	}
+}
+
+void ModuleRender::GenerateFallback()
+{
+	char fallbackImage[3] = { GLubyte(255), GLubyte(255), GLubyte(255) };
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &fallback);
+	glBindTexture(GL_TEXTURE_2D, fallback);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, fallbackImage);
 }
 
 void ModuleRender::FpsCount()

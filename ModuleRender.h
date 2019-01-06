@@ -9,9 +9,12 @@
 
 #include "ModuleModelLoader.h"
 
+#include "MathGeoLib.h"
+
 class GameObject;
 class QuadtreeNode;
 
+enum class MaterialTypeSelected;
 enum class ComponentType;
 class Component;
 class ComponentCamera;
@@ -52,7 +55,7 @@ public:
 	void CleanUpFromList(ComponentMesh* componentMesh);
 	std::list<ComponentMesh*>::iterator CleanUpIterator(std::list<ComponentMesh*>::iterator iterator);
 
-	void RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
+	void RenderMesh(const ComponentMesh& componentMesh, ComponentMaterial* componentMaterial,
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	
 	void DrawProperties();
@@ -82,6 +85,7 @@ private:
 	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
 	void ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras); 
 	void DrawQuadTreeNode(QuadtreeNode* quadtreeNode);
+	void GenerateFallback();
 private:
 	FrameBufferStruct frameBufferScene;
 	FrameBufferStruct frameBufferGame;
@@ -99,6 +103,8 @@ private:
 	std::vector<float> fpsList;
 	std::vector<float> msList;
 	std::vector<GameObject*> gameObjectsCollideQuadtree;
+
+	unsigned fallback = 0;
 };
 
 #endif __MODULERENDER_H__
