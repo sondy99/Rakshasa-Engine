@@ -512,7 +512,8 @@ void ModuleScene::SaveScene()
 	config->AddFloat("ambientLight", ambientLight);
 	config->AddFloat3("ambientLightPosition", ambientLightPosition);
 	config->AddBool("isSceneCullingActive", isSceneCullingActive);
-
+	config->AddBool("drawQuadTree", drawQuadTree);
+	
 	config->EndObject();
 
 	config->AddName("sceneCamera");
@@ -577,7 +578,8 @@ void ModuleScene::LoadScene()
 			ambientLight = config->GetFloat("ambientLight", scene);
 			ambientLightPosition = config->GetFloat3("ambientLightPosition", scene);
 			isSceneCullingActive = config->GetBool("isSceneCullingActive", scene);
-
+			drawQuadTree = config->GetBool("drawQuadTree", scene);
+			
 			App->camera->sceneCamera->Load(config, document["sceneCamera"]);
 
 			rapidjson::Value gameObjectList = document["gameObjects"].GetArray();

@@ -539,6 +539,14 @@ void ModuleRender::RenderComponentUsingQuadTree(math::float4x4 view, math::float
 		gameObjectsCollideQuadtree.clear();
 		App->scene->quadTree.CollectIntersections(gameObjectsCollideQuadtree, componentCameraGameSelected->frustum);
 
+		for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end(); ++iterator)
+		{
+			if (!(*iterator)->gameObjectParent->gameObjectStatic && (*iterator)->mesh.verticesNumber > 0 && componentCameraGameSelected->frustum.Intersects((*iterator)->globalBoundingBox))
+			{
+				gameObjectsCollideQuadtree.push_back((*iterator)->gameObjectParent);
+			}
+		}
+
 		for (std::vector<GameObject*>::iterator iterator = gameObjectsCollideQuadtree.begin(); iterator != gameObjectsCollideQuadtree.end(); ++iterator)
 		{
 			if ((*iterator)->active)
