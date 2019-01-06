@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 
-#define MAX_ITEMS 1
+#define MAX_ITEMS 5
 #define MIN_SIZE 1000.0f
 
 Quadtree::Quadtree()
@@ -45,7 +45,7 @@ void Quadtree::RemoveGameObject(GameObject * gameObject)
 	{
 		allGameObjects.remove(gameObject);
 
-		InitQuadTree(math::AABB(math::float3(-5000.0f, 0.0f, -5000.0f), math::float3(5000.0f, 5000.0f, 5000.0f)), false);
+		InitQuadTree(math::AABB(math::float3(-40000.0f, 0.0f, -40000.0f), math::float3(40000.0f, 5000.0f, 40000.0f)), false);
 
 		for (std::list<GameObject*>::iterator iterator = allGameObjects.begin(); iterator != allGameObjects.end(); ++iterator)
 		{

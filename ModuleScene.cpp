@@ -34,16 +34,16 @@ bool ModuleScene::Init()
 	
 	markToUpdateSceneFiles = true;
 
-	quadTree.InitQuadTree(math::AABB(math::float3(-5000.0f, 0.0f, -5000.0f), math::float3(5000.0f, 5000.0f, 5000.0f)), true);
+	quadTree.InitQuadTree(math::AABB(math::float3(-40000.0f, 0.0f, -40000.0f), math::float3(40000.0f, 5000.0f, 40000.0f)), true);
 
 	return true;
 }
 
 bool ModuleScene::CleanUp()
 {
+	gameObjectSelected = nullptr;
+	gameObjectToBeDuplicated = nullptr;
 	RELEASE(root);
-	RELEASE(gameObjectSelected);
-	RELEASE(gameObjectToBeDuplicated);
 
 	return true;
 }
@@ -446,11 +446,6 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 			gameObjectSelected = nullptr;
 		}
 
-		if (gameObjectsToBeDeleted.size() == 1 && ((GameObject*)*gameObjectsToBeDeleted.begin())->parent == nullptr)
-		{
-			quadTree.InitQuadTree(math::AABB(math::float3(-5000.0f, 0.0f, -5000.0f), math::float3(5000.0f, 5000.0f, 5000.0f)), true);
-		}
-
 		gameObjectsToBeDeleted.clear();
 
 	}
@@ -614,6 +609,7 @@ void ModuleScene::LoadScene()
 
 void ModuleScene::ClearScene()
 {
+	quadTree.InitQuadTree(math::AABB(math::float3(-40000.0f, 0.0f, -40000.0f), math::float3(40000.0f, 5000.0f, 40000.0f)), true);
 	gameObjectsToBeDeleted = root->childrens;
 }
 
