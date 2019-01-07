@@ -66,6 +66,8 @@ public:
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
 	void RemoveMeshComponent(Component* componentToBeRemove);
 	void LoadQuadTreeForAllMesh();
+
+	void DrawImGuizmo(float sceneWidth, float sceneHeight);
 public:
 	void* context = nullptr;
 	float deltaTime = 0.0f;

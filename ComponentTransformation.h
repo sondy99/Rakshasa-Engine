@@ -18,6 +18,7 @@ public:
 	void Load(Config* config, rapidjson::Value& value) override;
 
 	void UpdateLocalModelMatrix();
+	void SetPositionRotationScaleFromLocalModelMatrix(math::float4x4 newLocalModelMatrix);
 public:
 	bool identity = false;
 
@@ -26,8 +27,8 @@ public:
 	float3 scale = { 1.0f, 1.0f, 1.0f };
 	Quat rotation = { 1.0f, 0.0f, 0.0f, 0.0f };
 
-	float4x4 localModelMatrix = float4x4::identity;
-	float4x4 globalModelMatrix = float4x4::identity;
+	math::float4x4 localModelMatrix = math::float4x4::identity;
+	math::float4x4 globalModelMatrix = math::float4x4::identity;
 private:
 	void RotationToEuler();
 };

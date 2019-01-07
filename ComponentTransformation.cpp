@@ -34,6 +34,12 @@ void ComponentTransformation::UpdateLocalModelMatrix()
 	}
 }
 
+void ComponentTransformation::SetPositionRotationScaleFromLocalModelMatrix(math::float4x4 newLocalModelMatrix)
+{
+	newLocalModelMatrix.Decompose(position, rotation, scale);
+	RotationToEuler();
+}
+
 void ComponentTransformation::RotationToEuler()
 {
 	eulerRotation = rotation.ToEulerXYZ();

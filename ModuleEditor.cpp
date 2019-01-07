@@ -12,6 +12,8 @@
 
 #include "GameObject.h"
 
+#include "ImGuizmo.h"
+
 ModuleEditor::ModuleEditor()
 {
 }
@@ -126,6 +128,7 @@ void ModuleEditor::InitImGuiFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	CreateDockSpace();
 }

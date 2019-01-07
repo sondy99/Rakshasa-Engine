@@ -20,6 +20,8 @@
 #include "SDL.h"
 #include "GL/glew.h"
 
+#include "ImGuizmo.h"
+
 ModuleRender::ModuleRender()
 {
 	fpsList.resize(100, 0.0f);
@@ -102,6 +104,7 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
+
 
 	math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
 	math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
@@ -292,6 +295,7 @@ void ModuleRender::DrawCameraSceneWindow()
 		sceneViewportX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
 		sceneViewportY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
 		App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
+		ImGui::Separator();
 	}
 
 	ImVec2 size = ImGui::GetWindowSize();
@@ -299,6 +303,8 @@ void ModuleRender::DrawCameraSceneWindow()
 	App->camera->SetScreenNewScreenSize(size.x, size.y);
 
 	ImGui::Image((ImTextureID)frameBufferScene.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+
+	DrawImGuizmo(size.x, size.y);
 
 	ImGui::End();
 }
@@ -626,3 +632,40 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 	App->debugDraw->Draw(frameBufferToRender.frameBufferObject, camera->screenWidth, camera->screenHeight, view, projection);
 }
 
+void ModuleRender::DrawImGuizmo(float sceneWidth, float sceneHeight)
+{
+	ImVec2 pos = ImGui::GetWindowPos();
+	ImGuizmo::SetRect(pos.x, pos.y, sceneWidth, sceneHeight);
+	ImGuizmo::SetDrawlist();
+
+	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+
+	ImGui::SetCursorPos({ 20,30 });
+
+	GameObject* gameObjectSelected = App->scene->GetGameObjectSelected();
+
+	if (gameObjectSelected != nullptr)
+	{
+		ImGuizmo::Enable(!gameObjectSelected->gameObjectStatic);
+
+		ComponentTransformation* transformation = (ComponentTransformation*)gameObjectSelected->GetComponent(ComponentType::TRANSFORMATION);
+
+		math::float4x4 model = transformation->globalModelMatrix;
+		math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
+		math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
+
+		ImGuizmo::SetOrthographic(false);
+
+		model.Transpose();
+		viewScene.Transpose();
+		projectionScene.Transpose();
+		ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&model, NULL, NULL, NULL, NULL);
+
+		if (ImGuizmo::IsUsing())
+		{
+			model.Transpose();
+			transformation->SetPositionRotationScaleFromLocalModelMatrix(model);
+		}
+	}
+}

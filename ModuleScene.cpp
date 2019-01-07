@@ -111,6 +111,7 @@ void ModuleScene::CreateGameObject(Config* config, rapidjson::Value & value)
 
 void ModuleScene::DrawProperties()
 {
+	
 	if (!ImGui::Begin("Game objects hierarchy", &toggleSceneProperties))
 	{
 		ImGui::End();
@@ -186,7 +187,7 @@ void ModuleScene::DrawProperties()
 
 		ImGui::EndPopup();
 	}
-
+	
 	ImGui::Separator();
 
 	ImGui::SliderFloat("Ambient", &ambientLight, 0.0f, 1.0f);
@@ -233,6 +234,7 @@ void ModuleScene::DrawProperties()
 	}
 
 	ImGui::End();
+
 }
 
 void ModuleScene::DrawGeometryGameObjectButtons(GameObject* gameObjectParent)
@@ -616,4 +618,3 @@ void ModuleScene::ClearScene()
 	quadTree.InitQuadTree(math::AABB(math::float3(-40000.0f, 0.0f, -40000.0f), math::float3(40000.0f, 5000.0f, 40000.0f)), true);
 	gameObjectsToBeDeleted = root->childrens;
 }
-
