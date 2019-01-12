@@ -51,10 +51,11 @@ void ComponentTransformation::RotationToEuler()
 void ComponentTransformation::DrawProperties()
 {
 	bool changed = false;
+
+	UpdateLocalModelMatrix();
+
 	if (ImGui::CollapsingHeader("Transformation"))
 	{
-		UpdateLocalModelMatrix();
-
 		ImGui::Button("Transformation options");
 
 		if (ImGui::IsItemClicked(0))

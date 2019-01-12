@@ -131,9 +131,12 @@ void ModuleTextures::LoadMaterial(const char* path, ComponentMaterial* component
 				Unload(componentMaterial->material.occlusionMap);
 			}
 
-			LoadMaterial(path, componentMaterial->material.occlusionMap, 
-				componentMaterial->material.ambientWidth, 
-				componentMaterial->material.ambientHeight);
+			if (strcmp(path, "Select a Texture") != 0)
+			{
+				LoadMaterial(path, componentMaterial->material.occlusionMap,
+					componentMaterial->material.ambientWidth,
+					componentMaterial->material.ambientHeight);
+			}
 
 		break;
 		case MaterialTypeSelected::DIFFUSE_MAP:
@@ -142,9 +145,12 @@ void ModuleTextures::LoadMaterial(const char* path, ComponentMaterial* component
 				Unload(componentMaterial->material.diffuseMap);
 			}
 
-			LoadMaterial(path, componentMaterial->material.diffuseMap,
-				componentMaterial->material.diffuseWidth,
-				componentMaterial->material.diffuseHeight);
+			if (strcmp(path, "Select a Texture") != 0)
+			{
+				LoadMaterial(path, componentMaterial->material.diffuseMap,
+					componentMaterial->material.diffuseWidth,
+					componentMaterial->material.diffuseHeight);
+			}
 
 			break;
 		case MaterialTypeSelected::SPECULAR_MAP:
@@ -153,10 +159,12 @@ void ModuleTextures::LoadMaterial(const char* path, ComponentMaterial* component
 				Unload(componentMaterial->material.specularMap);
 			}
 
-			LoadMaterial(path, componentMaterial->material.specularMap,
-				componentMaterial->material.specularWidth,
-				componentMaterial->material.specularHeight);
-
+			if (strcmp(path, "Select a Texture") != 0)
+			{
+				LoadMaterial(path, componentMaterial->material.specularMap,
+					componentMaterial->material.specularWidth,
+					componentMaterial->material.specularHeight);
+			}
 			break;
 		case MaterialTypeSelected::EMISSIVE_MAP:
 			if (componentMaterial->material.emissiveMap != 0u)
@@ -164,10 +172,12 @@ void ModuleTextures::LoadMaterial(const char* path, ComponentMaterial* component
 				Unload(componentMaterial->material.emissiveMap);
 			}
 
-			LoadMaterial(path, componentMaterial->material.emissiveMap,
-				componentMaterial->material.emissiveWidth,
-				componentMaterial->material.emissiveHeight);
-
+			if (strcmp(path, "Select a Texture") != 0)
+			{
+				LoadMaterial(path, componentMaterial->material.emissiveMap,
+					componentMaterial->material.emissiveWidth,
+					componentMaterial->material.emissiveHeight);
+			}
 			break;
 	}
 }

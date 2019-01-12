@@ -455,7 +455,7 @@ void ModuleScene::ManageDuplicationAndDeletionGameObject()
 	if (gameObjectToBeDuplicated != nullptr)
 	{
 		gameObjectToBeDuplicated->DuplicateGameObject(nullptr);
-		RELEASE(gameObjectToBeDuplicated);
+		gameObjectToBeDuplicated = nullptr;
 	}
 }
 

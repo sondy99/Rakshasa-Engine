@@ -65,28 +65,9 @@ void ComponentMesh::DrawProperties()
 {
 	if (ImGui::CollapsingHeader("Mesh"))
 	{
-		ImGui::Button("Mesh options");
-
-		if (ImGui::IsItemClicked(0))
+		if (ImGui::Button("Delete component"))
 		{
-			ImGui::OpenPopup("MeshOptionsContextualMenu");
-		}
-
-		if (ImGui::BeginPopup("MeshOptionsContextualMenu"))
-		{
-			ImGui::PopID();
-			ImGui::PushID("DeleteMesh");
-			if (ImGui::Button("Delete mesh     "))
-			{
-			}
-			ImGui::PopID();
-			ImGui::PushID("DeleteMeshComponent");
-			if (ImGui::Button("Delete component"))
-			{
-				isMarkToBeDeleted = true;
-			}
-			ImGui::PopID();
-			ImGui::EndPopup();
+			isMarkToBeDeleted = true;
 		}
 
 		ImGui::Separator();
@@ -134,7 +115,10 @@ Component * ComponentMesh::Clone()
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;
 	result->mesh = mesh;
+	result->labelCurrentFileMeshSelected = labelCurrentFileMeshSelected;
 	result->localBoundingBox = localBoundingBox;
+	result->geometryType = geometryType;
+	result->isWireframeActive = isWireframeActive;
 
 	return result;
 }

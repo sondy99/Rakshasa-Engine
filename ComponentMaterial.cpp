@@ -49,6 +49,10 @@ void ComponentMaterial::DrawProperties()
 			if (ImGui::Button("Delete all materials"))
 			{
 				App->textures->RemoveMaterial(this);
+				labelDiffuseCurrentFileTextureSelected = "Select a Texture";
+				labelEmissiveCurrentFileTextureSelected = "Select a Texture";
+				labelOcclusionCurrentFileTextureSelected = "Select a Texture";
+				labelSpecularCurrentFileTextureSelected= "Select a Texture";
 			}
 			ImGui::PopID();
 			ImGui::PushID("DeleteMaterialComponent");
@@ -139,6 +143,10 @@ Component * ComponentMaterial::Clone()
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;
 	result->material = material;
+	result->labelDiffuseCurrentFileTextureSelected = labelDiffuseCurrentFileTextureSelected;
+	result->labelOcclusionCurrentFileTextureSelected = labelOcclusionCurrentFileTextureSelected;
+	result->labelOcclusionCurrentFileTextureSelected = labelOcclusionCurrentFileTextureSelected;
+	result->labelSpecularCurrentFileTextureSelected = labelSpecularCurrentFileTextureSelected;
 
 	return result;
 }

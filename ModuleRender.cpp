@@ -639,7 +639,6 @@ void ModuleRender::DrawImGuizmo(float sceneWidth, float sceneHeight)
 	ImGuizmo::SetDrawlist();
 
 	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
 
 	ImGui::SetCursorPos({ 20,30 });
 
@@ -647,25 +646,30 @@ void ModuleRender::DrawImGuizmo(float sceneWidth, float sceneHeight)
 
 	if (gameObjectSelected != nullptr)
 	{
-		ImGuizmo::Enable(!gameObjectSelected->gameObjectStatic);
+		ComponentMesh* mesh = (ComponentMesh*)gameObjectSelected->GetComponent(ComponentType::MESH);
 
-		ComponentTransformation* transformation = (ComponentTransformation*)gameObjectSelected->GetComponent(ComponentType::TRANSFORMATION);
-
-		math::float4x4 model = transformation->globalModelMatrix;
-		math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
-		math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
-
-		ImGuizmo::SetOrthographic(false);
-
-		model.Transpose();
-		viewScene.Transpose();
-		projectionScene.Transpose();
-		ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&model, NULL, NULL, NULL, NULL);
-
-		if (ImGuizmo::IsUsing())
+		if (mesh != nullptr)
 		{
+			ImGuizmo::Enable(!gameObjectSelected->gameObjectStatic);
+
+			ComponentTransformation* transformation = (ComponentTransformation*)gameObjectSelected->GetComponent(ComponentType::TRANSFORMATION);
+
+			math::float4x4 model = transformation->globalModelMatrix;
+			math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
+			math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
+
+			ImGuizmo::SetOrthographic(false);
+
 			model.Transpose();
-			transformation->SetPositionRotationScaleFromLocalModelMatrix(model);
+			viewScene.Transpose();
+			projectionScene.Transpose();
+			ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, ImGuizmo::LOCAL, (float*)&model, NULL, NULL, NULL, NULL);
+
+			if (ImGuizmo::IsUsing())
+			{
+				model.Transpose();
+				transformation->SetPositionRotationScaleFromLocalModelMatrix(model);
+			}
 		}
 	}
 }
