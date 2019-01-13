@@ -81,7 +81,7 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 
 	LOG("Loading texture %s", path.c_str());
 
-	char* fileBuffer;
+	char* fileBuffer = nullptr;
 	unsigned lenghBuffer = App->fileSystem->Load(path.c_str(), &fileBuffer);
 
 	if (ilLoadL(IL_DDS, fileBuffer, lenghBuffer))
@@ -115,9 +115,11 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 			width, height,
 			0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
 			ilGetData());
+
+		ilDeleteImages(1, &imageID);
+		RELEASE_ARRAY(fileBuffer);
 	}
 
-	ilDeleteImages(1, &imageID);
 	LOG("Texture creation successful.");
 }
 
