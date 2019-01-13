@@ -125,17 +125,42 @@ void ComponentMaterial::LoadMaterial(const char * name)
 {
 }
 
-Component * ComponentMaterial::Clone()
+Component* ComponentMaterial::Clone()
 {
 	ComponentMaterial* result = App->textures->CreateComponentMaterial();
 
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;
-	result->material = material;
+	result->material.ambientK = material.ambientK;
+	result->material.ambientWidth = material.ambientWidth;
+	result->material.ambientHeight = material.ambientHeight;
+
+	result->material.diffuseColor = material.diffuseColor;
+	result->material.diffuseK = material.diffuseK;
+	result->material.diffuseWidth = material.diffuseWidth;
+	result->material.diffuseHeight = material.diffuseHeight;
+
+	result->material.specularColor = material.specularColor;
+	result->material.specularK = material.specularK;
+	result->material.shininess = material.shininess;
+	result->material.specularWidth = material.specularWidth;
+	result->material.specularHeight = material.specularHeight;
+
+	result->material.emissiveColor = material.emissiveColor;
+	result->material.emissiveWidth = material.emissiveWidth;
+	result->material.emissiveHeight = material.emissiveHeight;
+
 	result->labelDiffuseCurrentFileTextureSelected = labelDiffuseCurrentFileTextureSelected;
+	App->textures->LoadMaterial(labelDiffuseCurrentFileTextureSelected.c_str(), result, MaterialTypeSelected::DIFFUSE_MAP);
+
 	result->labelOcclusionCurrentFileTextureSelected = labelOcclusionCurrentFileTextureSelected;
-	result->labelOcclusionCurrentFileTextureSelected = labelOcclusionCurrentFileTextureSelected;
+	App->textures->LoadMaterial(labelOcclusionCurrentFileTextureSelected.c_str(), result, MaterialTypeSelected::OCCLUSION_MAP);
+
 	result->labelSpecularCurrentFileTextureSelected = labelSpecularCurrentFileTextureSelected;
+	App->textures->LoadMaterial(labelSpecularCurrentFileTextureSelected.c_str(), result, MaterialTypeSelected::SPECULAR_MAP);
+
+	result->labelEmissiveCurrentFileTextureSelected = labelEmissiveCurrentFileTextureSelected;
+	App->textures->LoadMaterial(labelEmissiveCurrentFileTextureSelected.c_str(), result, MaterialTypeSelected::EMISSIVE_MAP);
 
 	return result;
 }

@@ -183,7 +183,7 @@ void ModuleModelLoader::GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh
 
 void ModuleModelLoader::CreateMeshComponent(const par_shapes_mesh_s* parShapeMesh, GameObject * gameObjectMesh, const math::float4& color, GeometryType geometryType)
 {
-	Mesh* meshStruct = nullptr;
+	Mesh* meshStruct = new Mesh();
 	GenerateMesh(parShapeMesh, meshStruct);
 
 	ComponentMesh* componentMesh = App->renderer->CreateComponentMesh(gameObjectMesh, ComponentType::MESH, meshStruct);

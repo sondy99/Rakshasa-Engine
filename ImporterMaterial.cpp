@@ -47,6 +47,7 @@ bool ImporterMaterial::Import(const char* path)
 				RELEASE_ARRAY(data);
 			}
 			ilDeleteImages(1, &ImageName);
+			RELEASE_ARRAY(fileBuffer);
 		}
 	}
 

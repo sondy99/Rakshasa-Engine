@@ -16,6 +16,8 @@
 #include "ComponentMesh.h"
 #include "ComponentTransformation.h"
 
+#include "ImGuizmo.h"
+
 ModuleCamera::ModuleCamera()
 {
 }
@@ -72,7 +74,7 @@ update_status ModuleCamera::PreUpdate()
 		}
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && viewPortIsFocused)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && viewPortIsFocused && !ImGuizmo::IsOver())
 	{
 		PickGameObject();
 	}

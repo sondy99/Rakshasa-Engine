@@ -44,7 +44,7 @@ std::list<ComponentMaterial*>::iterator ModuleTextures::CleanUpIterator(std::lis
 	Unload((*iterator)->material.emissiveMap);
 
 	RELEASE(*iterator);
-	return materials.erase(iterator); 
+	return materials.erase(iterator);
 }
 
 void ModuleTextures::CleanUpFromList(ComponentMaterial * componentMaterial)
@@ -72,7 +72,7 @@ void ModuleTextures::CleanUpFromList(ComponentMaterial * componentMaterial)
 void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& width, int& height)
 {
 	unsigned imageID;
-	
+
 	ilGenImages(1, &imageID);
 
 	ilBindImage(imageID);
@@ -125,62 +125,54 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 
 void ModuleTextures::LoadMaterial(const char* path, ComponentMaterial* componentMaterial, MaterialTypeSelected materialTypeSelected)
 {
-	switch(materialTypeSelected)
+	switch (materialTypeSelected)
 	{
-		case MaterialTypeSelected::OCCLUSION_MAP :
-			if (componentMaterial->material.occlusionMap != 0u)
-			{
-				Unload(componentMaterial->material.occlusionMap);
-			}
+	case MaterialTypeSelected::OCCLUSION_MAP:
+		if (componentMaterial->material.occlusionMap != 0u)
+		{
+			Unload(componentMaterial->material.occlusionMap);
+		}
 
-			if (strcmp(path, "Select a Texture") != 0)
-			{
-				LoadMaterial(path, componentMaterial->material.occlusionMap,
-					componentMaterial->material.ambientWidth,
-					componentMaterial->material.ambientHeight);
-			}
+		LoadMaterial(path, componentMaterial->material.occlusionMap,
+			componentMaterial->material.ambientWidth,
+			componentMaterial->material.ambientHeight);
+
 
 		break;
-		case MaterialTypeSelected::DIFFUSE_MAP:
-			if (componentMaterial->material.diffuseMap != 0u)
-			{
-				Unload(componentMaterial->material.diffuseMap);
-			}
+	case MaterialTypeSelected::DIFFUSE_MAP:
+		if (componentMaterial->material.diffuseMap != 0u)
+		{
+			Unload(componentMaterial->material.diffuseMap);
+		}
 
-			if (strcmp(path, "Select a Texture") != 0)
-			{
-				LoadMaterial(path, componentMaterial->material.diffuseMap,
-					componentMaterial->material.diffuseWidth,
-					componentMaterial->material.diffuseHeight);
-			}
+		LoadMaterial(path, componentMaterial->material.diffuseMap,
+			componentMaterial->material.diffuseWidth,
+			componentMaterial->material.diffuseHeight);
 
-			break;
-		case MaterialTypeSelected::SPECULAR_MAP:
-			if (componentMaterial->material.specularMap != 0u)
-			{
-				Unload(componentMaterial->material.specularMap);
-			}
 
-			if (strcmp(path, "Select a Texture") != 0)
-			{
-				LoadMaterial(path, componentMaterial->material.specularMap,
-					componentMaterial->material.specularWidth,
-					componentMaterial->material.specularHeight);
-			}
-			break;
-		case MaterialTypeSelected::EMISSIVE_MAP:
-			if (componentMaterial->material.emissiveMap != 0u)
-			{
-				Unload(componentMaterial->material.emissiveMap);
-			}
+		break;
+	case MaterialTypeSelected::SPECULAR_MAP:
+		if (componentMaterial->material.specularMap != 0u)
+		{
+			Unload(componentMaterial->material.specularMap);
+		}
 
-			if (strcmp(path, "Select a Texture") != 0)
-			{
-				LoadMaterial(path, componentMaterial->material.emissiveMap,
-					componentMaterial->material.emissiveWidth,
-					componentMaterial->material.emissiveHeight);
-			}
-			break;
+		LoadMaterial(path, componentMaterial->material.specularMap,
+			componentMaterial->material.specularWidth,
+			componentMaterial->material.specularHeight);
+
+		break;
+	case MaterialTypeSelected::EMISSIVE_MAP:
+		if (componentMaterial->material.emissiveMap != 0u)
+		{
+			Unload(componentMaterial->material.emissiveMap);
+		}
+
+		LoadMaterial(path, componentMaterial->material.emissiveMap,
+			componentMaterial->material.emissiveWidth,
+			componentMaterial->material.emissiveHeight);
+
+		break;
 	}
 }
 

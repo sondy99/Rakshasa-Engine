@@ -260,29 +260,31 @@ bool ImporterMesh::Save(const Mesh& mesh, const char* meshName)
 	return result;
 }
 
-void ImporterMesh::RemoveMesh(const char * meshName)
+void ImporterMesh::RemoveMesh(const char* meshName)
 {
-	std::map<const char*, std::pair<Mesh*, unsigned>>::iterator iterator = mapMeshUsed.begin();
-	for (iterator; iterator != mapMeshUsed.end(); iterator++)
+	if (meshName != nullptr)
 	{
-		if (std::strcmp(meshName, (*iterator).first) == 0)
+		std::map<const char*, std::pair<Mesh*, unsigned>>::iterator iterator = mapMeshUsed.begin();
+		for (iterator; iterator != mapMeshUsed.end(); iterator++)
 		{
-			break;
+			if (std::strcmp(meshName, (*iterator).first) == 0)
+			{
+				break;
+			}
+		}
+
+		if (iterator != mapMeshUsed.end())
+		{
+			(*iterator).second.second--;
+
+			if ((*iterator).second.second == 0u)
+			{
+				CleanUpStructMesh((*iterator).second.first);
+
+				mapMeshUsed.erase(iterator);
+			}
 		}
 	}
-
-	if (iterator != mapMeshUsed.end())
-	{
-		(*iterator).second.second--;
-
-		if ((*iterator).second.second == 0u)
-		{
-			CleanUpStructMesh((*iterator).second.first);
-
-			mapMeshUsed.erase(iterator);
-		}
-	}
-
 }
 
 void ImporterMesh::CleanUpStructMesh(Mesh* mesh)
