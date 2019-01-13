@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#include <vector>
+
 class ModuleEditor : public Module
 {
 public:
@@ -23,13 +25,17 @@ private:
 	void DrawAboutMenu();
 	void DrawConsole();
 	void CreateDockSpace() const;
+	void DrawMemoryViewPort();
+	void AddMemory(float memoryPoints);
 private:
+	bool toggleMemoryViewPort = true;
 	bool toggleAboutMenu = false;
 	bool toggleConsole = true;
 	bool toggleGameObjectProperties = true;
 	ImGuiTextBuffer textBuffer;     
 	bool scrollDown;
 	bool exit = false;
+	std::vector<float> memoryPoints;
 };
 
 #endif __ModuleEditor_h__

@@ -45,5 +45,6 @@ enum update_status
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Rakshasa Engine"
+#define LOGSSIZE 100
 
 #endif __GLOBAL_H_

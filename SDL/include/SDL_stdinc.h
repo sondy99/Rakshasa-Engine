@@ -330,8 +330,8 @@ char *alloca();
 
 extern DECLSPEC void *SDLCALL SDL_malloc(size_t size);
 extern DECLSPEC void *SDLCALL SDL_calloc(size_t nmemb, size_t size);
-extern DECLSPEC void *SDLCALL SDL_realloc(void *mem, size_t size);
-extern DECLSPEC void SDLCALL SDL_free(void *mem);
+extern DECLSPEC void *SDLCALL SDL_realloc(void *memoryPoints, size_t size);
+extern DECLSPEC void SDLCALL SDL_free(void *memoryPoints);
 
 extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
 extern DECLSPEC int SDLCALL SDL_setenv(const char *name, const char *value, int overwrite);

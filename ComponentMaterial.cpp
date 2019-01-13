@@ -105,31 +105,25 @@ void ComponentMaterial::DrawProperties()
 
 void ComponentMaterial::DrawComboBoxMaterials(const char * id, MaterialTypeSelected materialTypeSelected, static std::string &labelCurrentFileTextureSelected)
 {
-	std::vector<std::string> fileTexturesList = App->library->GetFileTexturesList();
-	fileTexturesList.insert(fileTexturesList.begin(), "Select a Texture");
-
-	if (fileTexturesList.size() > 0)
+	ImGui::PushID(id);
+	if (ImGui::BeginCombo("##", labelCurrentFileTextureSelected.c_str()))
 	{
-		ImGui::PushID(id);
-		if (ImGui::BeginCombo("##", labelCurrentFileTextureSelected.c_str()))
+		for (std::vector<std::string>::iterator iterator = App->library->GetFileTexturesList()->begin(); iterator != App->library->GetFileTexturesList()->end(); ++iterator)
 		{
-			for (std::vector<std::string>::iterator iterator = fileTexturesList.begin(); iterator != fileTexturesList.end(); ++iterator)
+			bool isSelected = (labelCurrentFileTextureSelected == (*iterator).c_str());
+			if (ImGui::Selectable((*iterator).c_str(), isSelected))
 			{
-				bool isSelected = (labelCurrentFileTextureSelected == (*iterator).c_str());
-				if (ImGui::Selectable((*iterator).c_str(), isSelected))
+				labelCurrentFileTextureSelected = (*iterator).c_str();
+				App->textures->LoadMaterial(labelCurrentFileTextureSelected.c_str(), this, materialTypeSelected);
+				if (isSelected)
 				{
-					labelCurrentFileTextureSelected = (*iterator).c_str();
-					App->textures->LoadMaterial(labelCurrentFileTextureSelected.c_str(), this, materialTypeSelected);
-					if (isSelected)
-					{
-						ImGui::SetItemDefaultFocus();
-					}
+					ImGui::SetItemDefaultFocus();
 				}
 			}
-			ImGui::EndCombo();
 		}
-		ImGui::PopID();
+		ImGui::EndCombo();
 	}
+	ImGui::PopID();
 }
 
 void ComponentMaterial::LoadMaterial(const char * name)

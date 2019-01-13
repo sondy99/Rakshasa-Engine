@@ -196,6 +196,9 @@
     <ClCompile Include="ImGuizmo.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>mmgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -546,6 +549,12 @@
     <ClInclude Include="ImGuizmo.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\nommgr.h">
+      <Filter>mmgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -577,6 +586,9 @@
     </Filter>
     <Filter Include="Rapidjson">
       <UniqueIdentifier>{f5014a58-0add-4c31-81e2-52373fd848f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mmgr">
+      <UniqueIdentifier>{3b9edc65-d210-4c7d-941f-792dbc3b32e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

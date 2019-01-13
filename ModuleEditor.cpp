@@ -14,8 +14,11 @@
 
 #include "ImGuizmo.h"
 
-ModuleEditor::ModuleEditor()
+#include "mmgr/mmgr.h"
+
+ModuleEditor::ModuleEditor() : memoryPoints(LOGSSIZE)
 {
+	memoryPoints.resize(LOGSSIZE);
 }
 
 ModuleEditor::~ModuleEditor()
@@ -62,6 +65,7 @@ update_status ModuleEditor::Update()
 			ImGui::Checkbox("Camera properties", &App->camera->toggleCameraProperties);
 			ImGui::Checkbox("Model properties", &App->modelLoader->toggleModelProperties);
 			ImGui::Checkbox("Library properties", &App->library->toggleLibraryProperties);
+			ImGui::Checkbox("Memory", &toggleMemoryViewPort);
 			
 			ImGui::Checkbox("Console", &toggleConsole);
 			
@@ -118,6 +122,7 @@ void ModuleEditor::WindowManager()
 	}
 
 	DrawConsole();
+	DrawMemoryViewPort();
 
 	App->renderer->DrawCameraSceneWindow();
 	App->renderer->DrawCameraGameWindow();
@@ -177,6 +182,31 @@ void ModuleEditor::DrawConsole()
 	}
 }
 
+void ModuleEditor::DrawMemoryViewPort()
+{
+	if (toggleMemoryViewPort)
+	{
+		ImGui::Begin("Memory", &toggleMemoryViewPort);
+
+		sMStats stats = m_getMemoryStatistics();
+		AddMemory((float)stats.totalReportedMemory);
+
+		ImGui::PlotHistogram("##memory", &memoryPoints[0], memoryPoints.size(), 0, "Memory Consumption (Bytes)", 0.0f, (float)stats.peakReportedMemory * 1.2f, ImVec2(0, 80));
+
+		ImGui::Text("Total Reported Mem: %u", stats.totalReportedMemory);
+		ImGui::Text("Total Actual Mem: %u", stats.totalActualMemory);
+		ImGui::Text("Peak Reported Mem: %u", stats.peakReportedMemory);
+		ImGui::Text("Peak Actual Mem: %u", stats.peakActualMemory);
+		ImGui::Text("Accumulated Reported Mem: %u", stats.accumulatedReportedMemory);
+		ImGui::Text("Accumulated Actual Mem: %u", stats.accumulatedActualMemory);
+		ImGui::Text("Accumulated Alloc Unit Count: %u", stats.accumulatedAllocUnitCount);
+		ImGui::Text("Total Alloc Unit Count: %u", stats.totalAllocUnitCount);
+		ImGui::Text("Peak Alloc Unit Count: %u", stats.peakAllocUnitCount);
+
+		ImGui::End();
+	}
+}
+
 void ModuleEditor::DrawAboutMenu()
 {
 	if (toggleAboutMenu)
@@ -222,4 +252,13 @@ void ModuleEditor::LogIntoConsole(const char* message)
 		textBuffer.appendf(message);
 		scrollDown = true;
 	}
+}
+
+void ModuleEditor::AddMemory(float memoryValue) {
+
+	for (unsigned i = 0u; i < LOGSSIZE - 1; ++i) {
+		memoryPoints[i] = memoryPoints[i + 1];
+	}
+
+	memoryPoints[LOGSSIZE - 1] = memoryValue;
 }

@@ -132,7 +132,7 @@ typedef struct SDL_RWops
             Uint8 *base;
             Uint8 *here;
             Uint8 *stop;
-        } mem;
+        } memoryPoints;
         struct
         {
             void *data1;
@@ -161,8 +161,8 @@ extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFP(void * fp,
                                                 SDL_bool autoclose);
 #endif
 
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromMem(void *mem, int size);
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromConstMem(const void *mem,
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromMem(void *memoryPoints, int size);
+extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromConstMem(const void *memoryPoints,
                                                       int size);
 
 /* @} *//* RWFrom functions */

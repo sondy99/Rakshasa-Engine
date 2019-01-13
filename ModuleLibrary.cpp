@@ -18,11 +18,11 @@ void LibraryWatcher()
 	std::map<std::string, std::string> currentFilesLibrary;
 	while (!stopWatcher)
 	{
-		currentFilesAssets = App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/", true);
+		App->fileSystem->GetFilesFromDirectoryRecursive("/Assets/", true, currentFilesAssets);
 		if ((oldFilesAssets.size() == 0 && oldFilesAssets.size() != currentFilesAssets.size()) 
 			|| oldFilesAssets.size() < currentFilesAssets.size())
 		{
-			currentFilesLibrary = App->fileSystem->GetFilesFromDirectoryRecursive("/Library/", false);
+			App->fileSystem->GetFilesFromDirectoryRecursive("/Library/", false, currentFilesLibrary);
 			for (std::map<std::string, std::string>::iterator iterator = currentFilesAssets.begin(); iterator != currentFilesAssets.end(); ++iterator)
 			{
 				std::string fileName = (*iterator).first;
@@ -51,10 +51,10 @@ void LibraryWatcher()
 		else if (oldFilesAssets.size() > currentFilesAssets.size())
 		{
 			oldFilesAssets = currentFilesAssets;
-		} 
-	}
+		}
 
-	Sleep(1000);
+		Sleep(1000);
+	}
 }
 
 ModuleLibrary::ModuleLibrary()
@@ -70,6 +70,10 @@ bool ModuleLibrary::Init()
 	std::thread watcherThread(LibraryWatcher);
 
 	watcherThread.detach();
+
+	fileMeshesList = new std::vector<std::string>();
+	fileTexturesList = new std::vector<std::string>();
+	fileSceneList = new std::vector<std::string>();
 
 	UpdateMeshesList();
 	UpdateTexturesList();
@@ -103,9 +107,10 @@ update_status ModuleLibrary::Update()
 bool ModuleLibrary::CleanUp()
 {
 	stopWatcher = true;
+	Sleep(1000);
 	return true;
 }
-
+#include "GameObject.h"
 void ModuleLibrary::DrawProperties()
 {
 	if (!ImGui::Begin("Library properties", &toggleLibraryProperties))
@@ -150,20 +155,20 @@ void ModuleLibrary::DrawProperties()
 
 void ModuleLibrary::UpdateMeshesList()
 {
-	fileMeshesList.clear();
-	App->fileSystem->GetFilesFromDirectory("/Library/Meshes/", fileMeshesList);
+	fileMeshesList->clear();
+	App->fileSystem->GetFilesFromDirectory("/Library/Meshes/", *fileMeshesList);
 }
 
 void ModuleLibrary::UpdateTexturesList()
 {
-	fileTexturesList.clear();
-	App->fileSystem->GetFilesFromDirectory("/Library/Textures/", fileTexturesList);
+	fileTexturesList->clear();
+	App->fileSystem->GetFilesFromDirectory("/Library/Textures/", *fileTexturesList);
 }
 
 void ModuleLibrary::UpdateSceneList()
 {
-	fileSceneList.clear();
-	App->fileSystem->GetFilesFromDirectory("/Library/Scene/", fileSceneList);
+	fileSceneList->clear();
+	App->fileSystem->GetFilesFromDirectory("/Library/Scene/", *fileSceneList);
 }
 
 void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
@@ -188,21 +193,21 @@ void ModuleLibrary::DrawTreeNode(const char* name, bool isLeaf)
 	{
 		if (name == "Meshes")
 		{
-			for (std::vector<std::string>::iterator iterator = fileMeshesList.begin(); iterator != fileMeshesList.end(); ++iterator)
+			for (std::vector<std::string>::iterator iterator = fileMeshesList->begin(); iterator != fileMeshesList->end(); ++iterator)
 			{
 				DrawTreeNode((*iterator).c_str(), true);
 			}
 		}
 		else if (name == "Textures")
 		{
-			for (std::vector<std::string>::iterator iterator = fileTexturesList.begin(); iterator != fileTexturesList.end(); ++iterator)
+			for (std::vector<std::string>::iterator iterator = fileTexturesList->begin(); iterator != fileTexturesList->end(); ++iterator)
 			{
 				DrawTreeNode((*iterator).c_str(), true);
 			}
 		}
 		else if (name == "Scene")
 		{
-			for (std::vector<std::string>::iterator iterator = fileSceneList.begin(); iterator != fileSceneList.end(); ++iterator)
+			for (std::vector<std::string>::iterator iterator = fileSceneList->begin(); iterator != fileSceneList->end(); ++iterator)
 			{
 				DrawTreeNode((*iterator).c_str(), true);
 			}

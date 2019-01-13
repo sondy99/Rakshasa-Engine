@@ -313,10 +313,8 @@ void ModuleRender::DrawCameraGameWindow()
 {
 	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
 
-	std::list<ComponentCamera*> componentCameras = App->camera->cameras;
-
-	ManageComboBoxCamera(componentCameras);
-	if (componentCameras.size() > 0)
+	ManageComboBoxCamera();
+	if (App->camera->cameras->size() > 0)
 	{
 		if (componentCameraGameSelected)
 		{
@@ -387,11 +385,11 @@ void ModuleRender::LoadQuadTreeForAllMesh()
 	}
 }
 
-void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCameras)
+void ModuleRender::ManageComboBoxCamera()
 {
 	static const char* labelCurrentCameraGameObjecteName = "Select a camera";
 
-	if (componentCameras.size() > 0)
+	if (App->camera->cameras->size() > 0)
 	{
 		if (componentCameraGameSelected != nullptr)
 		{
@@ -400,7 +398,7 @@ void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCam
 
 		if (ImGui::BeginCombo("##combo", labelCurrentCameraGameObjecteName))
 		{
-			for (std::list<ComponentCamera*>::iterator iterator = componentCameras.begin(); iterator != componentCameras.end(); ++iterator)
+			for (std::list<ComponentCamera*>::iterator iterator = App->camera->cameras->begin(); iterator != App->camera->cameras->end(); ++iterator)
 			{
 				bool isSelected = (labelCurrentCameraGameObjecteName == (*iterator)->gameObjectParent->name.c_str());
 				if (ImGui::Selectable((*iterator)->gameObjectParent->name.c_str(), isSelected))
@@ -415,10 +413,6 @@ void ModuleRender::ManageComboBoxCamera(std::list<ComponentCamera*> componentCam
 			}
 			ImGui::EndCombo();
 		}
-	}
-	else
-	{
-		labelCurrentCameraGameObjecteName = "Select a camera";
 	}
 }
 
@@ -640,36 +634,43 @@ void ModuleRender::DrawImGuizmo(float sceneWidth, float sceneHeight)
 
 	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
-	ImGui::SetCursorPos({ 20,30 });
-
 	GameObject* gameObjectSelected = App->scene->GetGameObjectSelected();
 
 	if (gameObjectSelected != nullptr)
 	{
 		ComponentMesh* mesh = (ComponentMesh*)gameObjectSelected->GetComponent(ComponentType::MESH);
 
-		if (mesh != nullptr)
+		ImGuizmo::Enable(!gameObjectSelected->gameObjectStatic);
+
+		ComponentTransformation* transformation = (ComponentTransformation*)gameObjectSelected->GetComponent(ComponentType::TRANSFORMATION);
+
+		math::float4x4 model = transformation->globalModelMatrix;
+		math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
+		math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
+
+		ImGuizmo::SetOrthographic(false);
+
+		model.Transpose();
+		viewScene.Transpose();
+		projectionScene.Transpose();
+		ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, ImGuizmo::WORLD, (float*)&model, NULL, NULL, NULL, NULL);
+
+		if (ImGuizmo::IsUsing())
 		{
-			ImGuizmo::Enable(!gameObjectSelected->gameObjectStatic);
-
-			ComponentTransformation* transformation = (ComponentTransformation*)gameObjectSelected->GetComponent(ComponentType::TRANSFORMATION);
-
-			math::float4x4 model = transformation->globalModelMatrix;
-			math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
-			math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
-
-			ImGuizmo::SetOrthographic(false);
-
 			model.Transpose();
-			viewScene.Transpose();
-			projectionScene.Transpose();
-			ImGuizmo::Manipulate((float*)&viewScene, (float*)&projectionScene, mCurrentGizmoOperation, ImGuizmo::LOCAL, (float*)&model, NULL, NULL, NULL, NULL);
 
-			if (ImGuizmo::IsUsing())
+			ComponentTransformation* transformationParent = (ComponentTransformation*)gameObjectSelected->parent->GetComponent(ComponentType::TRANSFORMATION);
+
+			if (transformationParent != nullptr)
 			{
-				model.Transpose();
-				transformation->SetPositionRotationScaleFromLocalModelMatrix(model);
+				transformation->localModelMatrix = transformationParent->globalModelMatrix.Inverted() * model;
 			}
+			else
+			{
+				transformation->localModelMatrix = model;
+			}
+
+			transformation->SetPositionRotationScaleFromLocalModelMatrix();
 		}
 	}
 }

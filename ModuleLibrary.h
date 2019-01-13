@@ -21,9 +21,9 @@ public:
 	void UpdateMeshesList();
 	void UpdateTexturesList();
 	void UpdateSceneList();
-	inline std::vector<std::string> GetFileMeshList() const { return fileMeshesList; }
-	inline std::vector<std::string> GetFileTexturesList() const { return fileTexturesList; }
-	inline std::vector<std::string> GetFileSceneList() const { return fileSceneList; }
+	inline std::vector<std::string>* GetFileMeshList() const { return fileMeshesList; }
+	inline std::vector<std::string>* GetFileTexturesList() const { return fileTexturesList; }
+	inline std::vector<std::string>* GetFileSceneList() const { return fileSceneList; }
 public:
 	bool toggleLibraryProperties = true;
 private:
@@ -35,9 +35,9 @@ private:
 	bool removeTexture = false;
 	bool removeScene = false;
 	std::string itemSelected;
-	std::vector<std::string> fileMeshesList;
-	std::vector<std::string> fileTexturesList;
-	std::vector<std::string> fileSceneList;
+	std::vector<std::string>* fileMeshesList;
+	std::vector<std::string>* fileTexturesList;
+	std::vector<std::string>* fileSceneList;
 };
 
 #endif // __ModuleLibrary_h__

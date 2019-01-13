@@ -140,7 +140,7 @@ void ModuleScene::DrawProperties()
 		ImGui::SameLine();
 		if (ImGui::BeginCombo("##comboScene", labelCurrentSceneFileName))
 		{
-			for (std::vector<std::string>::iterator iterator = fileSceneList.begin(); iterator != fileSceneList.end(); ++iterator)
+			for (std::vector<std::string>::iterator iterator = fileSceneList->begin(); iterator != fileSceneList->end(); ++iterator)
 			{
 				bool isSelected = (labelCurrentSceneFileName == (*iterator).c_str());
 				if (ImGui::Selectable((*iterator).c_str(), isSelected))

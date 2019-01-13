@@ -10970,7 +10970,7 @@ typedef void * (GLAPIENTRY * PFNGLMAPBUFFERRANGEEXTPROC) (GLenum target, GLintpt
 #define GL_DRIVER_UUID_EXT 0x9598
 #define GL_PROTECTED_MEMORY_OBJECT_EXT 0x959B
 
-typedef void (GLAPIENTRY * PFNGLBUFFERSTORAGEMEMEXTPROC) (GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLBUFFERSTORAGEMEMEXTPROC) (GLenum target, GLsizeiptr size, GLuint memoryPoints, GLuint64 offset);
 typedef void (GLAPIENTRY * PFNGLCREATEMEMORYOBJECTSEXTPROC) (GLsizei n, GLuint* memoryObjects);
 typedef void (GLAPIENTRY * PFNGLDELETEMEMORYOBJECTSEXTPROC) (GLsizei n, const GLuint* memoryObjects);
 typedef void (GLAPIENTRY * PFNGLGETMEMORYOBJECTPARAMETERIVEXTPROC) (GLuint memoryObject, GLenum pname, GLint* params);
@@ -10978,17 +10978,17 @@ typedef void (GLAPIENTRY * PFNGLGETUNSIGNEDBYTEI_VEXTPROC) (GLenum target, GLuin
 typedef void (GLAPIENTRY * PFNGLGETUNSIGNEDBYTEVEXTPROC) (GLenum pname, GLubyte* data);
 typedef GLboolean (GLAPIENTRY * PFNGLISMEMORYOBJECTEXTPROC) (GLuint memoryObject);
 typedef void (GLAPIENTRY * PFNGLMEMORYOBJECTPARAMETERIVEXTPROC) (GLuint memoryObject, GLenum pname, const GLint* params);
-typedef void (GLAPIENTRY * PFNGLNAMEDBUFFERSTORAGEMEMEXTPROC) (GLuint buffer, GLsizeiptr size, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM1DEXTPROC) (GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM2DEXTPROC) (GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTPROC) (GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM3DEXTPROC) (GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTPROC) (GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM1DEXTPROC) (GLuint texture, GLsizei levels, GLenum internalFormat, GLsizei width, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM2DEXTPROC) (GLuint texture, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM2DMULTISAMPLEEXTPROC) (GLuint texture, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM3DEXTPROC) (GLuint texture, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLuint memory, GLuint64 offset);
-typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM3DMULTISAMPLEEXTPROC) (GLuint texture, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLNAMEDBUFFERSTORAGEMEMEXTPROC) (GLuint buffer, GLsizeiptr size, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM1DEXTPROC) (GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM2DEXTPROC) (GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM2DMULTISAMPLEEXTPROC) (GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLboolean fixedSampleLocations, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM3DEXTPROC) (GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXSTORAGEMEM3DMULTISAMPLEEXTPROC) (GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedSampleLocations, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM1DEXTPROC) (GLuint texture, GLsizei levels, GLenum internalFormat, GLsizei width, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM2DEXTPROC) (GLuint texture, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM2DMULTISAMPLEEXTPROC) (GLuint texture, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLboolean fixedSampleLocations, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM3DEXTPROC) (GLuint texture, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLuint memoryPoints, GLuint64 offset);
+typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM3DMULTISAMPLEEXTPROC) (GLuint texture, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedSampleLocations, GLuint memoryPoints, GLuint64 offset);
 
 #define glBufferStorageMemEXT GLEW_GET_FUN(__glewBufferStorageMemEXT)
 #define glCreateMemoryObjectsEXT GLEW_GET_FUN(__glewCreateMemoryObjectsEXT)
@@ -11021,7 +11021,7 @@ typedef void (GLAPIENTRY * PFNGLTEXTURESTORAGEMEM3DMULTISAMPLEEXTPROC) (GLuint t
 
 #define GL_HANDLE_TYPE_OPAQUE_FD_EXT 0x9586
 
-typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYFDEXTPROC) (GLuint memory, GLuint64 size, GLenum handleType, GLint fd);
+typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYFDEXTPROC) (GLuint memoryPoints, GLuint64 size, GLenum handleType, GLint fd);
 
 #define glImportMemoryFdEXT GLEW_GET_FUN(__glewImportMemoryFdEXT)
 
@@ -11046,8 +11046,8 @@ typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYFDEXTPROC) (GLuint memory, GLuint64 
 #define GL_DEVICE_LUID_EXT 0x9599
 #define GL_DEVICE_NODE_MASK_EXT 0x959A
 
-typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYWIN32HANDLEEXTPROC) (GLuint memory, GLuint64 size, GLenum handleType, void *handle);
-typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYWIN32NAMEEXTPROC) (GLuint memory, GLuint64 size, GLenum handleType, const void *name);
+typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYWIN32HANDLEEXTPROC) (GLuint memoryPoints, GLuint64 size, GLenum handleType, void *handle);
+typedef void (GLAPIENTRY * PFNGLIMPORTMEMORYWIN32NAMEEXTPROC) (GLuint memoryPoints, GLuint64 size, GLenum handleType, const void *name);
 
 #define glImportMemoryWin32HandleEXT GLEW_GET_FUN(__glewImportMemoryWin32HandleEXT)
 #define glImportMemoryWin32NameEXT GLEW_GET_FUN(__glewImportMemoryWin32NameEXT)
@@ -13185,8 +13185,8 @@ typedef void (GLAPIENTRY * PFNGLVERTEXWEIGHTFVEXTPROC) (GLfloat* weight);
 #ifndef GL_EXT_win32_keyed_mutex
 #define GL_EXT_win32_keyed_mutex 1
 
-typedef GLboolean (GLAPIENTRY * PFNGLACQUIREKEYEDMUTEXWIN32EXTPROC) (GLuint memory, GLuint64 key, GLuint timeout);
-typedef GLboolean (GLAPIENTRY * PFNGLRELEASEKEYEDMUTEXWIN32EXTPROC) (GLuint memory, GLuint64 key);
+typedef GLboolean (GLAPIENTRY * PFNGLACQUIREKEYEDMUTEXWIN32EXTPROC) (GLuint memoryPoints, GLuint64 key, GLuint timeout);
+typedef GLboolean (GLAPIENTRY * PFNGLRELEASEKEYEDMUTEXWIN32EXTPROC) (GLuint memoryPoints, GLuint64 key);
 
 #define glAcquireKeyedMutexWin32EXT GLEW_GET_FUN(__glewAcquireKeyedMutexWin32EXT)
 #define glReleaseKeyedMutexWin32EXT GLEW_GET_FUN(__glewReleaseKeyedMutexWin32EXT)

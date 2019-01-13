@@ -34,6 +34,7 @@ bool ModuleFileSystem::Init()
 		PHYSFS_mkdir("/Library/Meshes/");
 	if (PHYSFS_exists("/Library/Scene/") == 0)
 		PHYSFS_mkdir("/Library/Scene/");
+
 	return true;
 }
 
@@ -198,20 +199,30 @@ bool ModuleFileSystem::Copy(const char * sourcePath, const char * destinationPat
 	return result;
 }
 
-std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecursive(const char * directory, const bool withExtension)
+void ModuleFileSystem::GetFilesFromDirectoryRecursive(const char* directory, const bool withExtension, std::map<std::string, std::string>& result)
 {
-	std::map<std::string, std::string> result;
-	char **enumeratedFIles = PHYSFS_enumerateFiles(directory);
-	char **iterator;
+	char** enumeratedFIles = PHYSFS_enumerateFiles(directory);
+	char** iterator;
+	
+	unsigned directoryStringLenght = (unsigned)strlen(directory) + 1;
+	char* directoryString = new char[directoryStringLenght];
 
-	std::string directoryString(directory); 
-	std::vector<std::string> directoryList;
-
+	strcpy_s(directoryString, directoryStringLenght, directory);
+	
 	for (iterator = enumeratedFIles; *iterator != nullptr; iterator++)
 	{
-		if (PHYSFS_isDirectory((directoryString + *iterator).c_str()))
+		unsigned iteratorLenght = directoryStringLenght + (unsigned)strlen(*iterator) + 1;
+		char* directoryWithFile = new char[iteratorLenght];
+		directoryWithFile[0] = '\0';
+
+		strcat_s(directoryWithFile, directoryStringLenght, directoryString);
+
+		strcat_s(directoryWithFile, iteratorLenght, *iterator);
+
+		if (PHYSFS_isDirectory(directoryWithFile))
 		{
-			directoryList.push_back(*iterator);
+			strcat_s(directoryWithFile, iteratorLenght, "/");
+			GetFilesFromDirectoryRecursive(directoryWithFile, withExtension, result);
 		}
 		else
 		{
@@ -221,32 +232,38 @@ std::map<std::string, std::string> ModuleFileSystem::GetFilesFromDirectoryRecurs
 			}
 			else
 			{
-				std::string fileName((*iterator));
-				size_t positionDot = fileName.find_last_of(".");
-				size_t positionUnderscore = fileName.find_last_of("_");
-				fileName = fileName.substr(0, positionDot);
+				char* fileName = nullptr;
+				char* pointPointer;
+				pointPointer = strchr((*iterator), '.');
 
-				if (positionUnderscore != 0)
+				char* underscorePointer;
+				underscorePointer = strchr((*iterator), '_');
+
+				if (underscorePointer)
 				{
-					fileName = fileName.substr(0, positionUnderscore);
+					size_t len = underscorePointer - (*iterator) - 1;
+
+					fileName = new char[len + 2];
+					memcpy(fileName, (*iterator), len + 1);
+					fileName[len + 1] = '\0';
+				} else if (pointPointer)
+				{
+					size_t len = pointPointer - (*iterator) - 1;
+
+					fileName = new char[len + 2];
+					memcpy(fileName, (*iterator), len + 1);
+					fileName[len + 1] = '\0';
 				}
 
 				result[fileName] = directoryString;
+				RELEASE_ARRAY(fileName);
 			}
 		}
+		RELEASE_ARRAY(directoryWithFile)
 	}
 
 	PHYSFS_freeList(enumeratedFIles);
-
-	for (std::vector<std::string>::iterator iterator = directoryList.begin(); iterator != directoryList.end(); ++iterator)
-	{
-		(*iterator).insert(0, directory);
-		(*iterator).append("/");
-		std::map<std::string, std::string> partialResult = GetFilesFromDirectoryRecursive((*iterator).c_str(), withExtension);
-		result.insert(partialResult.begin(), partialResult.end());
-	}
-
-	return result;
+	RELEASE_ARRAY(directoryString);
 }
 
 void ModuleFileSystem::GetFilesFromDirectory(const char * directory, std::vector<std::string>& fileList) const
@@ -282,7 +299,7 @@ void ModuleFileSystem::ChangePathSlashes(std::string& fullPath) const
 	}
 }
 
-void ModuleFileSystem::SplitFilePath(const char * fullPath, std::string * path, std::string * file, std::string * extension) const
+void ModuleFileSystem::SplitFilePath(const char * fullPath, std::string* path, std::string* file, std::string* extension) const
 {
 	if (fullPath != nullptr)
 	{

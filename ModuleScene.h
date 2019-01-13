@@ -59,7 +59,7 @@ private:
 private:
 	GameObject* gameObjectSelected = nullptr;
 	std::list<GameObject*> gameObjectsToBeDeleted;
-	std::vector<std::string> fileSceneList;
+	std::vector<std::string>* fileSceneList = nullptr;
 	GameObject* gameObjectToBeDuplicated = nullptr;
 	int gameObjectCounter = 1;
 	bool markToLoadScene = false;

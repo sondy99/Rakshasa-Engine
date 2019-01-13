@@ -18,7 +18,7 @@ public:
 	void Load(Config* config, rapidjson::Value& value) override;
 
 	void UpdateLocalModelMatrix();
-	void SetPositionRotationScaleFromLocalModelMatrix(math::float4x4 newLocalModelMatrix);
+	void SetPositionRotationScaleFromLocalModelMatrix();
 public:
 	bool identity = false;
 

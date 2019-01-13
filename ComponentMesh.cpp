@@ -72,31 +72,25 @@ void ComponentMesh::DrawProperties()
 
 		ImGui::Separator();
 
-		std::vector<std::string> fileMeshesList = App->library->GetFileMeshList();
 		labelCurrentFileMeshSelected;
-		fileMeshesList.insert(fileMeshesList.begin(), "Select mesh");
-
-		if (fileMeshesList.size() > 0)
+		if (ImGui::BeginCombo("##meshCombo", labelCurrentFileMeshSelected.c_str()))
 		{
-			if (ImGui::BeginCombo("##meshCombo", labelCurrentFileMeshSelected.c_str()))
+			for (std::vector<std::string>::iterator iterator = App->library->GetFileMeshList()->begin(); iterator != App->library->GetFileMeshList()->end(); ++iterator)
 			{
-				for (std::vector<std::string>::iterator iterator = fileMeshesList.begin(); iterator != fileMeshesList.end(); ++iterator)
+				bool isSelected = (labelCurrentFileMeshSelected == (*iterator));
+				if (ImGui::Selectable((*iterator).c_str(), isSelected))
 				{
-					bool isSelected = (labelCurrentFileMeshSelected == (*iterator));
-					if (ImGui::Selectable((*iterator).c_str(), isSelected))
+					labelCurrentFileMeshSelected = (*iterator);
+
+					LoadMesh(labelCurrentFileMeshSelected.c_str());
+
+					if (isSelected)
 					{
-						labelCurrentFileMeshSelected = (*iterator);
-
-						LoadMesh(labelCurrentFileMeshSelected.c_str());
-
-						if (isSelected)
-						{
-							ImGui::SetItemDefaultFocus();
-						}
+						ImGui::SetItemDefaultFocus();
 					}
 				}
-				ImGui::EndCombo();
 			}
+			ImGui::EndCombo();
 		}
 
 		ImGui::Separator();

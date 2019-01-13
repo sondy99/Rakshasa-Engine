@@ -28,6 +28,7 @@ ModuleCamera::~ModuleCamera()
 // Called before render is available
 bool ModuleCamera::Init()
 {
+	cameras = new std::list<ComponentCamera*>();
 	sceneCamera = new ComponentCamera(nullptr, ComponentType::CAMERA);
 	selectedCamera = sceneCamera;
 
@@ -87,12 +88,14 @@ bool ModuleCamera::CleanUp()
 
 	CleanUpFromList(nullptr);
 
+	RELEASE(cameras);
+
 	return true;
 }
 
 void ModuleCamera::CleanUpFromList(ComponentCamera * componentCamera)
 {
-	for (std::list<ComponentCamera*>::iterator iterator = cameras.begin(); iterator != cameras.end();)
+	for (std::list<ComponentCamera*>::iterator iterator = cameras->begin(); iterator != cameras->end();)
 	{
 		if (componentCamera == nullptr)
 		{
@@ -115,7 +118,7 @@ void ModuleCamera::CleanUpFromList(ComponentCamera * componentCamera)
 std::list<ComponentCamera*>::iterator ModuleCamera::CleanUpIterator(std::list<ComponentCamera*>::iterator iterator)
 {
 	RELEASE(*iterator);
-	return cameras.erase(iterator);
+	return cameras->erase(iterator);
 }
 
 void ModuleCamera::SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight)
@@ -402,7 +405,7 @@ void ModuleCamera::DrawProperties()
 ComponentCamera* ModuleCamera::CreateComponentCamera(GameObject * gameObjectParent, ComponentType componentType)
 {
 	ComponentCamera* result = new ComponentCamera(gameObjectParent, componentType);
-	cameras.push_back(result);
+	cameras->push_back(result);
 
 	return result;
 }
@@ -411,7 +414,7 @@ void ModuleCamera::RemoveCameraComponent(Component * componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::CAMERA)
 	{
-		cameras.remove((ComponentCamera*)componentToBeRemove);
+		cameras->remove((ComponentCamera*)componentToBeRemove);
 	}
 }
 
