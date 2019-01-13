@@ -221,7 +221,7 @@ void ModuleTextures::RemoveMaterialComponent(Component * componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::MATERIAL)
 	{
-		materials.remove((ComponentMaterial*)componentToBeRemove);
+		CleanUpFromList((ComponentMaterial*)componentToBeRemove);
 	}
 }
 

@@ -46,7 +46,7 @@ public:
 	std::list<Component*> components;
 	std::list<GameObject*> childrens;
 private:
-	std::list<Component*>::iterator RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove);
+	std::list<Component*>::iterator RemoveComponent(std::list<Component*>::iterator iteratorToBeDeleted, Component* componentToBeRemove);
 };
 
 #endif __GAMEOBJECT_H__

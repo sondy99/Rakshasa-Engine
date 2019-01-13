@@ -38,9 +38,9 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void CleanUpMesh(Mesh meshStruct);
-	void GenerateMesh(Mesh& meshStruct);
-	void GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh& meshStruct);
+	void CleanUpMesh(Mesh* meshStruct);
+	void GenerateMesh(Mesh* meshStruct);
+	void GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh* meshStruct);
 
 	void LoadGeometry(GameObject* gameObjectParent, GeometryType geometryType);
 	void DrawProperties();
@@ -54,7 +54,7 @@ private:
 	void CreateMeshComponent(const par_shapes_mesh_s* parShapeMesh, GameObject* gameObjectMesh, const math::float4& color, GeometryType geometryType);
 	void CreateMaterialComponent(GameObject* gameObjectMesh, const math::float4& color);
 	void CreateTransformationComponent(GameObject* gameObject);
-	void GenerateVAO(Mesh& mesh);
+	void GenerateVAO(Mesh* mesh);
 };
 
 #endif __ModuleModelLoader_H__

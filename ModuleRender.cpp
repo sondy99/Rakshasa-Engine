@@ -175,14 +175,14 @@ void ModuleRender::CleanUpFromList(ComponentMesh * componentMesh)
 
 std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(std::list<ComponentMesh*>::iterator iterator)
 {
-	if ((*iterator)->mesh.vbo != 0)
+	if ((*iterator)->mesh->vbo != 0)
 	{
-		glDeleteBuffers(1, &(*iterator)->mesh.vbo);
+		glDeleteBuffers(1, &(*iterator)->mesh->vbo);
 	}
 
-	if ((*iterator)->mesh.ibo != 0)
+	if ((*iterator)->mesh->ibo != 0)
 	{
-		glDeleteBuffers(1, &(*iterator)->mesh.ibo);
+		glDeleteBuffers(1, &(*iterator)->mesh->ibo);
 	}
 
 	RELEASE(*iterator);
@@ -193,7 +193,7 @@ std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(std::list<Comp
 void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, ComponentMaterial* componentMaterial,
 	const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj)
 {
-	Mesh mesh = componentMesh.mesh;
+	Mesh* mesh = componentMesh.mesh;
 
 	if (componentMesh.isWireframeActive)
 	{
@@ -248,8 +248,8 @@ void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, ComponentMater
 
 	}
 
-	glBindVertexArray(mesh.vao);
-	glDrawElements(GL_TRIANGLES, mesh.indicesNumber, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(mesh->vao);
+	glDrawElements(GL_TRIANGLES, mesh->indicesNumber, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -355,7 +355,7 @@ ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, C
 	return result;
 }
 
-ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
+ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh* mesh)
 {
 	ComponentMesh* result = new ComponentMesh(gameObjectParent, componentType, mesh);
 	meshes.push_back(result);
@@ -367,7 +367,7 @@ void ModuleRender::RemoveMeshComponent(Component* componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::MESH)
 	{
-		meshes.remove((ComponentMesh*)componentToBeRemove);
+		CleanUpFromList((ComponentMesh*)componentToBeRemove);
 	}
 }
 
@@ -520,12 +520,15 @@ void ModuleRender::RenderComponentFromMeshesList(ComponentMesh* componentMesh, m
 		ComponentTransformation* transformation = (ComponentTransformation*)componentMesh->gameObjectParent->GetComponent(ComponentType::TRANSFORMATION);
 		ComponentMaterial* componentMaterial = (ComponentMaterial*)componentMesh->gameObjectParent->GetComponent(ComponentType::MATERIAL);
 
-		RenderMesh(*componentMesh, componentMaterial,
-			transformation->globalModelMatrix, view, projection);
-
-		if (componentMesh != nullptr && frameBufferType == FrameBufferType::SCENE && componentMesh->gameObjectParent->isSelected)
+		if (componentMesh != nullptr  && componentMesh->mesh != nullptr)
 		{
-			App->environment->DrawBoundingBox(*componentMesh);
+			RenderMesh(*componentMesh, componentMaterial,
+				transformation->globalModelMatrix, view, projection);
+
+			if (frameBufferType == FrameBufferType::SCENE && componentMesh->gameObjectParent->isSelected)
+			{
+				App->environment->DrawBoundingBox(*componentMesh);
+			}
 		}
 	}
 }
@@ -539,7 +542,7 @@ void ModuleRender::RenderComponentUsingQuadTree(math::float4x4 view, math::float
 
 		for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end(); ++iterator)
 		{
-			if (!(*iterator)->gameObjectParent->gameObjectStatic && (*iterator)->mesh.verticesNumber > 0 && componentCameraGameSelected->frustum.Intersects((*iterator)->globalBoundingBox))
+			if (!(*iterator)->gameObjectParent->gameObjectStatic && (*iterator)->mesh->verticesNumber > 0 && componentCameraGameSelected->frustum.Intersects((*iterator)->globalBoundingBox))
 			{
 				gameObjectsCollideQuadtree.push_back((*iterator)->gameObjectParent);
 			}

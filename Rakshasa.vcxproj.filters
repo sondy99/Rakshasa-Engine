@@ -192,12 +192,14 @@
     <ClCompile Include="Config.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="ImGuizmo.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -545,7 +547,6 @@
     <ClInclude Include="Config.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="ImGuizmo.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -554,6 +555,9 @@
     </ClInclude>
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

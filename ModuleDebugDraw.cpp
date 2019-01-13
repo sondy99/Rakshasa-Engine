@@ -585,6 +585,7 @@ ModuleDebugDraw::~ModuleDebugDraw()
 bool ModuleDebugDraw::Init()
 {
     implementation = new DDRenderInterfaceCoreGL;
+	implementation->mvpMatrix = math::float4x4::identity;
     dd::initialize(implementation);
     return true;
 }
@@ -593,9 +594,7 @@ bool ModuleDebugDraw::Init()
 bool ModuleDebugDraw::CleanUp()
 {
     dd::shutdown();
-
-    delete implementation;
-    implementation = 0;
+	RELEASE(implementation);
 
     return true;
 }

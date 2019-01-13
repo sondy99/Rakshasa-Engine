@@ -141,7 +141,7 @@ void GameObject::DrawProperties()
 				}
 				else
 				{
-					iterator = RemoveComponent(iterator);
+					iterator = RemoveComponent(iterator, *iterator);
 				}
 
 			}
@@ -153,7 +153,7 @@ void GameObject::RemoveGameObject(GameObject* mainObjectToDelete)
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 	{
-		iterator = RemoveComponent(iterator);
+		iterator = RemoveComponent(iterator, *iterator);
 	}
 
 	for (std::list<GameObject*>::iterator iterator = childrens.begin(); iterator != childrens.end();)
@@ -383,13 +383,20 @@ void GameObject::Load(Config* config, rapidjson::Value & value)
 	}
 }
 
-std::list<Component*>::iterator GameObject::RemoveComponent(std::list<Component*>::iterator iteratorComponentToBeRemove)
+std::list<Component*>::iterator GameObject::RemoveComponent(std::list<Component*>::iterator iteratorToBeDeleted, Component* componentToBeRemove)
 {
-	App->renderer->RemoveMeshComponent(*iteratorComponentToBeRemove);
-	App->textures->RemoveMaterialComponent(*iteratorComponentToBeRemove);
-	App->camera->RemoveCameraComponent(*iteratorComponentToBeRemove);
-	RELEASE(*iteratorComponentToBeRemove);
-	std::list<Component*>::iterator iterator = components.erase(iteratorComponentToBeRemove);
+	std::list<Component*>::iterator iterator = components.erase(iteratorToBeDeleted);
+
+	if (componentToBeRemove->componentType == ComponentType::TRANSFORMATION)
+	{
+		RELEASE(componentToBeRemove);
+	}
+	else
+	{
+		App->renderer->RemoveMeshComponent(componentToBeRemove);
+		App->textures->RemoveMaterialComponent(componentToBeRemove);
+		App->camera->RemoveCameraComponent(componentToBeRemove);
+	}
 	
 	return iterator;
 }

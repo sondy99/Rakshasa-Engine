@@ -2,8 +2,10 @@
 
 #include "Application.h"
 
-#include "ModuleTextures.h"
+#include "ComponentMesh.h"
 #include "ModuleFileSystem.h"
+
+std::map<const char*, std::pair<Mesh*, unsigned>> ImporterMesh::mapMeshUsed;
 
 void ImporterMesh::ImportFBX(const char* filePath)
 {
@@ -83,16 +85,41 @@ bool ImporterMesh::Import(const aiMesh* aiMesh, const char* meshName)
 	return Save(meshStruct, meshName);
 }
 
-bool ImporterMesh::Load(Mesh* meshStruct, const char* meshName)
+bool ImporterMesh::Load(Mesh* & meshStruct, char* meshName)
 {
 	bool result = false;
 
 	if (meshStruct == nullptr)
-		return result;
+	{
+		meshStruct = new Mesh();
+
+		unsigned meshNameLenght = (unsigned)strlen(meshName) + 1;
+		meshStruct->name = new char[meshNameLenght];
+
+		strcpy_s(meshStruct->name, meshNameLenght, meshName);
+	}
+
+	std::map<const char*, std::pair<Mesh*, unsigned>>::iterator iterator = mapMeshUsed.begin();
+	for (iterator; iterator != mapMeshUsed.end(); iterator++)
+	{
+		if(std::strcmp(meshStruct->name, (*iterator).first) == 0)
+		{
+			break;
+		}
+	}
+
+	if (!(iterator != mapMeshUsed.end()))
+	{
+		mapMeshUsed[meshStruct->name] = std::make_pair(meshStruct, 1u);
+	}
+	else
+	{
+		(*iterator).second.second++;
+	}
 
 	char* buffer;
 	std::string meshPath("/Library/Meshes/");
-	meshPath.append(meshName);
+	meshPath.append(meshStruct->name);
 	unsigned size = App->fileSystem->Load(meshPath.c_str(),  &buffer);
 
 	if (buffer != nullptr && size > 0)
@@ -232,3 +259,62 @@ bool ImporterMesh::Save(const Mesh& mesh, const char* meshName)
 
 	return result;
 }
+
+void ImporterMesh::RemoveMesh(const char * meshName)
+{
+	std::map<const char*, std::pair<Mesh*, unsigned>>::iterator iterator = mapMeshUsed.begin();
+	for (iterator; iterator != mapMeshUsed.end(); iterator++)
+	{
+		if (std::strcmp(meshName, (*iterator).first) == 0)
+		{
+			break;
+		}
+	}
+
+	if (iterator != mapMeshUsed.end())
+	{
+		(*iterator).second.second--;
+
+		if ((*iterator).second.second == 0u)
+		{
+			CleanUpStructMesh((*iterator).second.first);
+
+			mapMeshUsed.erase(iterator);
+		}
+	}
+
+}
+
+void ImporterMesh::CleanUpStructMesh(Mesh* mesh)
+{
+	if (mesh != nullptr)
+	{
+		if (mesh->indices != nullptr)
+		{
+			RELEASE_ARRAY(mesh->indices);
+		}
+
+		if (mesh->vertices != nullptr)
+		{
+			RELEASE_ARRAY(mesh->vertices);
+		}
+
+		if (mesh->uvs != nullptr)
+		{
+			RELEASE_ARRAY(mesh->uvs);
+		}
+
+		if (mesh->normals != nullptr)
+		{
+			RELEASE_ARRAY(mesh->normals);
+		}
+
+		if (mesh->colors != nullptr)
+		{
+			RELEASE_ARRAY(mesh->colors);
+		}
+
+		RELEASE_ARRAY(mesh->name);
+	}
+}
+

@@ -40,11 +40,6 @@ void ComponentMaterial::DrawProperties()
 
 		if (ImGui::BeginPopup("MaterialOptionsContextualMenu"))
 		{
-			ImGui::PushID("AddMaterial");
-			if (ImGui::Button("Add from library    "))
-			{
-			}
-			ImGui::PopID();
 			ImGui::PushID("DeleteMaterial");
 			if (ImGui::Button("Delete all materials"))
 			{

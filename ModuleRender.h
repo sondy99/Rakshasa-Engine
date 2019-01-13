@@ -63,7 +63,7 @@ public:
 	void DrawCameraGameWindow();
 	ComponentMesh* CreateComponentMesh();
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType);
-	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh);
+	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh* mesh);
 	void RemoveMeshComponent(Component* componentToBeRemove);
 	void LoadQuadTreeForAllMesh();
 

@@ -414,7 +414,7 @@ void ModuleCamera::RemoveCameraComponent(Component * componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::CAMERA)
 	{
-		cameras->remove((ComponentCamera*)componentToBeRemove);
+		CleanUpFromList((ComponentCamera*)componentToBeRemove);
 	}
 }
 
@@ -432,7 +432,7 @@ void ModuleCamera::PickGameObject()
 
 	for (std::list<ComponentMesh*>::iterator iterator = App->renderer->meshes.begin(); iterator != App->renderer->meshes.end(); ++iterator)
 	{
-		if (!(*iterator)->gameObjectParent->gameObjectStatic && (*iterator)->mesh.verticesNumber > 0 && pickingLine.Intersects((*iterator)->globalBoundingBox))
+		if (!(*iterator)->gameObjectParent->gameObjectStatic && (*iterator)->mesh->verticesNumber > 0 && pickingLine.Intersects((*iterator)->globalBoundingBox))
 		{
 			objectsPossiblePick.push_back((*iterator)->gameObjectParent);
 		}
@@ -447,18 +447,18 @@ void ModuleCamera::PickGameObject()
 			ComponentMesh* componentMesh = (ComponentMesh*)(*iterator)->GetComponent(ComponentType::MESH);
 			ComponentTransformation* componentTransformation = (ComponentTransformation*)(*iterator)->GetComponent(ComponentType::TRANSFORMATION);
 
-			if (componentMesh != nullptr && componentTransformation != nullptr)
+			if (componentMesh != nullptr && componentMesh->mesh != nullptr && componentTransformation != nullptr)
 			{
-				Mesh mesh = componentMesh->mesh;
+				Mesh* mesh = componentMesh->mesh;
 				math::LineSegment localTransformPikingLine(pickingLine);
 				localTransformPikingLine.Transform(componentTransformation->globalModelMatrix.Inverted());
 
 				math::Triangle triangle;
-				for (unsigned i = 0; i < mesh.indicesNumber; i += 3)
+				for (unsigned i = 0; i < mesh->indicesNumber; i += 3)
 				{
-					triangle.a = { mesh.vertices[mesh.indices[i] * 3], mesh.vertices[mesh.indices[i] * 3 + 1], mesh.vertices[mesh.indices[i] * 3 + 2] };
-					triangle.b = { mesh.vertices[mesh.indices[i + 1] * 3], mesh.vertices[mesh.indices[i + 1] * 3 + 1], mesh.vertices[mesh.indices[i + 1] * 3 + 2] };
-					triangle.c = { mesh.vertices[mesh.indices[i + 2] * 3], mesh.vertices[mesh.indices[i + 2] * 3 + 1], mesh.vertices[mesh.indices[i + 2] * 3 + 2] };
+					triangle.a = { mesh->vertices[mesh->indices[i] * 3], mesh->vertices[mesh->indices[i] * 3 + 1], mesh->vertices[mesh->indices[i] * 3 + 2] };
+					triangle.b = { mesh->vertices[mesh->indices[i + 1] * 3], mesh->vertices[mesh->indices[i + 1] * 3 + 1], mesh->vertices[mesh->indices[i + 1] * 3 + 2] };
+					triangle.c = { mesh->vertices[mesh->indices[i + 2] * 3], mesh->vertices[mesh->indices[i + 2] * 3 + 1], mesh->vertices[mesh->indices[i + 2] * 3 + 2] };
 
 					float triangleDistance;
 					float3 hitPoint;

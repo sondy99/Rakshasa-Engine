@@ -28,37 +28,14 @@ ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType compone
 {
 }
 
-ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh mesh)
+ComponentMesh::ComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh* mesh)
 	: Component(gameObjectParent, componentType), mesh(mesh)
 {
 }
 
 ComponentMesh::~ComponentMesh()
 {
-	if (mesh.indices != nullptr)
-	{
-		RELEASE_ARRAY(mesh.indices);
-	}
-
-	if (mesh.vertices != nullptr)
-	{
-		RELEASE_ARRAY(mesh.vertices);
-	}
-
-	if (mesh.uvs != nullptr)
-	{
-		RELEASE_ARRAY(mesh.uvs);
-	}
-
-	if (mesh.normals != nullptr)
-	{
-		RELEASE_ARRAY(mesh.normals);
-	}
-
-	if (mesh.colors != nullptr)
-	{
-		RELEASE_ARRAY(mesh.colors);
-	}
+	CleanMesh();
 }
 
 void ComponentMesh::DrawProperties()
@@ -95,8 +72,11 @@ void ComponentMesh::DrawProperties()
 
 		ImGui::Separator();
 
-		ImGui::Text("Triangles count: %d", mesh.verticesNumber / 3);
-		ImGui::Text("Vertices count: %d", mesh.verticesNumber);
+		if (mesh != nullptr)
+		{
+			ImGui::Text("Triangles count: %d", mesh->verticesNumber / 3);
+			ImGui::Text("Vertices count: %d", mesh->verticesNumber);
+		}
 
 		ImGui::Checkbox("Wireframe active", &isWireframeActive);
 	}
@@ -159,10 +139,10 @@ void ComponentMesh::Load(Config* config, rapidjson::Value& value)
 
 void ComponentMesh::CreateBoundingBox()
 {
-	if (mesh.vertices != nullptr)
+	if (mesh->vertices != nullptr)
 	{
 		localBoundingBox.SetNegativeInfinity();
-		localBoundingBox.Enclose((float3*)mesh.vertices, mesh.verticesNumber);
+		localBoundingBox.Enclose((float3*)mesh->vertices, mesh->verticesNumber);
 	}
 }
 
@@ -179,8 +159,19 @@ void ComponentMesh::UpdateGlobalBoundingBox()
 
 void ComponentMesh::LoadMesh(const char* name)
 {
-	App->modelLoader->CleanUpMesh(mesh);
-	ImporterMesh::Load(&mesh, name);
+	CleanMesh();
+	ImporterMesh::Load(mesh, (char*)name);
 	App->modelLoader->GenerateMesh(mesh);
 	CreateBoundingBox();
 }
+
+void ComponentMesh::CleanMesh()
+{
+	if (mesh != nullptr)
+	{
+		App->modelLoader->CleanUpMesh(mesh);
+		ImporterMesh::RemoveMesh(mesh->name);
+		mesh = nullptr;
+	}
+}
+
