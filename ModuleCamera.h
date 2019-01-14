@@ -62,8 +62,11 @@ private:
 
 	void MoveCamera(CameraMovement cameraSide);
 	void RotateCamera(CameraMovement cameraSide);
-	void Zooming(bool positive);
-	void FocusObject(math::float3& objectCenterPos);
+	void Zooming(bool positive); 
+	void FitCamera(const AABB &boundingBox);
+	void ManageFocus();
+	void FocusSpecificPosition(const math::float3& objectCenterPos);
+	void FocusUsingTransformation();
 private:
 	math::float3 sceneCenter = math::float3(0.0f, 0.0f, 0.0f);
 	bool clickOnViewPort = false;

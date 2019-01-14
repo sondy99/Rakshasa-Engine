@@ -25,7 +25,6 @@ public:
 	void InitFrustum(GameObject* gameObjectParent);
 
 	void SetHorizontalFOV(float& fovXDegrees);
-	void SetVerticalFOV(float& fovYDegrees);
 public:
 	Frustum frustum;
 

@@ -28,7 +28,7 @@ void ComponentCamera::InitFrustum(GameObject* gameObjectParent)
 	frustum.nearPlaneDistance = 10.0f;
 	frustum.farPlaneDistance = gameObjectParent != nullptr ? 10000.0f : 35000.0f;
 
-	SetVerticalFOV(fovY);
+	SetHorizontalFOV(fovX);
 }
 
 void ComponentCamera::SetHorizontalFOV(float& fovXDegrees)
@@ -36,13 +36,6 @@ void ComponentCamera::SetHorizontalFOV(float& fovXDegrees)
 	fovX = fovXDegrees;
 	frustum.horizontalFov = math::DegToRad(fovX);
 	frustum.verticalFov = 2.0f * atanf(tanf(frustum.horizontalFov * 0.5) * ((float)screenHeight / (float)screenWidth));
-}
-
-void ComponentCamera::SetVerticalFOV(float& fovYDegrees)
-{
-	fovY = fovYDegrees;
-	frustum.verticalFov = math::DegToRad(fovY);
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ((float)screenWidth / (float)screenHeight));
 }
 
 void ComponentCamera::DrawProperties()
@@ -227,5 +220,4 @@ void ComponentCamera::SetScreenNewScreenSize(unsigned width, unsigned height)
 	screenRatio = (float)screenWidth / (float)screenHeight;
 
 	SetHorizontalFOV(fovX);
-	SetVerticalFOV(fovY);
 }

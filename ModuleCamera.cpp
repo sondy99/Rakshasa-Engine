@@ -52,26 +52,46 @@ update_status ModuleCamera::PreUpdate()
 		selectedCamera->firstMouse = true;
 	}
 
-	if (clickOnViewPort)
+	if (clickOnViewPort && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		CameraMovementKeyboard();
-		CameraMovementMouse();
 
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->scene->GetGameObjectSelected() != nullptr)
 		{
-			FocusObject(sceneCenter);
+			FocusUsingTransformation();
+		}
+		else
+		{
+			CameraMovementMouse();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
+		if (selectedCamera == sceneCamera)
 		{
-			selectedCamera->cameraSpeed = selectedCamera->cameraSpeed * 3;
-			selectedCamera->rotationSpeed = selectedCamera->rotationSpeed * 3;
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
+			{
+				Zooming(false);
+			}
+			else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
+			{
+				Zooming(true);
+			}
 		}
-		else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
-		{
-			selectedCamera->cameraSpeed = selectedCamera->cameraSpeed / 3;
-			selectedCamera->rotationSpeed = selectedCamera->rotationSpeed / 3;
-		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_DOWN)
+	{
+		selectedCamera->cameraSpeed = selectedCamera->cameraSpeed * 3;
+		selectedCamera->rotationSpeed = selectedCamera->rotationSpeed * 3;
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_UP)
+	{
+		selectedCamera->cameraSpeed = selectedCamera->cameraSpeed / 3;
+		selectedCamera->rotationSpeed = selectedCamera->rotationSpeed / 3;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+		ManageFocus();
 	}
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && isFocusedViewPort  && !ImGuizmo::IsOver() && !isFocusedcomboGizmoOptions)
@@ -211,23 +231,66 @@ void ModuleCamera::MouseUpdate(const iPoint& mousePosition)
 void ModuleCamera::Zooming(bool positive)
 {
 	if (positive)
-		selectedCamera->fovX += 10.0;
+		sceneCamera->fovX += 10.0;
 	else
-		selectedCamera->fovX -= 10.0;
+		sceneCamera->fovX -= 10.0;
 
-	selectedCamera->fovX = math::Clamp(selectedCamera->fovX, 0.0f, 100.0f);
+	sceneCamera->fovX = math::Clamp(sceneCamera->fovX, 0.0f, 1000.0f);
 
-	selectedCamera->zoomValue = 45.0f / selectedCamera->fovX;
+	sceneCamera->zoomValue = 45.0f / sceneCamera->fovX;
 
-	selectedCamera->SetHorizontalFOV(selectedCamera->fovX);
+	sceneCamera->SetHorizontalFOV(sceneCamera->fovX);
 }
 
-void ModuleCamera::FocusObject(math::float3& objectCenterPos)
+void ModuleCamera::FitCamera(const AABB & boundingBox)
 {
-	selectedCamera->firstMouse = true;
-	selectedCamera->cameraFront = objectCenterPos - selectedCamera->cameraPosition;
-	selectedCamera->pitch = math::RadToDeg(sinf(-selectedCamera->cameraFront.y));
-	selectedCamera->yaw = math::RadToDeg(atan2f(selectedCamera->cameraFront.z, selectedCamera->cameraFront.x)) + 90.0f;
+	float length = boundingBox.HalfSize().Length();
+
+	math::float3 diagonal = boundingBox.Diagonal();
+	math::float3 center = boundingBox.CenterPoint();
+	sceneCamera->cameraPosition.z = (center.z + diagonal.Length());
+	sceneCamera->cameraPosition.y = center.y;
+	sceneCamera->cameraPosition.x = center.x;
+}
+
+void ModuleCamera::ManageFocus()
+{
+	if (App->scene->GetGameObjectSelected() != nullptr)
+	{
+		ComponentMesh* componentMesh = (ComponentMesh*)App->scene->GetGameObjectSelected()->GetComponent(ComponentType::MESH);
+		if (componentMesh != nullptr)
+		{
+			FitCamera(componentMesh->globalBoundingBox);
+			FocusSpecificPosition(componentMesh->globalBoundingBox.CenterPoint());
+		}
+		else
+		{
+			FocusUsingTransformation();
+		}
+	}
+	else
+	{
+		FocusSpecificPosition(sceneCenter);
+	}
+}
+
+void ModuleCamera::FocusSpecificPosition(const math::float3& objectCenterPos)
+{
+	math::float3 auxFront = objectCenterPos - sceneCamera->cameraPosition;
+	sceneCamera->cameraFront = auxFront.Normalized();
+	sceneCamera->pitch = math::RadToDeg(sinf(sceneCamera->cameraFront.y));
+	sceneCamera->yaw = math::RadToDeg(atan2f(sceneCamera->cameraFront.z, selectedCamera->cameraFront.x));
+}
+
+void ModuleCamera::FocusUsingTransformation()
+{
+	ComponentTransformation* componentTransformation = (ComponentTransformation*)App->scene->GetGameObjectSelected()->GetComponent(ComponentType::TRANSFORMATION);
+	math::float3 position;
+	math::Quat rotation;
+	math::float3 scale;
+	componentTransformation->globalModelMatrix.Decompose(position, rotation, scale);
+
+	FocusSpecificPosition(position);
 }
 
 void ModuleCamera::CameraMovementMouse()
@@ -242,20 +305,10 @@ void ModuleCamera::CameraMovementMouse()
 		SDL_ShowCursor(SDL_ENABLE);
 		selectedCamera->firstMouse = true;
 	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X1) == KEY_DOWN)
-	{
-		Zooming(true);
-	}
-	else if (App->input->GetMouseButtonDown(SDL_BUTTON_X2) == KEY_DOWN)
-	{
-		Zooming(false);
-	}
 }
 
 void ModuleCamera::CameraMovementKeyboard()
 {
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
 		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
 		{
 			MoveCamera(UP);
@@ -296,7 +349,6 @@ void ModuleCamera::CameraMovementKeyboard()
 		{
 			RotateCamera(RIGHT);
 		}
-	}
 }
 
 void ModuleCamera::DrawProperties()
