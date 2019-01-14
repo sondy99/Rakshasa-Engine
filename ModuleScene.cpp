@@ -16,8 +16,8 @@
 
 #include <string>
 
-char ModuleScene::sceneFileName[40] = {};
-const char* ModuleScene::labelCurrentSceneFileName = "";
+char ModuleScene::sceneFileName[40] = { 's','c','e','n','e','.','j','s','o','n' };
+const char* ModuleScene::labelCurrentSceneFileName = "scene.json";
 ModuleScene::ModuleScene()
 {
 }
@@ -37,6 +37,8 @@ bool ModuleScene::Init()
 	quadTree = new Quadtree();
 
 	quadTree->InitQuadTree(math::AABB(math::float3(-40000.0f, 0.0f, -40000.0f), math::float3(40000.0f, 5000.0f, 40000.0f)), true);
+
+	LoadScene(labelCurrentSceneFileName);
 
 	return true;
 }

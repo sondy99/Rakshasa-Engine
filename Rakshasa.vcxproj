@@ -78,6 +78,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>rapidjson-1.1.0\include\rapidjson;Brofiler\include;Imgui;./glew-2.1.0/include;./SDL/include;MathGeoLib/include;DevIL/include;assimp/include;physicsFS\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>Brofiler\lib;./glew-2.1.0/lib/Release/Win32;DevIL/lib/x86/Release;assimp/lib/x86;physicsFS\lib</AdditionalLibraryDirectories>
