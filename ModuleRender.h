@@ -107,7 +107,7 @@ private:
 	std::vector<float> msList;
 	std::vector<GameObject*> gameObjectsCollideQuadtree;
 
-	unsigned fallback = 0;
+	unsigned fallback = 0u;
 };
 
 #endif __MODULERENDER_H__

@@ -294,8 +294,8 @@ void ModuleRender::DrawCameraSceneWindow()
 		App->camera->selectedCamera = App->camera->sceneCamera;
 		sceneViewportX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
 		sceneViewportY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
-		App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
-		ImGui::Separator();
+		App->camera->isFocusedViewPort = ImGui::IsWindowHovered();
+		App->camera->isFocusedcomboGizmoOptions = false;
 	}
 
 	ImVec2 size = ImGui::GetWindowSize();
@@ -321,7 +321,7 @@ void ModuleRender::DrawCameraGameWindow()
 			if (ImGui::IsWindowFocused())
 			{
 				App->camera->selectedCamera = componentCameraGameSelected;
-				App->camera->viewPortIsFocused = ImGui::IsWindowHovered();
+				App->camera->isFocusedViewPort = ImGui::IsWindowHovered();
 			}
 
 			ImVec2 size = ImGui::GetWindowSize();
@@ -631,16 +631,54 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 
 void ModuleRender::DrawImGuizmo(float sceneWidth, float sceneHeight)
 {
-	ImVec2 pos = ImGui::GetWindowPos();
-	ImGuizmo::SetRect(pos.x, pos.y, sceneWidth, sceneHeight);
-	ImGuizmo::SetDrawlist();
-
-	static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 	GameObject* gameObjectSelected = App->scene->GetGameObjectSelected();
 
 	if (gameObjectSelected != nullptr)
 	{
+		ImVec2 pos = ImGui::GetWindowPos();
+		ImGuizmo::SetRect(pos.x, pos.y, sceneWidth, sceneHeight);
+		ImGuizmo::SetDrawlist();
+
+		ImGui::SetCursorPos({ 10,30 });
+
+		static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+
+		const char* items[] = { "Translate", "Scale", "Rotate" };
+		static const char* selectedOption = nullptr;
+
+		if(ImGui::BeginChild("GroupComboAndHover", { sceneWidth ,30 }, false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_AlwaysUseWindowPadding))
+		{
+			if (ImGui::BeginCombo("##gizmo", selectedOption))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+				{
+					App->camera->isFocusedcomboGizmoOptions = true;
+					bool isSelected = (selectedOption == items[i]); 
+					if (ImGui::Selectable(items[i], isSelected))
+					{
+						selectedOption = items[i];
+
+						switch (i)
+						{
+						case 0:
+							mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+							break;
+						case 1:
+							mCurrentGizmoOperation = ImGuizmo::SCALE;
+							break;
+						case 2:
+							mCurrentGizmoOperation = ImGuizmo::ROTATE;
+							break;
+						default:
+							break;
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::EndChild();
+		}
+				
 		ComponentMesh* mesh = (ComponentMesh*)gameObjectSelected->GetComponent(ComponentType::MESH);
 
 		ImGuizmo::Enable(!gameObjectSelected->gameObjectStatic);

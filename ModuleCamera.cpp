@@ -42,7 +42,7 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
-	if (viewPortIsFocused && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (isFocusedViewPort && App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		clickOnViewPort = true;
 	}
@@ -74,7 +74,7 @@ update_status ModuleCamera::PreUpdate()
 		}
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && viewPortIsFocused && !ImGuizmo::IsOver())
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && isFocusedViewPort  && !ImGuizmo::IsOver() && !isFocusedcomboGizmoOptions)
 	{
 		PickGameObject();
 	}
