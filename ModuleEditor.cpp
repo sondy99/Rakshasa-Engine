@@ -39,6 +39,8 @@ bool ModuleEditor::Init()
 
 	LogIntoConsole(TITLE);
 
+	InitHardWareValues();
+
 	return true;
 }
 
@@ -66,6 +68,8 @@ update_status ModuleEditor::Update()
 			ImGui::Checkbox("Model properties", &App->modelLoader->toggleModelProperties);
 			ImGui::Checkbox("Library properties", &App->library->toggleLibraryProperties);
 			ImGui::Checkbox("Memory", &toggleMemoryViewPort);
+			ImGui::Checkbox("Hardware info", &toggleHardwareInfo);
+			
 			
 			ImGui::Checkbox("Console", &toggleConsole);
 			
@@ -94,7 +98,7 @@ update_status ModuleEditor::PostUpdate()
 bool ModuleEditor::CleanUp()
 {
 	exit = true;
-
+	
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -123,6 +127,7 @@ void ModuleEditor::WindowManager()
 
 	DrawConsole();
 	DrawMemoryViewPort();
+	DrawHardwareInfo();
 
 	App->renderer->DrawCameraSceneWindow();
 	App->renderer->DrawCameraGameWindow();
@@ -182,6 +187,36 @@ void ModuleEditor::DrawConsole()
 	}
 }
 
+void ModuleEditor::DrawHardwareInfo()
+{
+	if (toggleHardwareInfo)
+	{
+		ImGui::Begin("HardwareInfo", &toggleHardwareInfo);
+
+		ImGui::Text("CPUs:");
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
+		
+		ImGui::Text("%d (Cache: %dB)", CPUCount, CPUCacheLineSize);
+		ImGui::PopStyleColor();
+
+		ImGui::Text("System RAM:");
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
+		ImGui::Text("%dGb", systemRAM);
+		ImGui::PopStyleColor();
+
+		ImGui::Text("Caps:");
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Text, { 1,1,0,1 });
+		
+		ImGui::Text(caps);
+		ImGui::PopStyleColor();
+
+		ImGui::End();
+	}
+}
+
 void ModuleEditor::DrawMemoryViewPort()
 {
 	if (toggleMemoryViewPort)
@@ -215,7 +250,7 @@ void ModuleEditor::DrawAboutMenu()
 
 		if (ImGui::MenuItem(TITLE))
 		{
-			ShellExecute(0, 0, "https://github.com/sondy99/sondy99/Rakshasa-Engine", 0, 0, SW_SHOW);
+			ShellExecute(0, 0, "https://github.com/sondy99/Rakshasa-Engine", 0, 0, SW_SHOW);
 		}
 
 		ImGui::Text("Authors:");
@@ -261,4 +296,51 @@ void ModuleEditor::AddMemory(float memoryValue) {
 	}
 
 	memoryPoints[LOGSSIZE - 1] = memoryValue;
+}
+
+void ModuleEditor::InitHardWareValues()
+{
+	std::string capsAux;
+	CPUCount = SDL_GetCPUCount();
+	CPUCacheLineSize = SDL_GetCPUCacheLineSize();
+	systemRAM = SDL_GetSystemRAM() / 1000;
+
+	has3DNow = SDL_Has3DNow();
+	hasAVX = SDL_HasAVX();
+	hasAVX2 = SDL_HasAVX2();
+	hasAltiVec = SDL_HasAltiVec();
+	hasMMX = SDL_HasMMX();
+	hasRDTSC = SDL_HasRDTSC();
+	hasSSE = SDL_HasSSE();
+	hasSSE2 = SDL_HasSSE2();
+	hasSSE3 = SDL_HasSSE3();
+	hasSSE41 = SDL_HasSSE41();
+	hasSSE42 = SDL_HasSSE42();
+
+	if (has3DNow)
+		capsAux += "3DNow!, ";
+	if (hasAVX)
+		capsAux += "AVX, ";
+	if (hasAVX2)
+		capsAux += "AVX2, ";
+	if (hasAltiVec)
+		capsAux += "AltiVec, ";
+	if (hasMMX)
+		capsAux += "MMX, ";
+	if (hasRDTSC)
+		capsAux += "RDTSC, ";
+	if (capsAux.size() > 5)
+		capsAux += "\n";
+	if (hasSSE)
+		capsAux += "SSE, ";
+	if (hasSSE2)
+		capsAux += "SSE2, ";
+	if (hasSSE3)
+		capsAux += "SSE3, ";
+	if (hasSSE41)
+		capsAux += "SSE41, ";
+	if (hasSSE42)
+		capsAux += "SSE42, ";
+
+	caps = capsAux.c_str();
 }
