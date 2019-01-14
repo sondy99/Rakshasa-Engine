@@ -9,6 +9,7 @@
 #include "ModuleCamera.h"
 #include "ModuleScene.h"
 #include "ModuleLibrary.h"
+#include "ModuleTime.h"
 
 #include "GameObject.h"
 
@@ -69,8 +70,7 @@ update_status ModuleEditor::Update()
 			ImGui::Checkbox("Library properties", &App->library->toggleLibraryProperties);
 			ImGui::Checkbox("Memory", &toggleMemoryViewPort);
 			ImGui::Checkbox("Hardware info", &toggleHardwareInfo);
-			
-			
+			ImGui::Checkbox("Timer info", &App->time->toggleTimerInfo);
 			ImGui::Checkbox("Console", &toggleConsole);
 			
 			//ImGui::Checkbox("Window", &toggleWindow);
@@ -114,6 +114,7 @@ void ModuleEditor::WindowManager()
 	App->modelLoader->DrawProperties();
 	App->scene->DrawProperties();
 	App->library->DrawProperties();
+	App->time->DrawProperties();
 
 	if (toggleGameObjectProperties)
 	{

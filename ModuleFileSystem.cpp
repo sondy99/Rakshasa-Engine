@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Application.h"
 
+#include "ModuleScene.h"
+
 #include "SDL.h"
 #include "physfs.h"
 
@@ -275,7 +277,7 @@ void ModuleFileSystem::GetFilesFromDirectory(const char * directory, std::vector
 
 	for (iterator = enumeratedFIles; *iterator != nullptr; iterator++)
 	{
-		if (!PHYSFS_isDirectory((dir + *iterator).c_str()))
+		if (!PHYSFS_isDirectory((dir + *iterator).c_str()) && strcmp(*iterator, App->scene->temporarySceneName) != 0)
 		{
 			fileList.push_back(*iterator);
 		}

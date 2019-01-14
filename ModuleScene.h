@@ -30,6 +30,8 @@ public:
 	void ClearScene();
 	void SetGameObjectSelected(GameObject* gameObject);
 	inline GameObject* GetGameObjectSelected() const { return gameObjectSelected; }
+	void SaveTemporaryScene();
+	void LoadTemporaryScene();
 public:
 	GameObject* root = nullptr;
 	bool toggleSceneProperties = true;
@@ -43,6 +45,8 @@ public:
 	Quadtree* quadTree = nullptr;
 	bool drawQuadTree = false;
 	bool drawReferenceGround = true;
+
+	const char* temporarySceneName = "temporaryscenename.json";
 private:
 	void DrawGeometryGameObjectButtons(GameObject* gameObjectParent);
 	void DrawTreeNode(GameObject * gameObject);
@@ -53,9 +57,9 @@ private:
 	bool CheckIfOneGameObjectIsParentOfOther(const GameObject& gameObjectPossibleParent, const GameObject& gameObjectPossibleSon);
 	void MoveUpDownGameObject(GameObject* gameObject, bool up);
 
-	void SaveScene();
+	void SaveScene(const char* fileName);
 	void SaveGameObject(Config* config, GameObject* gameObject);
-	void LoadScene();
+	void LoadScene(const char* fileName);
 private:
 	GameObject* gameObjectSelected = nullptr;
 	std::list<GameObject*> gameObjectsToBeDeleted;
@@ -63,6 +67,7 @@ private:
 	GameObject* gameObjectToBeDuplicated = nullptr;
 	int gameObjectCounter = 1;
 	bool markToLoadScene = false;
+	bool markToLoadTemporaryScene = false;
 };
 
 #endif __MODULESCENE_H_

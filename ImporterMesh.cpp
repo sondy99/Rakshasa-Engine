@@ -27,6 +27,8 @@ void ImporterMesh::ImportFBX(const char* filePath)
 			Import(scene->mMeshes[i], meshName.c_str());
 		}
 	}
+
+	RELEASE_ARRAY(fileBuffer);
 }
 
 bool ImporterMesh::Import(const aiMesh* aiMesh, const char* meshName)
@@ -114,7 +116,11 @@ bool ImporterMesh::Load(Mesh* & meshStruct, char* meshName)
 	}
 	else
 	{
+		RELEASE(meshStruct);
+
+		meshStruct = (*iterator).second.first;
 		(*iterator).second.second++;
+		return true;
 	}
 
 	char* buffer;

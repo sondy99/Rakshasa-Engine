@@ -20,6 +20,7 @@ class ModuleDebugDraw;
 class ModuleScene;
 class ModuleFileSystem;
 class ModuleLibrary;
+class ModuleTime;
 
 //class ModuleRenderTriangle;
 
@@ -46,6 +47,7 @@ public:
 	ModuleScene* scene = nullptr;
 	ModuleFileSystem* fileSystem = nullptr;
 	ModuleLibrary* library = nullptr;
+	ModuleTime* time = nullptr;
 
 	//ModuleRenderTriangle* renderTrieangle = nullptr; 
 private:

@@ -12,6 +12,7 @@
 #include "ModuleScene.h"
 #include "ModuleFileSystem.h"
 #include "ModuleLibrary.h"
+#include "ModuleTime.h"
 
 //#include "ModuleRenderTriangle.h"
 
@@ -31,6 +32,7 @@ Application::Application()
 	modules.push_back(modelLoader = new ModuleModelLoader());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
 	modules.push_back(scene = new ModuleScene());
+	modules.push_back(time = new ModuleTime());
 	modules.push_back(library = new ModuleLibrary());
 
 	//modules.push_back(renderTrieangle = new ModuleRenderTriangle());

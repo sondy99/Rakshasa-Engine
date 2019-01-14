@@ -295,9 +295,11 @@ rapidjson::Document Config::LoadFromDisk(const char* file)
 	{
 		if (result.Parse<rapidjson::kParseStopWhenDoneFlag>(fileBuffer).HasParseError())
 		{
+			RELEASE_ARRAY(fileBuffer);
 			result = nullptr;
 		}
 	}
 
+	RELEASE_ARRAY(fileBuffer);
 	return result;
 }

@@ -201,6 +201,9 @@
     <ClCompile Include="Quadtree.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleTime.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -558,6 +561,9 @@
     </ClInclude>
     <ClInclude Include="Quadtree.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTime.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

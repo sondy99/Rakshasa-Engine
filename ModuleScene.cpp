@@ -58,8 +58,14 @@ update_status ModuleScene::Update()
 
 	if (markToLoadScene)
 	{
-		LoadScene();
+		LoadScene(sceneFileName);
 		markToLoadScene = false;
+	}
+
+	if (markToLoadTemporaryScene)
+	{
+		LoadScene(temporarySceneName);
+		markToLoadTemporaryScene = false;
 	}
 
 	if (markToUpdateSceneFiles)
@@ -136,7 +142,7 @@ void ModuleScene::DrawProperties()
 		ImGui::SameLine();
 		if (ImGui::Button("Save scene "))
 		{
-			SaveScene();
+			SaveScene(sceneFileName);
 		}
 		
 		ImGui::Text("File name:");
@@ -168,7 +174,7 @@ void ModuleScene::DrawProperties()
 			}
 			else
 			{
-				LoadScene();
+				LoadScene(sceneFileName);
 			}
 		}
 		if (ImGui::Button("Clear scene"))
@@ -308,6 +314,17 @@ void ModuleScene::SetGameObjectSelected(GameObject * gameObject)
 
 	gameObjectSelected = gameObject;
 	gameObjectSelected->isSelected = true;
+}
+
+void ModuleScene::SaveTemporaryScene()
+{
+	SaveScene(temporarySceneName);
+}
+
+void ModuleScene::LoadTemporaryScene()
+{
+	ClearScene();
+	markToLoadTemporaryScene = true;
 }
 
 GameObject* ModuleScene::GetGameObjectByUUID(GameObject* gameObject, char uuidObjectName[37])
@@ -509,7 +526,22 @@ void ModuleScene::MoveUpDownGameObject(GameObject * gameObject, bool up)
 	}
 }
 
-void ModuleScene::SaveScene()
+
+void ModuleScene::SaveGameObject(Config* config, GameObject* gameObject)
+{
+	gameObject->Save(config);
+
+	if (gameObject->childrens.size() > 0)
+	{
+		//TODO: change this to not use recursivity
+		for (std::list<GameObject*>::iterator iterator = gameObject->childrens.begin(); iterator != gameObject->childrens.end(); ++iterator)
+		{
+			SaveGameObject(config, (*iterator));
+		}
+	}
+}
+
+void ModuleScene::SaveScene(const char* fileName)
 {
 	Config* config = new Config();
 	config->StartObject("scene");
@@ -519,7 +551,7 @@ void ModuleScene::SaveScene()
 	config->AddBool("isSceneCullingActive", isSceneCullingActive);
 	config->AddBool("drawQuadTree", drawQuadTree);
 	config->AddBool("enableVSync", App->renderer->enableVSync);
-	
+
 	config->EndObject();
 
 	config->AddName("sceneCamera");
@@ -537,7 +569,7 @@ void ModuleScene::SaveScene()
 
 	std::string fullPathSceneFileName;
 	std::string ext;
-	App->fileSystem->SplitFilePath(sceneFileName, nullptr, &fullPathSceneFileName, &ext);
+	App->fileSystem->SplitFilePath(fileName, nullptr, &fullPathSceneFileName, &ext);
 
 	if (strcmp(ext.c_str(), "json") == 0)
 	{
@@ -553,30 +585,16 @@ void ModuleScene::SaveScene()
 
 }
 
-void ModuleScene::SaveGameObject(Config* config, GameObject* gameObject)
+void ModuleScene::LoadScene(const char* fileName)
 {
-	gameObject->Save(config);
-
-	if (gameObject->childrens.size() > 0)
-	{
-		//TODO: change this to not use recursivity
-		for (std::list<GameObject*>::iterator iterator = gameObject->childrens.begin(); iterator != gameObject->childrens.end(); ++iterator)
-		{
-			SaveGameObject(config, (*iterator));
-		}
-	}
-}
-
-void ModuleScene::LoadScene()
-{
-	if (strcmp(sceneFileName, "/n") > 0)
+	if (strcmp(fileName, "/n") > 0)
 	{
 		Config* config = new Config();
 
-		std::string fullPathSceneFileName = sceneFileName;
+		std::string fullPathSceneFileName = fileName;
 		fullPathSceneFileName.insert(0, "/Library/Scene/");
 		rapidjson::Document document = config->LoadFromDisk(fullPathSceneFileName.c_str());
-
+		
 		if (!document.HasParseError())
 		{
 			rapidjson::Value& scene = document["scene"];

@@ -88,7 +88,7 @@ Component * ComponentMesh::Clone()
 
 	result->gameObjectParent = gameObjectParent;
 	result->componentType = componentType;
-	result->mesh = mesh;
+	ImporterMesh::Load(result->mesh, (char*)mesh->name);
 	result->labelCurrentFileMeshSelected = labelCurrentFileMeshSelected;
 	result->localBoundingBox = localBoundingBox;
 	result->geometryType = geometryType;
@@ -132,6 +132,7 @@ void ComponentMesh::Load(Config* config, rapidjson::Value& value)
 		geometryType = config->GetGeometryType("geometryType", value);
 
 		par_shapes_mesh_s* parMesh = App->modelLoader->CreateParShapesByGeometryType(geometryType);
+		mesh = new Mesh();
 		App->modelLoader->GenerateMesh(parMesh, mesh);
 		App->modelLoader->FreeParShapes(parMesh);
 	}

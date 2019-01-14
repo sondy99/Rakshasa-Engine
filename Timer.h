@@ -16,17 +16,41 @@ public:
 	void Start()
 	{
 		ticksStart = SDL_GetTicks();
+		running = true;
 	};
 
-	float Stop()
+	void Stop()
 	{
-		ticksStop = SDL_GetTicks();
-
-		return (ticksStop - ticksStart) / 1000.0f;
+		running = false;
 	};
+
+	inline float Read() {
+		if (running)
+			time = (SDL_GetTicks() - ticksStart + timeSkipped);
+		return time;
+	}
+
+	inline float ReadSeconds() {
+		if (running)
+			time = (SDL_GetTicks() - ticksStart + timeSkipped) / 1000.0f;
+		return time;
+	}
+
+	inline void Pause() {
+		timeSkipped += (SDL_GetTicks() - ticksStart);
+		running = false;
+	}
+
+	inline void Reset() {
+		ticksStart = SDL_GetTicks();
+		timeSkipped = 0;
+	}
+public:
+	bool running = false;
 private:
-	__int32 ticksStart;
-	__int32 ticksStop;
+	float time = 0.0f;
+	__int32 ticksStart = 0;
+	__int32 timeSkipped = 0;
 };
 
 class TimerMicro
@@ -48,8 +72,8 @@ public:
 		return (ticksStop - ticksStart);
 	};
 private:
-	__int64 ticksStart;
-	__int64 ticksStop;
+	__int64 ticksStart = 0;
+	__int64 ticksStop = 0;
 };
 
 #endif __TIMER_H_

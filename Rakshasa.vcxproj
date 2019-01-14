@@ -254,6 +254,7 @@
     <ClInclude Include="ModuleScene.h" />
     <ClInclude Include="ModuleShader.h" />
     <ClInclude Include="ModuleTextures.h" />
+    <ClInclude Include="ModuleTime.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="par_shapes.h" />
     <ClInclude Include="Point.h" />
@@ -346,6 +347,7 @@
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleShader.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
+    <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Quadtree.cpp" />
   </ItemGroup>
