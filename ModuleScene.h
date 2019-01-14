@@ -40,7 +40,7 @@ public:
 	static const char* labelCurrentSceneFileName;
 	bool markToUpdateSceneFiles = false;
 
-	Quadtree quadTree;
+	Quadtree* quadTree = nullptr;
 	bool drawQuadTree = false;
 	bool drawReferenceGround = true;
 private:

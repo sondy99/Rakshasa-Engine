@@ -110,7 +110,7 @@ void GameObject::DrawProperties()
 				{
 					if (!gameObjectStatic)
 					{
-						App->scene->quadTree.RemoveGameObject(this);
+						App->scene->quadTree->RemoveGameObject(this);
 					}
 					else
 					{
@@ -122,7 +122,7 @@ void GameObject::DrawProperties()
 							for (std::list<Component*>::iterator iterator = componentList.begin(); iterator != componentList.end(); ++iterator)
 							{
 								((ComponentMesh*)(*iterator))->UpdateGlobalBoundingBox();
-								App->scene->quadTree.InsertGameObject(((ComponentMesh*)(*iterator))->gameObjectParent, true);
+								App->scene->quadTree->InsertGameObject(((ComponentMesh*)(*iterator))->gameObjectParent, true);
 							}
 						}
 					}

@@ -430,7 +430,7 @@ void ModuleCamera::PickGameObject()
 	math::LineSegment pickingLine = sceneCamera->frustum.UnProjectLineSegment(normalizedX, normalizedY);
 
 	objectsPossiblePick.clear();
-	App->scene->quadTree.CollectIntersections(objectsPossiblePick, pickingLine);
+	App->scene->quadTree->CollectIntersections(objectsPossiblePick, pickingLine);
 
 	for (std::list<ComponentMesh*>::iterator iterator = App->renderer->meshes.begin(); iterator != App->renderer->meshes.end(); ++iterator)
 	{
@@ -449,7 +449,7 @@ void ModuleCamera::PickGameObject()
 			ComponentMesh* componentMesh = (ComponentMesh*)(*iterator)->GetComponent(ComponentType::MESH);
 			ComponentTransformation* componentTransformation = (ComponentTransformation*)(*iterator)->GetComponent(ComponentType::TRANSFORMATION);
 
-			if (componentMesh != nullptr && componentMesh->mesh != nullptr && componentTransformation != nullptr)
+			if (componentMesh != nullptr && componentMesh->mesh != nullptr && componentMesh->mesh->name != nullptr && componentTransformation != nullptr)
 			{
 				Mesh* mesh = componentMesh->mesh;
 				math::LineSegment localTransformPikingLine(pickingLine);

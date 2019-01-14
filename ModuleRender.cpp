@@ -380,7 +380,7 @@ void ModuleRender::LoadQuadTreeForAllMesh()
 		if ((*iterator)->gameObjectParent->gameObjectStatic)
 		{
 			(*iterator)->UpdateGlobalBoundingBox();
-			App->scene->quadTree.InsertGameObject((*iterator)->gameObjectParent, true);
+			App->scene->quadTree->InsertGameObject((*iterator)->gameObjectParent, true);
 		}
 	}
 }
@@ -538,7 +538,7 @@ void ModuleRender::RenderComponentUsingQuadTree(math::float4x4 view, math::float
 	if (componentCameraGameSelected != nullptr && App->scene->isSceneCullingActive)
 	{
 		gameObjectsCollideQuadtree.clear();
-		App->scene->quadTree.CollectIntersections(gameObjectsCollideQuadtree, componentCameraGameSelected->frustum);
+		App->scene->quadTree->CollectIntersections(gameObjectsCollideQuadtree, componentCameraGameSelected->frustum);
 
 		for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end(); ++iterator)
 		{
@@ -599,7 +599,7 @@ void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferT
 	{
 		if (App->scene->drawQuadTree)
 		{
-			DrawQuadTreeNode(App->scene->quadTree.root);
+			DrawQuadTreeNode(App->scene->quadTree->root);
 		}
 
 		if (App->scene->drawReferenceGround)
