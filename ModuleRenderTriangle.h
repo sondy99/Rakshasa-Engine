@@ -1,5 +1,5 @@
-#ifndef __ModuleRenderExercise_h__
-#define __ModuleRenderExercise_h__
+#ifndef __MODULERENDEREXERCISE_H__
+#define __MODULERENDEREXERCISE_H__
 
 #include "Module.h"
 
@@ -19,4 +19,4 @@ private:
 	unsigned texture0 = 0;
 };
 
-#endif /* __ModuleRenderExercise_h__ */
+#endif __MODULERENDEREXERCISE_H__

@@ -1,5 +1,5 @@
-#ifndef __ModuleEnvironment_H__
-#define __ModuleEnvironment_H__
+#ifndef __MODULEENVIRONMENT_H__
+#define __MODULEENVIRONMENT_H__
 
 #include "Module.h"
 
@@ -23,6 +23,6 @@ public:
 	void DrawFrustum(const ComponentCamera& camera);
 };
 
-#endif __ModuleEnvironment_H__
+#endif __MODULEENVIRONMENT_H__
 
 

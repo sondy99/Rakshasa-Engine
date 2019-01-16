@@ -1,5 +1,5 @@
-#ifndef __ModuleShader_H__
-#define __ModuleShader_H__
+#ifndef __MODULESHADER_H__
+#define __MODULESHADER_H__
 
 #include "Module.h"
 
@@ -21,6 +21,6 @@ private:
 	void CheckCompilationErrors(GLuint shader);
 };
 
-#endif __ModuleShader_H__
+#endif __MODULESHADER_H__
 
 

@@ -1,5 +1,5 @@
-#ifndef __ModuleFileSystem_h__
-#define __ModuleFileSystem_h__
+#ifndef __MODULEFILESYSTEM_H__
+#define __MODULEFILESYSTEM_H__
 
 #include "Module.h"
 
@@ -33,4 +33,4 @@ public:
 	char* basePath = nullptr;
 };
 
-#endif __ModuleFileSystem_h__
+#endif __MODULEFILESYSTEM_H__

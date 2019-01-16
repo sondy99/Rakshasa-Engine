@@ -45,4 +45,4 @@ private:
 	iPoint mouse = { 0, 0 };
 };
 
-#endif // __MODULEINPUT_H__
+#endif __MODULEINPUT_H__

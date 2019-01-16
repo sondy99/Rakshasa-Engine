@@ -1,5 +1,5 @@
-#ifndef __ModuleWindow_H__
-#define __ModuleWindow_H__
+#ifndef __MODULEWINDOW_H__
+#define __MODULEWINDOW_H__
 
 #include "Module.h"
 #include "SDL/include/SDL.h"
@@ -24,4 +24,4 @@ public:
 	int width = 0;
 };
 
-#endif __ModuleWindow_H__
+#endif __MODULEWINDOW_H__

@@ -1,5 +1,5 @@
-#ifndef __ModuleModelLoader_H__
-#define __ModuleModelLoader_H__
+#ifndef __MODULEMODELLOADER_H__
+#define __MODULEMODELLOADER_H__
 
 #include "Module.h"
 
@@ -57,4 +57,4 @@ private:
 	void GenerateVAO(Mesh* mesh);
 };
 
-#endif __ModuleModelLoader_H__
+#endif __MODULEMODELLOADER_H__

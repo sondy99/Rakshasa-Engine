@@ -1,5 +1,5 @@
-#ifndef __ModuleLibrary_h__
-#define __ModuleLibrary_h__
+#ifndef __MODULELIBRARY_H__
+#define __MODULELIBRARY_H__
 
 #include "Module.h"
 
@@ -40,4 +40,4 @@ private:
 	std::vector<std::string>* fileSceneList;
 };
 
-#endif // __ModuleLibrary_h__
+#endif __MODULELIBRARY_H__

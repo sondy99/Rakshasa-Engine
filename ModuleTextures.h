@@ -1,5 +1,5 @@
-#ifndef __ModuleTextures_H__
-#define __ModuleTextures_H__
+#ifndef __MODULETEXTURES_H__
+#define __MODULETEXTURES_H__
 
 #include "Module.h"
 #include "ModuleModelLoader.h"
@@ -43,4 +43,4 @@ private:
 	std::list<ComponentMaterial*> materials;
 };
 
-#endif __ModuleTextures_H__
+#endif __MODULETEXTURES_H__

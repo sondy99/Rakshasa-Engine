@@ -1,5 +1,5 @@
-#ifndef __ModuleEditor_h__
-#define __ModuleEditor_h__
+#ifndef __MODULEEDITOR_H__
+#define __MODULEEDITOR_H__
 
 #include "Module.h"
 
@@ -58,4 +58,4 @@ private:
 	bool hasSSE42 = false;
 };
 
-#endif __ModuleEditor_h__
+#endif __MODULEEDITOR_H__

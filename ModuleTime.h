@@ -1,5 +1,5 @@
-#ifndef __ModuleTime_h_
-#define __ModuleTime_h_
+#ifndef __MODULETIME_H_
+#define __MODULETIME_H_
 
 #include "Timer.h"
 #include "Module.h"
@@ -46,4 +46,4 @@ private:
 	unsigned frameCount = 0u;
 };
 
-#endif //__ModuleTime_h_
+#endif __MODULETIME_H_
