@@ -32,7 +32,6 @@ bool ModuleTextures::Init()
 bool ModuleTextures::CleanUp()
 {
 	CleanUpFromList(nullptr);
-
 	return true;
 }
 

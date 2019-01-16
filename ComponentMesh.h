@@ -44,7 +44,7 @@ public:
 	void CreateBoundingBox();
 	void UpdateGlobalBoundingBox();
 public:
-	Mesh* mesh;
+	Mesh* mesh = nullptr;
 	AABB localBoundingBox = AABB();
 	AABB globalBoundingBox = AABB();
 	bool isWireframeActive = false;

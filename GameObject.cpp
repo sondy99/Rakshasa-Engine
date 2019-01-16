@@ -40,6 +40,11 @@ GameObject::~GameObject()
 			App->camera->CleanUpFromList((ComponentCamera*)*iterator);
 		}
 
+		if ((*iterator)->componentType == ComponentType::TRANSFORMATION)
+		{
+			RELEASE(*iterator);
+		}
+
 		iterator = components.erase(iterator);
 	}
 

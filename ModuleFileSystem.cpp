@@ -48,6 +48,7 @@ update_status ModuleFileSystem::Update()
 bool ModuleFileSystem::CleanUp()
 {
 	PHYSFS_deinit();
+	
 	return true;
 }
 

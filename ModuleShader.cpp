@@ -44,7 +44,7 @@ GLuint ModuleShader::LoadShaders(GLuint& program, const char* vertexShaderPath, 
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-
+	
 	return GL_TRUE;
 }
 

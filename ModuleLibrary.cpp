@@ -108,6 +108,11 @@ bool ModuleLibrary::CleanUp()
 {
 	stopWatcher = true;
 	Sleep(1000);
+
+	RELEASE(fileMeshesList);
+	RELEASE(fileTexturesList);
+	RELEASE(fileSceneList);
+
 	return true;
 }
 #include "GameObject.h"

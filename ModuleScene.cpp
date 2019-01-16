@@ -24,8 +24,6 @@ ModuleScene::ModuleScene()
 
 ModuleScene::~ModuleScene()
 {
-	delete root;
-	root = nullptr;
 }
 
 bool ModuleScene::Init()

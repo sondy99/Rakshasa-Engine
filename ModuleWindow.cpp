@@ -59,6 +59,8 @@ bool ModuleWindow::CleanUp()
 	}
 
 	SDL_Quit();
+
+
 	return true;
 }
 
