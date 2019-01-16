@@ -259,22 +259,33 @@ void ModuleEditor::DrawAboutMenu()
 
 		ImGui::Separator();
 
-		ImGui::Text("Libraries:");
-		if (ImGui::MenuItem("SDL v2.0.8"))
-		{
-			ShellExecute(0, 0, "https://www.libsdl.org/index.php", 0, 0, SW_SHOW);
-		}
-		if (ImGui::MenuItem("Glew v2.1.0"))
-		{
-			ShellExecute(0, 0, "http://glew.sourceforge.net/", 0, 0, SW_SHOW);
-		}
-		if (ImGui::MenuItem("ImGui v1.66"))
-		{
-			ShellExecute(0, 0, "https://github.com/ocornut/imgui/tree/docking", 0, 0, SW_SHOW);
-		}
-		if (ImGui::MenuItem("Devil v1.8.0"))
-		{
-			ShellExecute(0, 0, "http://openil.sourceforge.net/", 0, 0, SW_SHOW);
+		if (ImGui::TreeNode("Libraries")) {
+			if (ImGui::MenuItem("SDL v2.0.8"))
+			{
+				ShellExecute(0, 0, "https://www.libsdl.org/index.php", 0, 0, SW_SHOW);
+			}
+			if (ImGui::MenuItem("ImGui v1.66"))
+			{
+				ShellExecute(0, 0, "https://github.com/ocornut/imgui/tree/docking", 0, 0, SW_SHOW);
+			}
+			if (ImGui::MenuItem("Glew v2.1.0"))
+			{
+				ShellExecute(0, 0, "http://glew.sourceforge.net/", 0, 0, SW_SHOW);
+			}
+			if (ImGui::MenuItem("Devil v1.8.0"))
+			{
+				ShellExecute(0, 0, "http://openil.sourceforge.net/", 0, 0, SW_SHOW);
+			}
+			ImGui::BulletText("MathGeoLib (version 1.5)");
+			ImGui::BulletText("Assimp");
+			ImGui::BulletText("mmgr (version 1.0)");
+			ImGui::BulletText("Crossguid (version 0.2.2)");
+			ImGui::BulletText("DebugDraw (version 2017)");
+			ImGui::BulletText("PhysicsFS (version 3.0.1)");
+			ImGui::BulletText("RapidJson (version 1.1.0)");
+			ImGui::BulletText("ImGuizmo (version 1.1.0)");
+			ImGui::Selectable("ImGuizmo (version 1.53)");
+			ImGui::TreePop();
 		}
 
 		ImGui::End();
