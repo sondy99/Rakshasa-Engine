@@ -175,14 +175,17 @@ void ModuleRender::CleanUpFromList(const ComponentMesh * componentMesh)
 
 std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(const std::list<ComponentMesh*>::iterator iterator)
 {
-	if ((*iterator)->mesh->vbo != 0)
+	if ((*iterator)->mesh != nullptr)
 	{
-		glDeleteBuffers(1, &(*iterator)->mesh->vbo);
-	}
+		if ((*iterator)->mesh->vbo != 0)
+		{
+			glDeleteBuffers(1, &(*iterator)->mesh->vbo);
+		}
 
-	if ((*iterator)->mesh->ibo != 0)
-	{
-		glDeleteBuffers(1, &(*iterator)->mesh->ibo);
+		if ((*iterator)->mesh->ibo != 0)
+		{
+			glDeleteBuffers(1, &(*iterator)->mesh->ibo);
+		}
 	}
 
 	RELEASE(*iterator);

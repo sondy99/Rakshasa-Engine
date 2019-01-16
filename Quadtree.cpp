@@ -13,7 +13,6 @@ Quadtree::Quadtree()
 {
 }
 
-
 Quadtree::~Quadtree()
 {
 	Clear(true);

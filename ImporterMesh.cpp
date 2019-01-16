@@ -116,6 +116,7 @@ bool ImporterMesh::Load(Mesh* & meshStruct, char* meshName)
 	}
 	else
 	{
+		RELEASE_ARRAY(meshStruct->name);
 		RELEASE(meshStruct);
 
 		meshStruct = (*iterator).second.first;
@@ -323,6 +324,8 @@ void ImporterMesh::CleanUpStructMesh(Mesh* mesh)
 		}
 
 		RELEASE_ARRAY(mesh->name);
+		RELEASE(mesh);
 	}
+
 }
 

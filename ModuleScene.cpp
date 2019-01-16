@@ -36,7 +36,7 @@ bool ModuleScene::Init()
 
 	quadTree->InitQuadTree(math::AABB(math::float3(-40000.0f, 0.0f, -40000.0f), math::float3(40000.0f, 5000.0f, 40000.0f)), true);
 
-	LoadScene(labelCurrentSceneFileName);
+	//LoadScene(labelCurrentSceneFileName);
 
 	return true;
 }

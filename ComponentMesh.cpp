@@ -172,7 +172,7 @@ void ComponentMesh::CleanMesh()
 	{
 		App->modelLoader->CleanUpMesh(mesh);
 		ImporterMesh::RemoveMesh(mesh->name);
-		RELEASE(mesh);
+		mesh = nullptr;
 	}
 }
 
