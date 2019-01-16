@@ -115,7 +115,7 @@ bool ModuleCamera::CleanUp()
 	return true;
 }
 
-void ModuleCamera::CleanUpFromList(ComponentCamera * componentCamera)
+void ModuleCamera::CleanUpFromList(const ComponentCamera * componentCamera)
 {
 	for (std::list<ComponentCamera*>::iterator iterator = cameras->begin(); iterator != cameras->end();)
 	{
@@ -137,7 +137,7 @@ void ModuleCamera::CleanUpFromList(ComponentCamera * componentCamera)
 	}
 }
 
-std::list<ComponentCamera*>::iterator ModuleCamera::CleanUpIterator(std::list<ComponentCamera*>::iterator iterator)
+std::list<ComponentCamera*>::iterator ModuleCamera::CleanUpIterator(const std::list<ComponentCamera*>::iterator iterator)
 {
 	RELEASE(*iterator);
 	return cameras->erase(iterator);
@@ -456,7 +456,7 @@ void ModuleCamera::DrawProperties()
 	}
 }
 
-ComponentCamera* ModuleCamera::CreateComponentCamera(GameObject * gameObjectParent, ComponentType componentType)
+ComponentCamera* ModuleCamera::CreateComponentCamera(GameObject* gameObjectParent, ComponentType componentType)
 {
 	ComponentCamera* result = new ComponentCamera(gameObjectParent, componentType);
 	cameras->push_back(result);
@@ -464,10 +464,15 @@ ComponentCamera* ModuleCamera::CreateComponentCamera(GameObject * gameObjectPare
 	return result;
 }
 
-void ModuleCamera::RemoveCameraComponent(Component * componentToBeRemove)
+void ModuleCamera::RemoveCameraComponent(const Component* componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::CAMERA)
 	{
+		if (componentToBeRemove == App->renderer->componentCameraGameSelected)
+		{
+			App->renderer->componentCameraGameSelected = nullptr;
+		}
+
 		CleanUpFromList((ComponentCamera*)componentToBeRemove);
 	}
 }

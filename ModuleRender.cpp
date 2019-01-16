@@ -151,7 +151,7 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::CleanUpFromList(ComponentMesh * componentMesh)
+void ModuleRender::CleanUpFromList(const ComponentMesh * componentMesh)
 {
 	for (std::list<ComponentMesh*>::iterator iterator = meshes.begin(); iterator != meshes.end();)
 	{
@@ -173,7 +173,7 @@ void ModuleRender::CleanUpFromList(ComponentMesh * componentMesh)
 	}
 }
 
-std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(std::list<ComponentMesh*>::iterator iterator)
+std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(const std::list<ComponentMesh*>::iterator iterator)
 {
 	if ((*iterator)->mesh->vbo != 0)
 	{
@@ -190,7 +190,7 @@ std::list<ComponentMesh*>::iterator ModuleRender::CleanUpIterator(std::list<Comp
 	return meshes.erase(iterator);
 }
 
-void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, ComponentMaterial* componentMaterial,
+void ModuleRender::RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
 	const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj)
 {
 	Mesh* mesh = componentMesh.mesh;
@@ -363,7 +363,7 @@ ComponentMesh* ModuleRender::CreateComponentMesh(GameObject* gameObjectParent, C
 	return result;
 }
 
-void ModuleRender::RemoveMeshComponent(Component* componentToBeRemove)
+void ModuleRender::RemoveMeshComponent(const Component* componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::MESH)
 	{
@@ -416,7 +416,7 @@ void ModuleRender::ManageComboBoxCamera()
 	}
 }
 
-void ModuleRender::DrawQuadTreeNode(QuadtreeNode * quadtreeNode)
+void ModuleRender::DrawQuadTreeNode(const QuadtreeNode* quadtreeNode)
 {
 	App->environment->DrawBoundingBox(quadtreeNode->aabb.minPoint, quadtreeNode->aabb.maxPoint);
 
@@ -591,7 +591,7 @@ void ModuleRender::CalculateGameObjectGlobalMatrix(GameObject* gameObject)
 	}
 }
 
-void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection)
+void ModuleRender::RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, const ComponentCamera* camera, math::float4x4 view, math::float4x4 projection)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferToRender.frameBufferObject);
 

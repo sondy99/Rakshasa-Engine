@@ -14,15 +14,15 @@ public:
 	void DrawProperties() override;
 	Component* Clone() override;
 
-	void Save(Config* config) override;
-	void Load(Config* config, rapidjson::Value& value) override;
+	void Save(const Config* config) override;
+	void Load(const Config* config, rapidjson::Value& value) override;
 
 	math::float4x4 ProjectionMatrix();
 	math::float4x4 LookAt(math::float3& cameraPosition, math::float3& cameraFront, math::float3& cameraUp);
 	
 	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 
-	void InitFrustum(GameObject* gameObjectParent);
+	void InitFrustum(const GameObject* gameObjectParent);
 
 	void SetHorizontalFOV(float& fovXDegrees);
 public:

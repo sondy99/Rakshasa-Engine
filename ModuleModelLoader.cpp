@@ -69,7 +69,7 @@ bool ModuleModelLoader::CleanUp()
 	return true;
 }
 
-void ModuleModelLoader::CleanUpMesh(Mesh* meshStruct)
+void ModuleModelLoader::CleanUpMesh(const Mesh* meshStruct)
 {
 	if (meshStruct != nullptr)
 	{

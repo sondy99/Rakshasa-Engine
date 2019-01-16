@@ -165,7 +165,7 @@ Component* ComponentMaterial::Clone()
 	return result;
 }
 
-void ComponentMaterial::Save(Config * config)
+void ComponentMaterial::Save(const Config* config)
 {
 	config->StartObject();
 
@@ -190,7 +190,7 @@ void ComponentMaterial::Save(Config * config)
 	config->EndObject();
 }
 
-void ComponentMaterial::Load(Config* config, rapidjson::Value& value)
+void ComponentMaterial::Load(const Config* config, rapidjson::Value& value)
 {
 	labelDiffuseCurrentFileTextureSelected = config->GetString("labelDiffuseCurrentFileTextureSelected", value);
 	material.diffuseColor = config->GetFloat4("diffuseColor", value);

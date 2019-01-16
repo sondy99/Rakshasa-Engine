@@ -260,7 +260,7 @@ Component* ComponentTransformation::Clone()
 	return result;
 }
 
-void ComponentTransformation::Save(Config * config)
+void ComponentTransformation::Save(const Config * config)
 {
 	config->StartObject();
 
@@ -275,7 +275,7 @@ void ComponentTransformation::Save(Config * config)
 	config->EndObject();
 }
 
-void ComponentTransformation::Load(Config* config, rapidjson::Value& value)
+void ComponentTransformation::Load(const Config* config, rapidjson::Value& value)
 {
 	identity = config->GetBool("identity", value);
 	position = config->GetFloat3("position", value);

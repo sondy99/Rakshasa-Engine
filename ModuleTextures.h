@@ -28,16 +28,16 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
-	void CleanUpFromList(ComponentMaterial* componentMaterial);
-	std::list<ComponentMaterial*>::iterator CleanUpIterator(std::list<ComponentMaterial*>::iterator iterator);
+	void CleanUpFromList(const ComponentMaterial* componentMaterial);
+	std::list<ComponentMaterial*>::iterator CleanUpIterator(const std::list<ComponentMaterial*>::iterator iterator);
 
-	void LoadMaterial(std::string path, unsigned& textureID, int& width, int& height);
+	void LoadMaterial(const char* path, unsigned& textureID, int& width, int& height);
 	void LoadMaterial(const char* path, ComponentMaterial* componentMaterial, MaterialTypeSelected materialTypeSelected);
 	void Unload(unsigned id); 
 	ComponentMaterial* CreateComponentMaterial();
 	ComponentMaterial* CreateComponentMaterial(GameObject* gameObjectParent, ComponentType componentType);
 	ComponentMaterial* CreateComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material);
-	void RemoveMaterialComponent(Component* componentToBeRemove);
+	void RemoveMaterialComponent(const Component* componentToBeRemove);
 	void RemoveMaterial(ComponentMaterial* componentMaterial);
 private:
 	std::list<ComponentMaterial*> materials;

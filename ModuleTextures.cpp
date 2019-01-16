@@ -36,7 +36,7 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
-std::list<ComponentMaterial*>::iterator ModuleTextures::CleanUpIterator(std::list<ComponentMaterial*>::iterator iterator)
+std::list<ComponentMaterial*>::iterator ModuleTextures::CleanUpIterator(const std::list<ComponentMaterial*>::iterator iterator)
 {
 	Unload((*iterator)->material.diffuseMap);
 	Unload((*iterator)->material.occlusionMap);
@@ -47,7 +47,7 @@ std::list<ComponentMaterial*>::iterator ModuleTextures::CleanUpIterator(std::lis
 	return materials.erase(iterator);
 }
 
-void ModuleTextures::CleanUpFromList(ComponentMaterial * componentMaterial)
+void ModuleTextures::CleanUpFromList(const ComponentMaterial * componentMaterial)
 {
 	for (std::list<ComponentMaterial*>::iterator iterator = materials.begin(); iterator != materials.end();)
 	{
@@ -69,7 +69,7 @@ void ModuleTextures::CleanUpFromList(ComponentMaterial * componentMaterial)
 	}
 }
 
-void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& width, int& height)
+void ModuleTextures::LoadMaterial(const char* path, unsigned& textureID, int& width, int& height)
 {
 	unsigned imageID;
 
@@ -77,12 +77,14 @@ void ModuleTextures::LoadMaterial(std::string path, unsigned& textureID, int& wi
 
 	ilBindImage(imageID);
 
-	path.insert(0, "/Library/Textures/");
+	std::string pathAux(path);
 
-	LOG("Loading texture %s", path.c_str());
+	pathAux.insert(0, "/Library/Textures/");
+
+	LOG("Loading texture %s", pathAux.c_str());
 
 	char* fileBuffer = nullptr;
-	unsigned lenghBuffer = App->fileSystem->Load(path.c_str(), &fileBuffer);
+	unsigned lenghBuffer = App->fileSystem->Load(pathAux.c_str(), &fileBuffer);
 
 	if (ilLoadL(IL_DDS, fileBuffer, lenghBuffer))
 	{
@@ -193,7 +195,7 @@ ComponentMaterial * ModuleTextures::CreateComponentMaterial()
 	return result;
 }
 
-ComponentMaterial* ModuleTextures::CreateComponentMaterial(GameObject * gameObjectParent, ComponentType componentType)
+ComponentMaterial* ModuleTextures::CreateComponentMaterial(GameObject* gameObjectParent, ComponentType componentType)
 {
 	ComponentMaterial* result = new ComponentMaterial(gameObjectParent, componentType);
 
@@ -202,7 +204,7 @@ ComponentMaterial* ModuleTextures::CreateComponentMaterial(GameObject * gameObje
 	return result;
 }
 
-ComponentMaterial* ModuleTextures::CreateComponentMaterial(GameObject * gameObjectParent, ComponentType componentType, Material material)
+ComponentMaterial* ModuleTextures::CreateComponentMaterial(GameObject* gameObjectParent, ComponentType componentType, Material material)
 {
 	ComponentMaterial* result = new ComponentMaterial(gameObjectParent, componentType, material);
 
@@ -211,7 +213,7 @@ ComponentMaterial* ModuleTextures::CreateComponentMaterial(GameObject * gameObje
 	return result;
 }
 
-void ModuleTextures::RemoveMaterialComponent(Component * componentToBeRemove)
+void ModuleTextures::RemoveMaterialComponent(const Component* componentToBeRemove)
 {
 	if (componentToBeRemove->componentType == ComponentType::MATERIAL)
 	{

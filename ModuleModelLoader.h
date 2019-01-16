@@ -38,7 +38,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void CleanUpMesh(Mesh* meshStruct);
+	void CleanUpMesh(const Mesh* meshStruct);
 	void GenerateMesh(Mesh* meshStruct);
 	void GenerateMesh(const par_shapes_mesh_s* parShapeMesh, Mesh* meshStruct);
 

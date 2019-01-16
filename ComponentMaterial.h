@@ -53,8 +53,8 @@ public:
 	void DrawProperties() override;
 	Component* Clone() override;
 
-	void Save(Config* config) override;
-	void Load(Config* config, rapidjson::Value& value) override;
+	void Save(const Config* config) override;
+	void Load(const Config* config, rapidjson::Value& value) override;
 public:
 	Material material;
 private:

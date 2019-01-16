@@ -19,7 +19,7 @@ ComponentCamera::~ComponentCamera()
 {
 }
 
-void ComponentCamera::InitFrustum(GameObject* gameObjectParent)
+void ComponentCamera::InitFrustum(const GameObject* gameObjectParent)
 {
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.pos = float3::zero;
@@ -161,7 +161,7 @@ Component* ComponentCamera::Clone()
 	return result;
 }
 
-void ComponentCamera::Save(Config * config)
+void ComponentCamera::Save(const Config * config)
 {
 	config->StartObject();
 	
@@ -183,7 +183,7 @@ void ComponentCamera::Save(Config * config)
 	config->EndObject();
 }
 
-void ComponentCamera::Load(Config* config, rapidjson::Value& value)
+void ComponentCamera::Load(const Config* config, rapidjson::Value& value)
 {
 	frustum.nearPlaneDistance = config->GetFloat("frustum.nearPlaneDistance", value);
 	frustum.farPlaneDistance = config->GetFloat("frustum.farPlaneDistance", value);

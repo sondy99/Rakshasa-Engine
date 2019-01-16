@@ -25,7 +25,7 @@ public:
 
 	void DrawProperties();
 
-	void RemoveGameObject(GameObject* mainObjectToDelete);
+	void RemoveGameObject(const GameObject* mainObjectToDelete);
 	void DuplicateGameObject(GameObject* newGameObjectParent);
 	GameObject* Clone();
 	Component* GameObject::GetComponent(ComponentType componentType);
@@ -33,8 +33,8 @@ public:
 	bool GameObject::HaveComponentRecursive(ComponentType componentType);
 	Component* CreateComponent(ComponentType componentType);
 
-	bool Save(Config* config);
-	void Load(Config* config, rapidjson::Value& value);
+	bool Save(const Config* config);
+	void Load(const Config* config, rapidjson::Value& value);
 public:
 	char uuid[37];
 	std::string name = nullptr;

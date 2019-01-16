@@ -30,8 +30,8 @@ public:
 	virtual void DrawProperties() {};
 	virtual Component* Clone() { return new Component(gameObjectParent, componentType); };
 
-	virtual void Save(Config* config) {};
-	virtual void Load(Config* config, rapidjson::Value& value) {};
+	virtual void Save(const Config* config) {};
+	virtual void Load(const Config* config, rapidjson::Value& value) {};
 public:
 	ComponentType componentType;
 	GameObject* gameObjectParent = nullptr;

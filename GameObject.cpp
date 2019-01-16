@@ -149,7 +149,7 @@ void GameObject::DrawProperties()
 	}
 }
 
-void GameObject::RemoveGameObject(GameObject* mainObjectToDelete)
+void GameObject::RemoveGameObject(const GameObject* mainObjectToDelete)
 {
 	for (std::list<Component*>::iterator iterator = components.begin(); iterator != components.end();)
 	{
@@ -334,7 +334,7 @@ Component* GameObject::CreateComponent(ComponentType componentType)
 	return result;
 }
 
-bool GameObject::Save(Config* config)
+bool GameObject::Save(const Config* config)
 {
 	config->StartObject();
 
@@ -363,7 +363,7 @@ bool GameObject::Save(Config* config)
 	return true;
 }
 
-void GameObject::Load(Config* config, rapidjson::Value & value)
+void GameObject::Load(const Config* config, rapidjson::Value& value)
 {
 	const char* newUuid = config->GetString("uuid", value);
 	sprintf_s(uuid, newUuid);

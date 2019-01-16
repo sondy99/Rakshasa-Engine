@@ -97,7 +97,7 @@ Component * ComponentMesh::Clone()
 	return result;
 }
 
-void ComponentMesh::Save(Config * config)
+void ComponentMesh::Save(const Config * config)
 {
 	config->StartObject();
 
@@ -118,7 +118,7 @@ void ComponentMesh::Save(Config * config)
 	config->EndObject();
 }
 
-void ComponentMesh::Load(Config* config, rapidjson::Value& value)
+void ComponentMesh::Load(const Config* config, rapidjson::Value& value)
 {
 	isWireframeActive = config->GetBool("isWireframeActive", value);
 

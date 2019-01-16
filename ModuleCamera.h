@@ -38,14 +38,14 @@ public:
 	bool Init() override;
 	update_status PreUpdate() override;
 	bool CleanUp() override;
-	void CleanUpFromList(ComponentCamera* componentCamera);
-	std::list<ComponentCamera*>::iterator CleanUpIterator(std::list<ComponentCamera*>::iterator iterator);
+	void CleanUpFromList(const ComponentCamera* componentCamera);
+	std::list<ComponentCamera*>::iterator CleanUpIterator(const std::list<ComponentCamera*>::iterator iterator);
 
 	void SetScreenNewScreenSize(unsigned newWidth, unsigned newHeight);
 
 	void DrawProperties();
 	ComponentCamera* CreateComponentCamera(GameObject* gameObjectParent, ComponentType componentType);
-	void RemoveCameraComponent(Component* componentToBeRemove); 
+	void RemoveCameraComponent(const Component* componentToBeRemove); 
 	void PickGameObject();
 public:
 	bool toggleCameraProperties = true;

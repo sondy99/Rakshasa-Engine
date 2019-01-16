@@ -52,10 +52,10 @@ public:
 	update_status Update() override;
 	update_status PostUpdate() override;
 	bool CleanUp() override;
-	void CleanUpFromList(ComponentMesh* componentMesh);
-	std::list<ComponentMesh*>::iterator CleanUpIterator(std::list<ComponentMesh*>::iterator iterator);
+	void CleanUpFromList(const ComponentMesh* componentMesh);
+	std::list<ComponentMesh*>::iterator CleanUpIterator(const std::list<ComponentMesh*>::iterator iterator);
 
-	void RenderMesh(const ComponentMesh& componentMesh, ComponentMaterial* componentMaterial,
+	void RenderMesh(const ComponentMesh& componentMesh, const ComponentMaterial* componentMaterial,
 		const math::float4x4& model, const math::float4x4& view, const math::float4x4& proj);
 	
 	void DrawProperties();
@@ -64,7 +64,7 @@ public:
 	ComponentMesh* CreateComponentMesh();
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType);
 	ComponentMesh* CreateComponentMesh(GameObject* gameObjectParent, ComponentType componentType, Mesh* mesh);
-	void RemoveMeshComponent(Component* componentToBeRemove);
+	void RemoveMeshComponent(const Component* componentToBeRemove);
 	void LoadQuadTreeForAllMesh();
 
 	void DrawImGuizmo(float sceneWidth, float sceneHeight);
@@ -85,9 +85,9 @@ private:
 	void RenderComponentFromMeshesList(ComponentMesh* componentMesh, math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void RenderComponentUsingQuadTree(math::float4x4 view, math::float4x4 projection, FrameBufferType frameBufferType);
 	void CalculateGameObjectGlobalMatrix(GameObject* gameObject);
-	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
+	void RenderUsingSpecificFrameBuffer(FrameBufferStruct frameBufferToRender, const ComponentCamera* camera, math::float4x4 view, math::float4x4 projection);
 	void ManageComboBoxCamera(); 
-	void DrawQuadTreeNode(QuadtreeNode* quadtreeNode);
+	void DrawQuadTreeNode(const QuadtreeNode* quadtreeNode);
 	void GenerateFallback();
 private:
 	FrameBufferStruct frameBufferScene;
