@@ -91,8 +91,11 @@ private:
 	void GenerateFallback();
 private:
 	FrameBufferStruct frameBufferScene;
-	FrameBufferStruct frameBufferGame;
 	bool sceneEnabled = true;
+	bool isWindowsSceneVisible = false;
+	FrameBufferStruct frameBufferGame;
+	bool sceneGame = true;
+	bool isWindowsGameVisible = false;
 
 	float lastTickTime = 0.0f;
 	float auxTimer = 0.0f;

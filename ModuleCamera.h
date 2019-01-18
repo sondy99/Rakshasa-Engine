@@ -54,6 +54,7 @@ public:
 	ComponentCamera* selectedCamera = nullptr;
 	std::list<ComponentCamera*>* cameras = nullptr;
 	bool isFocusedViewPort = false;
+	bool isFocuseSceneWindow = false;
 	bool isFocusedcomboGizmoOptions = false;
 private:
 	void CameraMovementKeyboard();

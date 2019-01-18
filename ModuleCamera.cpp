@@ -94,7 +94,7 @@ update_status ModuleCamera::PreUpdate()
 		ManageFocus();
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && isFocusedViewPort  && !ImGuizmo::IsOver() && !isFocusedcomboGizmoOptions)
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && isFocuseSceneWindow && !ImGuizmo::IsOver() && !isFocusedcomboGizmoOptions)
 	{
 		PickGameObject();
 	}

@@ -105,13 +105,14 @@ update_status ModuleRender::Update()
 {
 	BROFILER_CATEGORY("RenderUpdate()", Profiler::Color::Aqua);
 
+	if (isWindowsSceneVisible)
+	{
+		math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
+		math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
+		RenderUsingSpecificFrameBuffer(frameBufferScene, App->camera->sceneCamera, viewScene, projectionScene);
+	}
 
-	math::float4x4 viewScene = App->camera->sceneCamera->LookAt(App->camera->sceneCamera->cameraPosition, App->camera->sceneCamera->cameraFront, App->camera->sceneCamera->cameraUp);
-	math::float4x4 projectionScene = App->camera->sceneCamera->ProjectionMatrix();
-
-	RenderUsingSpecificFrameBuffer(frameBufferScene, App->camera->sceneCamera, viewScene, projectionScene);
-
-	if (componentCameraGameSelected != nullptr)
+	if (componentCameraGameSelected != nullptr && isWindowsGameVisible)
 	{
 		math::float4x4 viewGame = componentCameraGameSelected->LookAt(componentCameraGameSelected->cameraPosition,
 			componentCameraGameSelected->cameraFront, componentCameraGameSelected->cameraUp);
@@ -290,53 +291,62 @@ void ModuleRender::DrawProperties()
 
 void ModuleRender::DrawCameraSceneWindow()
 {
-	ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
+	isWindowsSceneVisible = ImGui::Begin("Scene", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	if (ImGui::IsWindowFocused())
+	if (isWindowsSceneVisible)
 	{
-		App->camera->selectedCamera = App->camera->sceneCamera;
-		sceneViewportX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
-		sceneViewportY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
-		App->camera->isFocusedViewPort = ImGui::IsWindowHovered();
-		App->camera->isFocusedcomboGizmoOptions = false;
+		if (ImGui::IsWindowFocused())
+		{
+			App->camera->selectedCamera = App->camera->sceneCamera;
+			sceneViewportX = ImGui::GetCursorPosX() + ImGui::GetWindowPos().x;
+			sceneViewportY = ImGui::GetCursorPosY() + ImGui::GetWindowPos().y;
+			App->camera->isFocusedViewPort = ImGui::IsWindowHovered();
+			App->camera->isFocuseSceneWindow = ImGui::IsWindowHovered();
+			App->camera->isFocusedcomboGizmoOptions = false;
+		}
+
+		ImVec2 size = ImGui::GetWindowSize();
+
+		App->camera->SetScreenNewScreenSize(size.x, size.y);
+
+		ImGui::Image((ImTextureID)frameBufferScene.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
+
+		DrawImGuizmo(size.x, size.y);
 	}
-
-	ImVec2 size = ImGui::GetWindowSize();
-
-	App->camera->SetScreenNewScreenSize(size.x, size.y);
-
-	ImGui::Image((ImTextureID)frameBufferScene.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
-
-	DrawImGuizmo(size.x, size.y);
 
 	ImGui::End();
 }
 
 void ModuleRender::DrawCameraGameWindow()
 {
-	ImGui::Begin("Game", &sceneEnabled, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoFocusOnAppearing);
-
-	ManageComboBoxCamera();
-	if (App->camera->cameras->size() > 0)
+	isWindowsGameVisible = ImGui::Begin("Game", &sceneGame, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	
+	if (isWindowsGameVisible)
 	{
-		if (componentCameraGameSelected)
+		isWindowsGameVisible = true;
+		ManageComboBoxCamera();
+		if (App->camera->cameras->size() > 0)
 		{
-			if (ImGui::IsWindowFocused())
+			if (componentCameraGameSelected)
 			{
-				App->camera->selectedCamera = componentCameraGameSelected;
-				App->camera->isFocusedViewPort = ImGui::IsWindowHovered();
+				if (ImGui::IsWindowFocused())
+				{
+					App->camera->selectedCamera = componentCameraGameSelected;
+					App->camera->isFocusedViewPort = ImGui::IsWindowHovered();
+				}
+
+				ImVec2 size = ImGui::GetWindowSize();
+
+				componentCameraGameSelected->SetScreenNewScreenSize(size.x, size.y);
+
+				ImGui::Image((ImTextureID)frameBufferGame.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 			}
-
-			ImVec2 size = ImGui::GetWindowSize();
-
-			componentCameraGameSelected->SetScreenNewScreenSize(size.x, size.y);
-
-			ImGui::Image((ImTextureID)frameBufferGame.renderTexture, { size.x, size.y }, { 0,1 }, { 1,0 });
 		}
-	}
-	else
-	{
-		componentCameraGameSelected = nullptr;
+		else
+		{
+			componentCameraGameSelected = nullptr;
+		}
+
 	}
 
 	ImGui::End();
